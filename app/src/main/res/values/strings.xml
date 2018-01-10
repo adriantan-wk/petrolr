@@ -3,4 +3,6 @@
     <string name="username_string">Username</string>
     <string name="password_string">Password</string>
     <string name="login_string">Log In</string>
+    <string name="favourites_string">Favourites</string>
+    <string name="history_string">History</string>
 </resources>

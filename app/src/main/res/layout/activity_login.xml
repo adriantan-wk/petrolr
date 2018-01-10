@@ -8,7 +8,7 @@
     tools:context="com.example.apptivitylab.demoapp.LoginActivity">
 
     <FrameLayout
-        android:id="@+id/activity_login_vg_container"
+        android:id="@+id/loginActivityContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
