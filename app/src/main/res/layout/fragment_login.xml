@@ -26,32 +26,57 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp">
         
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/loginFragmentUsername"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/username_string"/>
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/loginFragmentUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/username_string"/>
 
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="8dp"
+        app:passwordToggleEnabled="true">
 
         <android.support.design.widget.TextInputEditText
             android:id="@+id/loginFragmentPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="textPassword"
             android:hint="@string/password_string" />
 
     </android.support.design.widget.TextInputLayout>
 
-    <Button
-        android:id="@+id/loginFragmentLoginBtn"
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/loginFragmentLoginBtn"
+            android:layout_width="120dp"
+            android:layout_marginRight="8dp"
+            android:layout_height="wrap_content"
+            android:text="@string/login_string"
+            android:layout_marginTop="32dp" />
+
+        <Button
+            android:id="@+id/loginFragmentRegisterBtn"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="@string/register_string"
+            android:layout_marginTop="32dp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/loginFragmentForgotPass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/login_string"
-        android:layout_marginTop="32dp"/>
+        android:text="Forgot Your Password?"
+        android:textSize="10sp"
+        android:layout_marginTop="8dp"
+        android:clickable="true"/>
 
 </LinearLayout>

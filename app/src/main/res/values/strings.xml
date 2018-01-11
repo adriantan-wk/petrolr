@@ -5,4 +5,6 @@
     <string name="login_string">Log In</string>
     <string name="favourites_string">Favourites</string>
     <string name="history_string">History</string>
+    <string name="register_string">Register</string>
+    <string name="confirm_pass_string">Confirm Password</string>
 </resources>

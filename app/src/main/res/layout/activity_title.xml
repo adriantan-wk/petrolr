@@ -5,10 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.apptivitylab.demoapp.LoginActivity">
+    tools:context="com.example.apptivitylab.demoapp.TitleActivity">
 
     <FrameLayout
-        android:id="@+id/loginActivityContainer"
+        android:id="@+id/titleActivityContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
