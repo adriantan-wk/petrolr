@@ -1,10 +1,11 @@
-package com.example.apptivitylab.demoapp
+package com.example.apptivitylab.demoapp.ui
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.apptivitylab.demoapp.R
 
 /**
  * Created by ApptivityLab on 12/01/2018.
