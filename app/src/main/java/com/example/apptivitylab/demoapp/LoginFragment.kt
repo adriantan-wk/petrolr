@@ -28,20 +28,27 @@ class LoginFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_login, container,false)
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        /*username = loginFragmentUsername
+        username = loginFragmentUsername
         password = loginFragmentPassword
-        loginBtn = loginFragmentLoginBtn*/
+        loginBtn = loginFragmentLoginBtn
         registerBtn = loginFragmentRegisterBtn
-        //forgotPass = loginFragmentForgotPass
+        forgotPass = loginFragmentForgotPass
 
-        registerBtn.setOnClickListener({
+        registerBtn.setOnClickListener {
             activity!!.supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.titleActivityContainer, RegisterFragment())
                     .commit()
-        })
+        }
+
+        loginBtn.setOnClickListener {
+            val randomIntent = Intent(context, HomeActivity::class.java)
+
+            startActivity(randomIntent)
+        }
     }
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_create_trip"
+        android:icon="@drawable/add"
+        android:title="Create a Trip" />
+
+    <item
+        android:id="@+id/nav_price_history"
+        android:icon="@drawable/history"
+        android:title="Price History" />
+
+    <item
+        android:id="@+id/nav_preferences"
+        android:icon="@drawable/settings"
+        android:title="Preferences" />
+
+    <item
+        android:id="@+id/nav_logout"
+        android:icon="@drawable/logout"
+        android:title="@string/logout_string" />
+</menu>

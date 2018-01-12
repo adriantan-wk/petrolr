@@ -7,4 +7,10 @@
     <string name="history_string">History</string>
     <string name="register_string">Register</string>
     <string name="confirm_pass_string">Confirm Password</string>
+    <string name="distance_string">Distance</string>
+    <string name="time_required_string">Time Required</string>
+    <string name="price_string">Price</string>
+    <string name="logout_string">Log Out</string>
+    <string name="open_drawer_string">Open Drawer</string>
+    <string name="close_drawer_string">Close Drawer</string>
 </resources>
