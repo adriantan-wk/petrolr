@@ -43,6 +43,7 @@ class LoginFragment : Fragment() {
             activity!!.supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.titleActivityContainer, RegisterFragment())
+                    .addToBackStack("Login to Register")
                     .commit()
         }
 
