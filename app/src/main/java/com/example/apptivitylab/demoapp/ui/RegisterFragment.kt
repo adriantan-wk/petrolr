@@ -31,6 +31,7 @@ class RegisterFragment : Fragment() {
         confirmPass = registerFragmentPassConfirm
         registerBtn = registerFragmentRegisterBtn
 
+        //TODO True registration functionality
         registerBtn.setOnClickListener({
             activity!!.supportFragmentManager
                     .beginTransaction()
