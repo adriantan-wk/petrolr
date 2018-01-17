@@ -17,11 +17,6 @@ import kotlinx.android.synthetic.main.fragment_login.*
  */
 
 class LoginFragment : Fragment() {
-    private lateinit var username:TextInputEditText
-    private lateinit var password:TextInputEditText
-    private lateinit var loginBtn:Button
-    private lateinit var registerBtn:Button
-    private lateinit var forgotPass:TextView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_login, container,false)
@@ -29,12 +24,6 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        username = usernameEditText
-        password = passwordEditText
-        loginBtn = loginBtn
-        registerBtn = registerBtn
-        forgotPass = forgotPassTextView
 
         registerBtn.setOnClickListener {
             activity?.let {
