@@ -26,17 +26,17 @@ class RegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        username = registerFragmentUsername
-        password = registerFragmentPass
-        confirmPass = registerFragmentPassConfirm
-        registerBtn = registerFragmentRegisterBtn
+        username = rusernameEditText
+        password = passwordEditText
+        confirmPass = confirmPassEditText
+        registerBtn = registerBtn
 
         //TODO True registration functionality
         registerBtn.setOnClickListener({
             activity?.let {
                 it.supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.titleActivityContainer, LoginFragment())
+                    .replace(R.id.titleContainer, LoginFragment())
                     .commit()
             }
         })

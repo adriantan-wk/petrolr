@@ -19,7 +19,7 @@
             app:elevation="0dp">
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/homeActivityToolbar"
+                android:id="@+id/homeToolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#00ff0000">
@@ -29,7 +29,7 @@
         </android.support.design.widget.AppBarLayout>
 
         <FrameLayout
-            android:id="@+id/homeActivityContainer"
+            android:id="@+id/homeContainerFrameLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -40,7 +40,7 @@
     </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.NavigationView
-        android:id="@+id/homeActivityNavView"
+        android:id="@+id/homeNavView"
         android:layout_width="250dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"

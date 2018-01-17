@@ -30,17 +30,17 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        username = loginFragmentUsername
-        password = loginFragmentPassword
-        loginBtn = loginFragmentLoginBtn
-        registerBtn = loginFragmentRegisterBtn
-        forgotPass = loginFragmentForgotPass
+        username = usernameEditText
+        password = passwordEditText
+        loginBtn = loginBtn
+        registerBtn = registerBtn
+        forgotPass = forgotPassTextView
 
         registerBtn.setOnClickListener {
             activity?.let {
                 it.supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.titleActivityContainer, RegisterFragment())
+                    .replace(R.id.titleContainer, RegisterFragment())
                     .addToBackStack("Login to Register")
                     .commit()
             }

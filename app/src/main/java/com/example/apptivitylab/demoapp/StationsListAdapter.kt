@@ -4,10 +4,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import com.example.apptivitylab.demoapp.models.Station
 import kotlinx.android.synthetic.main.cell_station.view.*
-import org.w3c.dom.Text
 
 /**
  * Created by ApptivityLab on 15/01/2018.
@@ -51,8 +49,8 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             fun onStationSelected(station: Station)
         }
 
-        private val stationName = itemView.stationCellName
-        private val stationBrand = itemView.stationCellBrand
+        private val stationName = itemView.nameTextView
+        private val stationBrand = itemView.brandTextView
 
         private var station : Station? = null
 

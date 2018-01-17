@@ -12,7 +12,6 @@ import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.MockDataLoader
 import com.example.apptivitylab.demoapp.StationsListAdapter
 import com.example.apptivitylab.demoapp.models.Station
-import kotlinx.android.synthetic.main.fragment_station_list.*
 
 /**
  * Created by ApptivityLab on 15/01/2018.
@@ -29,7 +28,7 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recyclerView = stationListFragmentRecyclerView
+        recyclerView = stationListRecyclerView
 
         val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         recyclerView.layoutManager = layoutManager

@@ -22,7 +22,7 @@ class StationDetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_station_details)
 
-        toolbar = stationDetailsActivityToolbar
+        toolbar = stationDetailsToolbar
         setSupportActionBar(toolbar)
 
         toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_material)
@@ -35,7 +35,7 @@ class StationDetailsActivity : AppCompatActivity() {
 
         supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.stationDetailsActivityContainer, StationDetailsFragment.newInstance(item))
+                .replace(R.id.stationDetailsContainerFrameLayout, StationDetailsFragment.newInstance(item))
                 .commit()
     }
 }

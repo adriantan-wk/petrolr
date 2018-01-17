@@ -5,10 +5,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import com.example.apptivitylab.demoapp.R
-import com.example.apptivitylab.demoapp.R.id.*
 import com.example.apptivitylab.demoapp.models.Station
 import kotlinx.android.synthetic.main.fragment_station_details.*
 
@@ -48,10 +45,10 @@ class StationDetailsFragment : Fragment() {
     }
 
     private fun updateView() {
-        stationDetailsFragmentName.text = station.stationName
-        stationDetailsFragmentID.text = station.stationID
-        stationDetailsFragmentBrand.text = station.stationBrand
-        stationDetailsFragmentLatitude.text = station.stationLatLng?.latitude.toString()
-        stationDetailsFragmentLongitude.text = station.stationLatLng?.longitude.toString()
+        nameTextView.text = station.stationName
+        idTextView.text = station.stationID
+        brandTextView.text = station.stationBrand
+        latitudeTextView.text = station.stationLatLng?.latitude.toString()
+        longitudeTextView.text = station.stationLatLng?.longitude.toString()
     }
 }

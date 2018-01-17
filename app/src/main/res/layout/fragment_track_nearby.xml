@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <FrameLayout
-        android:id="@+id/trackNearbyFragmentMapContainer"
+        android:id="@+id/mapContainerFrameLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1">
@@ -19,7 +19,7 @@
         android:padding="16dp">
 
         <ImageView
-            android:id="@+id/trackNearbyFragmentImage"
+            android:id="@+id/stationImageView"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:src="@drawable/ic_launcher_background"/>
@@ -31,29 +31,29 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/trackNearbyFragmentStationName"
+                android:id="@+id/nameTextView"
                 style="@style/HeaderText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/trackNearbyFragmentImage"
+                android:layout_toRightOf="@id/stationImageView"
                 android:text="Test"/>
 
             <TextView
-                android:id="@+id/trackNearbyFragmentDistance"
+                android:id="@+id/distanceTextView"
                 style="@style/DescriptionText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/trackNearbyFragmentStationName"
-                android:layout_toRightOf="@id/trackNearbyFragmentImage"
+                android:layout_below="@id/nameTextView"
+                android:layout_toRightOf="@id/stationImageView"
                 android:text="@string/distance_string"/>
 
             <TextView
-                android:id="@+id/trackNearbyFragmentTime"
+                android:id="@+id/timeTextView"
                 style="@style/DescriptionText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/trackNearbyFragmentDistance"
-                android:layout_toRightOf="@id/trackNearbyFragmentImage"
+                android:layout_below="@id/distanceTextView"
+                android:layout_toRightOf="@id/stationImageView"
                 android:text="@string/time_required_string"/>
 
         </LinearLayout>
@@ -61,7 +61,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/trackNearbyFragmentPrice"
+        android:id="@+id/priceTextView"
         style="@style/HeaderText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

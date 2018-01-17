@@ -2,21 +2,14 @@ package com.example.apptivitylab.demoapp.ui
 
 import android.os.Bundle
 import android.support.design.widget.NavigationView
-import android.support.v4.app.ActivityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import com.example.apptivitylab.demoapp.R
 import kotlinx.android.synthetic.main.activity_home.*
-import android.Manifest
-import android.content.DialogInterface
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.support.design.widget.Snackbar
-import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
-import android.view.MenuItem
 import android.widget.Toast
 
 /**
@@ -32,12 +25,12 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        toolbar = homeActivityToolbar
+        toolbar = homeToolbar
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
         drawerLayout = homeActivityDrawerLayout
-        navView = homeActivityNavView
+        navView = homeNavView
 
         val drawerToggle = ActionBarDrawerToggle(this, drawerLayout, toolbar,
                 R.string.open_drawer_string, R.string.close_drawer_string)
@@ -52,7 +45,7 @@ class HomeActivity : AppCompatActivity() {
                 R.id.nav_track_nearby -> {
                     supportFragmentManager
                             .beginTransaction()
-                            .replace(R.id.homeActivityContainer, TrackNearbyFragment())
+                            .replace(R.id.homeContainerFrameLayout, TrackNearbyFragment())
                             .addToBackStack("To Track Nearby")
                             .commit()
 
@@ -63,7 +56,7 @@ class HomeActivity : AppCompatActivity() {
                 R.id.nav_station_list -> {
                     supportFragmentManager
                             .beginTransaction()
-                            .replace(R.id.homeActivityContainer, StationListFragment())
+                            .replace(R.id.homeContainerFrameLayout, StationListFragment())
                             .addToBackStack("To Station List")
                             .commit()
 
@@ -98,7 +91,7 @@ class HomeActivity : AppCompatActivity() {
 
         supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.homeActivityContainer, StationListFragment())
+                .replace(R.id.homeContainerFrameLayout, StationListFragment())
                 .commit()
     }
 
