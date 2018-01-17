@@ -21,7 +21,6 @@
         </activity>
 
     <activity android:name=".ui.HomeActivity"></activity>
-    <activity android:name=".ui.StationDetailsActivity"></activity>
 
     </application>
 

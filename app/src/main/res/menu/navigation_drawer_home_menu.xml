@@ -2,16 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/nav_track_nearby"
-        android:icon="@drawable/tracknearby"
-        android:title="Track Nearby" />
-
-    <item
-        android:id="@+id/nav_station_list"
-        android:icon="@drawable/fuellogo"
-        android:title="Station List" />
-
-    <item
         android:id="@+id/nav_create_trip"
         android:icon="@drawable/add"
         android:title="Create a Trip" />
