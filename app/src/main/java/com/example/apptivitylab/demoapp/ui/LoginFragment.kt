@@ -23,9 +23,6 @@ class LoginFragment : Fragment() {
     private lateinit var registerBtn:Button
     private lateinit var forgotPass:TextView
 
-    //searchActivityToolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_material)
-    //Where searchActivityToolbar is a toolbar set as the supportactionbar
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_login, container,false)
     }
@@ -47,6 +44,7 @@ class LoginFragment : Fragment() {
                     .commit()
         }
 
+        //TODO True login verification functionality
         loginBtn.setOnClickListener {
             val randomIntent = Intent(context, HomeActivity::class.java)
 
