@@ -37,11 +37,13 @@ class LoginFragment : Fragment() {
         forgotPass = loginFragmentForgotPass
 
         registerBtn.setOnClickListener {
-            activity!!.supportFragmentManager
+            activity?.let {
+                it.supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.titleActivityContainer, RegisterFragment())
                     .addToBackStack("Login to Register")
                     .commit()
+            }
         }
 
         //TODO True login verification functionality

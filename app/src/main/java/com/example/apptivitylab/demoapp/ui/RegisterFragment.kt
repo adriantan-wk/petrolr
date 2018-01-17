@@ -33,10 +33,12 @@ class RegisterFragment : Fragment() {
 
         //TODO True registration functionality
         registerBtn.setOnClickListener({
-            activity!!.supportFragmentManager
+            activity?.let {
+                it.supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.titleActivityContainer, LoginFragment())
                     .commit()
+            }
         })
     }
 }

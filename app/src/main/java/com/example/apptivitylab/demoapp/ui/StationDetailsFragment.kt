@@ -33,13 +33,6 @@ class StationDetailsFragment : Fragment() {
 
     private lateinit var station : Station
 
-    private lateinit var stationInfoImage : ImageView
-    private lateinit var stationInfoName : TextView
-    private lateinit var stationInfoID : TextView
-    private lateinit var stationInfoBrand : TextView
-    private lateinit var stationInfoLong : TextView
-    private lateinit var stationInfoLat : TextView
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_station_details, container, false)
     }
@@ -47,22 +40,18 @@ class StationDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        stationInfoImage = stationDetailsFragmentImage
-        stationInfoName = stationDetailsFragmentName
-        stationInfoID = stationDetailsFragmentID
-        stationInfoBrand = stationDetailsFragmentBrand
-        stationInfoLat = stationDetailsFragmentLatitude
-        stationInfoLong = stationDetailsFragmentLongitude
+        val station : Station? = arguments?.let {
+            it.getParcelable(STATION_DETAILS)
+        }
 
-        station = arguments!!.getParcelable(STATION_DETAILS)
         updateData()
     }
 
     private fun updateData() { //Update all fields with data from the station object
-        stationInfoName.text = station.stationName
-        stationInfoID.text = station.stationID
-        stationInfoBrand.text = station.stationBrand
-        stationInfoLat.text = station.stationLatLng?.latitude.toString()
-        stationInfoLong.text = station.stationLatLng?.longitude.toString()
+        stationDetailsFragmentName.text = station.stationName
+        stationDetailsFragmentID.text = station.stationID
+        stationDetailsFragmentBrand.text = station.stationBrand
+        stationDetailsFragmentLatitude.text = station.stationLatLng?.latitude.toString()
+        stationDetailsFragmentLongitude.text = station.stationLatLng?.longitude.toString()
     }
 }
