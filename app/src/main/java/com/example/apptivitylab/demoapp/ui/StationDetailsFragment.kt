@@ -40,8 +40,8 @@ class StationDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val station : Station? = arguments?.let {
-            it.getParcelable(STATION_DETAILS)
+        arguments?.let {
+            station = it.getParcelable(STATION_DETAILS)
         }
 
         updateData()
