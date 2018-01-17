@@ -11,8 +11,7 @@ import java.io.InputStreamReader
  * Created by ApptivityLab on 16/01/2018.
  */
 
-class StationLoader {
-//This class is only meant to load fake station data from a text file
+class MockDataLoader {
 //TODO Delete this class when actual data is available
 
     companion object {

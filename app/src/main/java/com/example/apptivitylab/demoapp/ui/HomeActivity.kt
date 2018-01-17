@@ -32,7 +32,6 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        //Set up toolbar, drawerlayout and navigationview
         toolbar = homeActivityToolbar
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -40,19 +39,17 @@ class HomeActivity : AppCompatActivity() {
         drawerLayout = homeActivityDrawerLayout
         navView = homeActivityNavView
 
-        //Create 'hamburger button' in toolbar to open DrawerLayout
         val drawerToggle = ActionBarDrawerToggle(this, drawerLayout, toolbar,
                 R.string.open_drawer_string, R.string.close_drawer_string)
         drawerLayout.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
 
-        //Create navigationview menu
         navView.inflateMenu(R.menu.navigation_drawer_home_menu)
         navView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 //TODO Other side drawer menu items
 
-                R.id.nav_track_nearby -> { //Go to the track nearby stations screen
+                R.id.nav_track_nearby -> {
                     supportFragmentManager
                             .beginTransaction()
                             .replace(R.id.homeActivityContainer, TrackNearbyFragment())
@@ -63,7 +60,7 @@ class HomeActivity : AppCompatActivity() {
                     true
                 }
 
-                R.id.nav_station_list -> { //Go to the station list screen
+                R.id.nav_station_list -> {
                     supportFragmentManager
                             .beginTransaction()
                             .replace(R.id.homeActivityContainer, StationListFragment())
@@ -74,17 +71,17 @@ class HomeActivity : AppCompatActivity() {
                     true
                 }
 
-                R.id.nav_logout -> { //Log Out
+                R.id.nav_logout -> {
                     AlertDialog.Builder(this)
-                            .setIcon(R.drawable.logout) //Create an alert to ask user if they wish to log out
+                            .setIcon(R.drawable.logout)
                             .setTitle("Log Out")
                             .setMessage("Are you sure you want to log out?")
                             .setPositiveButton("Yes",
                                     { dialog, which ->
                                         val logOutIntent = Intent(this, TitleActivity::class.java)
-                                        startActivity(logOutIntent) //Go to login screen
+                                        startActivity(logOutIntent)
                                     })
-                            .setNegativeButton("No", null) //Do nothing if user picks no
+                            .setNegativeButton("No", null)
                             .show()
 
                     true

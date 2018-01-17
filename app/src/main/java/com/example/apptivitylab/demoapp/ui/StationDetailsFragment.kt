@@ -44,10 +44,10 @@ class StationDetailsFragment : Fragment() {
             station = it.getParcelable(STATION_DETAILS)
         }
 
-        updateData()
+        updateView()
     }
 
-    private fun updateData() { //Update all fields with data from the station object
+    private fun updateView() {
         stationDetailsFragmentName.text = station.stationName
         stationDetailsFragmentID.text = station.stationID
         stationDetailsFragmentBrand.text = station.stationBrand

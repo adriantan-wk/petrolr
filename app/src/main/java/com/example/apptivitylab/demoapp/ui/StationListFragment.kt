@@ -9,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.apptivitylab.demoapp.R
-import com.example.apptivitylab.demoapp.StationLoader
+import com.example.apptivitylab.demoapp.MockDataLoader
 import com.example.apptivitylab.demoapp.StationsListAdapter
 import com.example.apptivitylab.demoapp.models.Station
 import kotlinx.android.synthetic.main.fragment_station_list.*
@@ -35,16 +35,16 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
         recyclerView.layoutManager = layoutManager
 
         val stationsAdapter = StationsListAdapter()
-        stationsAdapter.setStationListener(this) //Make stationlistfragment the listener for the station list items
+        stationsAdapter.setStationListener(this)
         recyclerView.adapter = stationsAdapter
-        stationsAdapter.updateDataSet(StationLoader.loadStations(context!!)) //Load fake station data from text file
+        stationsAdapter.updateDataSet(MockDataLoader.loadStations(context!!))
     }
 
-    override fun onStationSelected(station: Station) { //Implementation of station list item listener from inner viewholder class
+    override fun onStationSelected(station: Station) {
 
         val itemDetailsIntent = Intent(context, StationDetailsActivity::class.java)
-        itemDetailsIntent.putExtra("Selected Station", station) //Pass selected station object
+        itemDetailsIntent.putExtra("Selected Station", station)
 
-        startActivity(itemDetailsIntent) //Move to station details screen
+        startActivity(itemDetailsIntent)
     }
 }

@@ -30,22 +30,22 @@ class TrackNearbyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (ActivityCompat.checkSelfPermission(this.context!!, Manifest.permission.ACCESS_FINE_LOCATION) //If permission to access location services has not yet been granted
+        if (ActivityCompat.checkSelfPermission(this.context!!, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), //Request location service access
+            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                     ACCESS_FINE_LOCATION_PERMISSIONS)
         }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when (requestCode) {
-            ACCESS_FINE_LOCATION_PERMISSIONS -> { //Permissions granted
+            ACCESS_FINE_LOCATION_PERMISSIONS -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    val toast = Toast.makeText(context,  "Thank you :D", Toast.LENGTH_SHORT)
+                    val toast = Toast.makeText(context,"Location Permissions Granted", Toast.LENGTH_SHORT)
                     toast.show()
                     //TODO Allow Map Stuff
-                } else { //Permissions not granted
-                    val toast = Toast.makeText(context,  "But why", Toast.LENGTH_SHORT)
+                } else {
+                    val toast = Toast.makeText(context,"Location Permissions Denied", Toast.LENGTH_SHORT)
                     toast.show()
                     //TODO If permission is denied
                 }

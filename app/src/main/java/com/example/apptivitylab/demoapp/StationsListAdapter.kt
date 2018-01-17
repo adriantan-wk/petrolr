@@ -14,7 +14,7 @@ import org.w3c.dom.Text
  */
 
 class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var listOfStations: ArrayList<Station> = ArrayList() //Used to hold all stations to be displayed
+    private var listOfStations: ArrayList<Station> = ArrayList()
     private lateinit var stationListener : StationViewHolder.onSelectStationListener
 
     fun setStationListener(stationListener: StationViewHolder.onSelectStationListener) {
@@ -23,7 +23,7 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
 
-        return StationViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.cell_station, //Inflate station cell list xml layout
+        return StationViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.cell_station,
                 parent, false), stationListener)
     }
 
@@ -31,7 +31,7 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val stationViewHolder : StationViewHolder = holder as StationViewHolder
         val station : Station = listOfStations[position]
 
-        stationViewHolder.setStation(station) //Assign station from station list to appropriate viewholders
+        stationViewHolder.setStation(station)
     }
 
     override fun getItemCount(): Int {
@@ -39,15 +39,15 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     fun updateDataSet(stations: ArrayList<Station>) {
-        this.listOfStations.clear() //Clear old data
-        this.listOfStations = stations //Load new data
-        this.notifyDataSetChanged() //Restart recyclerview lifecycle
+        this.listOfStations.clear()
+        this.listOfStations = stations
+        this.notifyDataSetChanged()
     }
 
-    class StationViewHolder(itemView: View, handler: onSelectStationListener) //Inner viewholder class
+    class StationViewHolder(itemView: View, handler: onSelectStationListener)
         : RecyclerView.ViewHolder(itemView) {
 
-        interface onSelectStationListener { //Listener interface for station list items
+        interface onSelectStationListener {
             fun onStationSelected(station: Station)
         }
 
@@ -56,19 +56,19 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         private var station : Station? = null
 
-        init { //Set listener to viewholder and pass station data to listener implementation in stationlistfragment
+        init {
             itemView.setOnClickListener({
                 handler.onStationSelected(station!!)
             })
         }
 
-        fun setStation(station: Station) { //Set station object data to class member variable
+        fun setStation(station: Station) {
             this.station = station
 
             updateViewHolder()
         }
 
-        private fun updateViewHolder() { //Set object data to viewholder views
+        private fun updateViewHolder() {
             stationName.text = station?.stationName
             stationBrand.text = station?.stationBrand
         }

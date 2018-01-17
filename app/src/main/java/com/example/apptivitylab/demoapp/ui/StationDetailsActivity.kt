@@ -25,13 +25,13 @@ class StationDetailsActivity : AppCompatActivity() {
         toolbar = stationDetailsActivityToolbar
         setSupportActionBar(toolbar)
 
-        toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_material) //Create a back arrow on the toolbar
+        toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_material)
         toolbar.setNavigationOnClickListener(View.OnClickListener {
-            startActivity(Intent(this, HomeActivity::class.java)) //Back arrow returns to homeactivity
+            startActivity(Intent(this, HomeActivity::class.java))
         })
 
         val item = intent.getParcelableExtra<Station>("Selected Station")
-        supportActionBar?.title = item.stationName //Set toolbar title to station name
+        supportActionBar?.title = item.stationName
 
         supportFragmentManager
                 .beginTransaction()
