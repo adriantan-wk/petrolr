@@ -27,7 +27,7 @@ class StationDetailsActivity : AppCompatActivity() {
 
         toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_material)
         toolbar.setNavigationOnClickListener(View.OnClickListener {
-            startActivity(Intent(this, HomeActivity::class.java))
+            startActivity(Intent(this, StationListActivity::class.java))
         })
 
         val item = intent.getParcelableExtra<Station>("Selected Station")

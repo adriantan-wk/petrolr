@@ -19,7 +19,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.HomeActivity"></activity>
+        <activity android:name=".ui.TrackNearActivity"></activity>
+        <activity android:name=".ui.StationListActivity"></activity>
         <activity android:name=".ui.StationDetailsActivity"></activity>
 
         <meta-data
@@ -28,7 +29,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAxG9qPX3r2nlJL-OijhaR29oTD6nJUnZw"/>
+            android:value="AIzaSyA9uIlomYp8NyvU49rfIJcGjxVIo1QDHQ4"/>
 
     </application>
 

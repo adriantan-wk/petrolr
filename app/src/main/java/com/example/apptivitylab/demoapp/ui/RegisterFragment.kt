@@ -17,7 +17,7 @@ class RegisterFragment : Fragment() {
     private lateinit var username:TextInputEditText
     private lateinit var password:TextInputEditText
     private lateinit var confirmPass:TextInputEditText
-    private lateinit var registerBtn:Button
+    private lateinit var userRegisterBtn:Button
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_register, container,false)
@@ -29,10 +29,10 @@ class RegisterFragment : Fragment() {
         username = rusernameEditText
         password = passwordEditText
         confirmPass = confirmPassEditText
-        registerBtn = registerBtn
+        userRegisterBtn = registerBtn
 
         //TODO True registration functionality
-        registerBtn.setOnClickListener({
+        userRegisterBtn.setOnClickListener({
             activity?.let {
                 it.supportFragmentManager
                     .beginTransaction()

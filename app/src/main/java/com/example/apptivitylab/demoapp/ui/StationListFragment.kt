@@ -12,6 +12,7 @@ import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.MockDataLoader
 import com.example.apptivitylab.demoapp.StationsListAdapter
 import com.example.apptivitylab.demoapp.models.Station
+import kotlinx.android.synthetic.main.fragment_station_list.*
 
 /**
  * Created by ApptivityLab on 15/01/2018.
