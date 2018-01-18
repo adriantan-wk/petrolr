@@ -2,6 +2,8 @@ package com.example.apptivitylab.demoapp.ui
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.location.Location
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -11,7 +13,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.example.apptivitylab.demoapp.MockDataLoader
 import com.example.apptivitylab.demoapp.R
+import com.example.apptivitylab.demoapp.models.Station
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.location.LocationListener
@@ -20,6 +24,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
@@ -40,8 +45,10 @@ class TrackNearbyFragment : Fragment(), GoogleApiClient.ConnectionCallbacks, Goo
     private var mapFragment : SupportMapFragment? = null
     private var googleMap : GoogleMap? = null
 
-    private var locationMarker : Marker? = null
+    private var userLocationMarker: Marker? = null
     private var userLatLng : LatLng? = null
+
+    private var listOfStations : ArrayList<Station> = ArrayList()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -57,6 +64,10 @@ class TrackNearbyFragment : Fragment(), GoogleApiClient.ConnectionCallbacks, Goo
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        context?.let {
+            listOfStations = MockDataLoader.loadStations(it)
+        }
 
         if (googleApiClient == null) {
             context?.let {
@@ -131,6 +142,8 @@ class TrackNearbyFragment : Fragment(), GoogleApiClient.ConnectionCallbacks, Goo
 
             LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, request, this)
 
+            generateStationMarkers()
+
         } else {
             view?.let {
                 Snackbar.make(it, R.string.googleapi_unavailable_string, Snackbar.LENGTH_SHORT).show()
@@ -179,19 +192,38 @@ class TrackNearbyFragment : Fragment(), GoogleApiClient.ConnectionCallbacks, Goo
 
             userLatLng = LatLng(it.latitude, it.longitude)
 
-                if (locationMarker == null) {
+                if (userLocationMarker == null) {
                     userLatLng?.let {
                         val markerOptions = MarkerOptions().position(it).title(getString(R.string.user_marker_string))
 
                         googleMap?.let {
-                            locationMarker = it.addMarker(markerOptions)
+                            userLocationMarker = it.addMarker(markerOptions)
                         }
                     }
                 } else {
-                    locationMarker?.let {
+                    userLocationMarker?.let {
                         it.position = userLatLng
                     }
                 }
+        }
+    }
+
+    private fun generateStationMarkers() {
+        for (station in listOfStations) {
+            station.stationLatLng?.apply {
+                val stationLatLng = LatLng(this.latitude, this.longitude)
+
+                val bitmapImg: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.gasstation_marker)
+                val resizedBitmapImg = Bitmap.createScaledBitmap(bitmapImg, 100, 100, false)
+
+                val stationMarkerOptions: MarkerOptions = MarkerOptions().position(stationLatLng)
+                        .title(station.stationName).icon(BitmapDescriptorFactory.fromBitmap(resizedBitmapImg))
+
+                googleMap?.let {
+                    it.addMarker(stationMarkerOptions)
+                }
+            }
+
         }
     }
 }
