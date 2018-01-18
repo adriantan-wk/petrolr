@@ -2,13 +2,10 @@ package com.example.apptivitylab.demoapp.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.TextInputEditText
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import com.example.apptivitylab.demoapp.R
 import kotlinx.android.synthetic.main.fragment_login.*
 
@@ -30,14 +27,14 @@ class LoginFragment : Fragment() {
                 it.supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.titleContainer, RegisterFragment())
-                    .addToBackStack("Login to Register")
+                    .addToBackStack(LoginFragment::class.java.simpleName)
                     .commit()
             }
         }
 
         //TODO True login verification functionality
         loginBtn.setOnClickListener {
-            val randomIntent = Intent(context, HomeActivity::class.java)
+            val randomIntent = Intent(context, TrackNearActivity::class.java)
 
             startActivity(randomIntent)
         }

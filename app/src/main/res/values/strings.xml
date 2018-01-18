@@ -3,8 +3,6 @@
     <string name="username_string">Username</string>
     <string name="password_string">Password</string>
     <string name="login_string">Log In</string>
-    <string name="favourites_string">Favourites</string>
-    <string name="history_string">History</string>
     <string name="register_string">Register</string>
     <string name="confirm_pass_string">Confirm Password</string>
     <string name="distance_string">Distance</string>
@@ -13,4 +11,20 @@
     <string name="logout_string">Log Out</string>
     <string name="open_drawer_string">Open Drawer</string>
     <string name="close_drawer_string">Close Drawer</string>
+    <string name="feature_unavailable_string">That feature is currently unavailable</string>
+    <string name="recenter_msg_text">Map re-centered to user position</string>
+    <string name="googleapi_unavailable_string">Google Api Client is not yet ready</string>
+    <string name="location_permissions_granted_string">Location Permissions Granted</string>
+    <string name="location_permissions_denied_string">Location Permissions Denied</string>
+    <string name="gooelapi_failed_connection_string">GoogleApiClient Connection Failed</string>
+    <string name="latitude_string">Latitude</string>
+    <string name="user_marker_string">You are here</string>
+    <string name="station_list_title_string">Station List</string>
+    <string name="station_item_intent_string">Selected Station</string>
+    <string name="logout_dialog_title_string">Log Out</string>
+    <string name="logout_confirm_msg_string">Are you sure you want to log out?</string>
+    <string name="yes_string">Yes</string>
+    <string name="no_string">No</string>
+    <string name="longitude_string">Longitude</string>
+    <string name="accuracy_string">Accuracy</string>
 </resources>
