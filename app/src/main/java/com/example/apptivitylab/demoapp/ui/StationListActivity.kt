@@ -17,28 +17,21 @@ import kotlinx.android.synthetic.main.activity_station_list.*
  */
 
 class StationListActivity : AppCompatActivity() {
-    private lateinit var toolbar: Toolbar
-    private lateinit var drawerLayout: DrawerLayout
-    private lateinit var navView: NavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_station_list)
 
-        toolbar = stationListToolbar
-        setSupportActionBar(toolbar)
+        setSupportActionBar(stationListToolbar)
         supportActionBar?.title = "Station List"
 
-        drawerLayout = stationListDrawerLayout
-        navView = stationListNavView
-
-        val drawerToggle = ActionBarDrawerToggle(this, drawerLayout, toolbar,
+        val drawerToggle = ActionBarDrawerToggle(this, stationListDrawerLayout, stationListToolbar,
                 R.string.open_drawer_string, R.string.close_drawer_string)
-        drawerLayout.addDrawerListener(drawerToggle)
+        stationListDrawerLayout.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
 
-        navView.inflateMenu(R.menu.navigation_drawer_home_menu)
-        navView.setNavigationItemSelectedListener {
+        stationListNavView.inflateMenu(R.menu.navigation_drawer_home_menu)
+        stationListNavView.setNavigationItemSelectedListener {
             when (it.itemId) {
             //TODO Other side drawer menu items
 
@@ -46,12 +39,12 @@ class StationListActivity : AppCompatActivity() {
                     val trackNearIntent = Intent(this, TrackNearActivity::class.java)
                     startActivity(trackNearIntent)
 
-                    drawerLayout.closeDrawers()
+                    stationListDrawerLayout.closeDrawers()
                     true
                 }
 
                 R.id.nav_station_list -> {
-                    drawerLayout.closeDrawers()
+                    stationListDrawerLayout.closeDrawers()
                     true
                 }
 
@@ -71,7 +64,7 @@ class StationListActivity : AppCompatActivity() {
                     true
                 }
 
-                else -> { //Unavailable menu buttons
+                else -> {
                     val toast = Toast.makeText(this, "Sorry, this isn't available yet", Toast.LENGTH_SHORT)
                     toast.show()
 

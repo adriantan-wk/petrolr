@@ -19,7 +19,6 @@ import kotlinx.android.synthetic.main.fragment_station_list.*
  */
 
 class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.onSelectStationListener {
-    private lateinit var recyclerView : RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -29,14 +28,12 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recyclerView = stationListRecyclerView
-
         val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        recyclerView.layoutManager = layoutManager
+        stationListRecyclerView.layoutManager = layoutManager
 
         val stationsAdapter = StationsListAdapter()
         stationsAdapter.setStationListener(this)
-        recyclerView.adapter = stationsAdapter
+        stationListRecyclerView.adapter = stationsAdapter
         stationsAdapter.updateDataSet(MockDataLoader.loadStations(context!!))
     }
 

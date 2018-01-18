@@ -17,33 +17,26 @@ import kotlinx.android.synthetic.main.activity_track_nearby.*
  */
 
 class TrackNearActivity : AppCompatActivity() {
-    private lateinit var toolbar: Toolbar
-    private lateinit var drawerLayout: DrawerLayout
-    private lateinit var navView: NavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_track_nearby)
 
-        toolbar = trackNearToolbar
-        setSupportActionBar(toolbar)
+        setSupportActionBar(trackNearToolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
-        drawerLayout = trackNearDrawerLayout
-        navView = trackNearNavView
-
-        val drawerToggle = ActionBarDrawerToggle(this, drawerLayout, toolbar,
-                R.string.open_drawer_string, R.string.close_drawer_string)
-        drawerLayout.addDrawerListener(drawerToggle)
+        val drawerToggle = ActionBarDrawerToggle(this, trackNearDrawerLayout,
+                trackNearToolbar, R.string.open_drawer_string, R.string.close_drawer_string)
+        trackNearDrawerLayout.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
 
-        navView.inflateMenu(R.menu.navigation_drawer_home_menu)
-        navView.setNavigationItemSelectedListener {
+        trackNearNavView.inflateMenu(R.menu.navigation_drawer_home_menu)
+        trackNearNavView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 //TODO Other side drawer menu items
 
                 R.id.nav_track_nearby -> {
-                    drawerLayout.closeDrawers()
+                    trackNearDrawerLayout.closeDrawers()
                     true
                 }
 
@@ -51,7 +44,7 @@ class TrackNearActivity : AppCompatActivity() {
                     val stationListIntent = Intent(this, StationListActivity::class.java)
                     startActivity(stationListIntent)
 
-                    drawerLayout.closeDrawers()
+                    trackNearDrawerLayout.closeDrawers()
                     true
                 }
 
@@ -71,7 +64,7 @@ class TrackNearActivity : AppCompatActivity() {
                     true
                 }
 
-                else -> { //Unavailable menu buttons
+                else -> {
                     val toast = Toast.makeText(this, "Sorry, this isn't available yet", Toast.LENGTH_SHORT)
                     toast.show()
 

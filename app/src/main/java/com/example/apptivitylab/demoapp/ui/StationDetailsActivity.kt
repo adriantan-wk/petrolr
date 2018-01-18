@@ -15,18 +15,15 @@ import kotlinx.android.synthetic.main.activity_station_details.*
  */
 
 class StationDetailsActivity : AppCompatActivity() {
-    private lateinit var toolbar : Toolbar
-    private lateinit var container : FrameLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_station_details)
 
-        toolbar = stationDetailsToolbar
-        setSupportActionBar(toolbar)
+        setSupportActionBar(stationDetailsToolbar)
 
-        toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_material)
-        toolbar.setNavigationOnClickListener(View.OnClickListener {
+        stationDetailsToolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_material)
+        stationDetailsToolbar.setNavigationOnClickListener(View.OnClickListener {
             startActivity(Intent(this, StationListActivity::class.java))
         })
 
