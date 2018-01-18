@@ -15,6 +15,7 @@ class Station() : Parcelable{
     var stationName : String? = null
     var stationBrand : String? = null
     var stationLatLng : LatLng? = null
+    var distanceFromUser : Float? = null
 
     constructor(parcel: Parcel) : this() {
         stationID = parcel.readString()

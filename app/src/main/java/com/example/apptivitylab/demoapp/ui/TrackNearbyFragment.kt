@@ -161,7 +161,6 @@ class TrackNearbyFragment : Fragment(), GoogleApiClient.ConnectionCallbacks, Goo
                 } else {
                     val toast = Toast.makeText(context, R.string.location_permissions_denied_string, Toast.LENGTH_SHORT)
                     toast.show()
-                    //TODO If permission is denied
                 }
             } else -> { }
         }
