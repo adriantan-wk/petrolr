@@ -14,10 +14,6 @@ import kotlinx.android.synthetic.main.fragment_register.*
  * Created by ApptivityLab on 11/01/2018.
  */
 class RegisterFragment : Fragment() {
-    private lateinit var username:TextInputEditText
-    private lateinit var password:TextInputEditText
-    private lateinit var confirmPass:TextInputEditText
-    private lateinit var registerBtn:Button
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_register, container,false)
@@ -26,16 +22,14 @@ class RegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        username = registerFragmentUsername
-        password = registerFragmentPass
-        confirmPass = registerFragmentPassConfirm
-        registerBtn = registerFragmentRegisterBtn
-
+        //TODO True registration functionality
         registerBtn.setOnClickListener({
-            activity!!.supportFragmentManager
+            activity?.let {
+                it.supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.titleActivityContainer, LoginFragment())
+                    .replace(R.id.titleContainer, LoginFragment())
                     .commit()
+            }
         })
     }
 }

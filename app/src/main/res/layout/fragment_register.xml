@@ -36,7 +36,7 @@
             android:layout_marginTop="8dp">
 
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/registerFragmentUsername"
+                android:id="@+id/rusernameEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/username_string"/>
@@ -49,7 +49,7 @@
             android:layout_marginTop="8dp">
 
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/registerFragmentPass"
+                android:id="@+id/passwordEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/password_string"
@@ -64,7 +64,7 @@
             app:passwordToggleEnabled="true">
 
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/registerFragmentPassConfirm"
+                android:id="@+id/confirmPassEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/confirm_pass_string"
@@ -73,7 +73,7 @@
         </android.support.design.widget.TextInputLayout>
 
         <Button
-            android:id="@+id/registerFragmentRegisterBtn"
+            android:id="@+id/registerBtn"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"

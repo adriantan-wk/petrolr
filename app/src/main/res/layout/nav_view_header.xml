@@ -9,13 +9,13 @@
     android:background="@color/colorAccent">
 
     <ImageView
-        android:id="@+id/nav_header_image"
+        android:id="@+id/navHeaderImageView"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:src="@drawable/fuellogo"/>
 
     <TextView
-        android:id="@+id/nav_header_username"
+        android:id="@+id/navHeaderUserTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Username"

@@ -1,0 +1,10 @@
+SHE_001321;Station 1;Shell;4.5;103.56
+BP_142212;Station 2;BP;3.2;100.99
+SHE_451222;Station 3;Shell;2.8887;99.98
+PETR_55001;Station 4;Petronas;5.444;101.6
+PETR_66781;Station 5;Petronas;3.1;99.8
+BP_331221;Station 6;BP;4.5;109.655
+PeT_A141;Station 7;Petron;3.33;105.667
+PeT_C771;Station 8;Petron;4.112;101.899
+SHE_008133;Station 9;Shell;2.981;102.313
+SHE_118992;Station 10;Shell;3.455;107.332

@@ -17,14 +17,6 @@ import kotlinx.android.synthetic.main.fragment_login.*
  */
 
 class LoginFragment : Fragment() {
-    private lateinit var username:TextInputEditText
-    private lateinit var password:TextInputEditText
-    private lateinit var loginBtn:Button
-    private lateinit var registerBtn:Button
-    private lateinit var forgotPass:TextView
-
-    //searchActivityToolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_material)
-    //Where searchActivityToolbar is a toolbar set as the supportactionbar
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_login, container,false)
@@ -33,20 +25,17 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        username = loginFragmentUsername
-        password = loginFragmentPassword
-        loginBtn = loginFragmentLoginBtn
-        registerBtn = loginFragmentRegisterBtn
-        forgotPass = loginFragmentForgotPass
-
         registerBtn.setOnClickListener {
-            activity!!.supportFragmentManager
+            activity?.let {
+                it.supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.titleActivityContainer, RegisterFragment())
+                    .replace(R.id.titleContainer, RegisterFragment())
                     .addToBackStack("Login to Register")
                     .commit()
+            }
         }
 
+        //TODO True login verification functionality
         loginBtn.setOnClickListener {
             val randomIntent = Intent(context, HomeActivity::class.java)
 

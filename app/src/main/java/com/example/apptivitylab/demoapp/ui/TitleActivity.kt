@@ -12,7 +12,7 @@ class TitleActivity : AppCompatActivity() {
 
         supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.titleActivityContainer, LoginFragment())
+                .replace(R.id.titleContainer, LoginFragment())
                 .commit()
     }
 }
