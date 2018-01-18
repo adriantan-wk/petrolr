@@ -40,7 +40,7 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
     override fun onStationSelected(station: Station) {
 
         val itemDetailsIntent = Intent(context, StationDetailsActivity::class.java)
-        itemDetailsIntent.putExtra("Selected Station", station)
+        itemDetailsIntent.putExtra(getString(R.string.station_item_intent_string), station)
 
         startActivity(itemDetailsIntent)
     }

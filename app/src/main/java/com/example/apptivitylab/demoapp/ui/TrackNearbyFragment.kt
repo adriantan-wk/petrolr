@@ -68,7 +68,7 @@ class TrackNearbyFragment : Fragment(), GoogleApiClient.ConnectionCallbacks, Goo
 
         recenterFAB.setOnClickListener {
             if (userLatLng == null) {
-                Toast.makeText(context, "That feature is currently unavailable", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, R.string.feature_unavailable_string, Toast.LENGTH_SHORT).show()
             } else {
                 val cameraUpdate = CameraUpdateFactory.newLatLngZoom(userLatLng, 15f)
 
@@ -76,7 +76,7 @@ class TrackNearbyFragment : Fragment(), GoogleApiClient.ConnectionCallbacks, Goo
                     it.moveCamera(cameraUpdate)
                 }
 
-                Toast.makeText(context, "Map re-centered to user position", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, R.string.recenter_msg_text, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -133,7 +133,7 @@ class TrackNearbyFragment : Fragment(), GoogleApiClient.ConnectionCallbacks, Goo
 
         } else {
             view?.let {
-                Snackbar.make(it, "Google Api Client is not yet ready", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(it, R.string.googleapi_unavailable_string, Snackbar.LENGTH_SHORT).show()
             }
         }
     }
@@ -142,11 +142,11 @@ class TrackNearbyFragment : Fragment(), GoogleApiClient.ConnectionCallbacks, Goo
         when (requestCode) {
             ACCESS_FINE_LOCATION_PERMISSIONS -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    val toast = Toast.makeText(context,"Location Permissions Granted", Toast.LENGTH_SHORT)
+                    val toast = Toast.makeText(context,R.string.location_permissions_granted_string, Toast.LENGTH_SHORT)
                     toast.show()
                     startLocationUpdates()
                 } else {
-                    val toast = Toast.makeText(context,"Location Permissions Denied", Toast.LENGTH_SHORT)
+                    val toast = Toast.makeText(context, R.string.location_permissions_denied_string, Toast.LENGTH_SHORT)
                     toast.show()
                     //TODO If permission is denied
                 }
@@ -164,7 +164,7 @@ class TrackNearbyFragment : Fragment(), GoogleApiClient.ConnectionCallbacks, Goo
 
     override fun onConnectionFailed(p0: ConnectionResult) {
         view?.let {
-            Snackbar.make(it, "GoogleApiClient Connection Failed", Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(it, R.string.gooelapi_failed_connection_string, Snackbar.LENGTH_SHORT).show()
         }
     }
 
@@ -173,15 +173,15 @@ class TrackNearbyFragment : Fragment(), GoogleApiClient.ConnectionCallbacks, Goo
         location?.let {
             //The use of these textviews to display coordinates is temporary
             //TODO Change to distance, time and price when information is available
-            distanceTextView.text = "Latitude: " + it.latitude.toString()
-            timeTextView.text = "Longitude: " + it.longitude.toString()
-            priceTextView.text = "Accuracy: " + it.accuracy.toString()
+            distanceTextView.text = getString(R.string.latitude_string) + ": " + it.latitude.toString()
+            timeTextView.text = getString(R.string.longitude_string) + ": "+ it.longitude.toString()
+            priceTextView.text = getString(R.string.accuracy_string) + ": "+ it.accuracy.toString()
 
             userLatLng = LatLng(it.latitude, it.longitude)
 
                 if (locationMarker == null) {
                     userLatLng?.let {
-                        val markerOptions = MarkerOptions().position(it).title("You are here")
+                        val markerOptions = MarkerOptions().position(it).title(getString(R.string.user_marker_string))
 
                         googleMap?.let {
                             locationMarker = it.addMarker(markerOptions)

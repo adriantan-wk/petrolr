@@ -27,7 +27,7 @@ class LoginFragment : Fragment() {
                 it.supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.titleContainer, RegisterFragment())
-                    .addToBackStack("Login to Register")
+                    .addToBackStack(LoginFragment::class.java.simpleName)
                     .commit()
             }
         }

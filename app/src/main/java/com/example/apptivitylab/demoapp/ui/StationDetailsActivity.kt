@@ -27,7 +27,7 @@ class StationDetailsActivity : AppCompatActivity() {
             startActivity(Intent(this, StationListActivity::class.java))
         })
 
-        val item = intent.getParcelableExtra<Station>("Selected Station")
+        val item = intent.getParcelableExtra<Station>(getString(R.string.station_item_intent_string))
         supportActionBar?.title = item.stationName
 
         supportFragmentManager

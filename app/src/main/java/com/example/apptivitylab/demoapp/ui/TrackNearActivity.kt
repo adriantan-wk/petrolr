@@ -51,21 +51,21 @@ class TrackNearActivity : AppCompatActivity() {
                 R.id.nav_logout -> {
                     AlertDialog.Builder(this)
                             .setIcon(R.drawable.logout)
-                            .setTitle("Log Out")
-                            .setMessage("Are you sure you want to log out?")
-                            .setPositiveButton("Yes",
+                            .setTitle(R.string.logout_dialog_title_string)
+                            .setMessage(R.string.logout_confirm_msg_string)
+                            .setPositiveButton(R.string.yes_string,
                                     { dialog, which ->
                                         val logOutIntent = Intent(this, TitleActivity::class.java)
                                         startActivity(logOutIntent)
                                     })
-                            .setNegativeButton("No", null)
+                            .setNegativeButton(R.string.no_string, null)
                             .show()
 
                     true
                 }
 
                 else -> {
-                    val toast = Toast.makeText(this, "Sorry, this isn't available yet", Toast.LENGTH_SHORT)
+                    val toast = Toast.makeText(this, R.string.feature_unavailable_string, Toast.LENGTH_SHORT)
                     toast.show()
 
                     false
