@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+<!--Note: The strings in this file are hard coded for now as they are temporary-->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/petrol_type_string"
+        style="@style/HeaderText"/>
+
+    <LinearLayout
+        android:id="@+id/petrolTypesLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp">
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:id="@+id/EURO95RadioBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="EURO5 DIESEL"
+                android:textSize="15sp"/>
+
+            <RadioButton
+                android:id="@+id/RON95RadioBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="RON95"
+                android:textSize="15sp"/>
+
+            <RadioButton
+                android:id="@+id/RON97RadioBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="RON97"
+                android:textSize="15sp"/>
+
+        </RadioGroup>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/selectedPetrolTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/selected_petrol_string"
+        android:layout_marginTop="8dp"
+        style="@style/DescriptionText"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/stations_string"
+        style="@style/HeaderText"
+        android:layout_marginTop="32dp"/>
+
+    <LinearLayout
+        android:id="@+id/stationsLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="8dp">
+
+        <CheckBox
+            android:id="@+id/shellCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SHELL"
+            android:textSize="18dp" />
+
+        <CheckBox
+            android:id="@+id/petronCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PETRON"
+            android:textSize="18dp" />
+
+        <CheckBox
+            android:id="@+id/bpCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BP"
+            android:textSize="18dp" />
+
+        <CheckBox
+            android:id="@+id/petronasCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PETRONAS"
+            android:textSize="18dp" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/saveBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/save_string"
+        android:layout_marginTop="32dp"/>
+
+</LinearLayout>

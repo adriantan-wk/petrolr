@@ -10,12 +10,12 @@ import org.json.JSONObject
  */
 
 class Station() : Parcelable{
-    //private val stationPetrolTypes : Array<String>
     var stationID : String? = null
     var stationName : String? = null
     var stationBrand : String? = null
     var stationLatLng : LatLng? = null
     var distanceFromUser : Float? = null
+    var stationPetrolTypes : ArrayList<Petrol> = ArrayList()
 
     constructor(parcel: Parcel) : this() {
         stationID = parcel.readString()

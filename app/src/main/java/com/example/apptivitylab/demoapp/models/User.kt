@@ -7,10 +7,14 @@ import org.json.JSONObject
  */
 
 class User {
-    val username : String
-    val password : String
+    var userID : String? = null
+    var username : String? = null
+    var password : String? = null
+    var prefPetrol : Petrol? = null
+    var prefBrands : ArrayList<Brand> = ArrayList()
 
     constructor(jsonObject: JSONObject) {
+        userID = jsonObject.optString("userID")
         username = jsonObject.optString("Username")
         password = jsonObject.optString("Password")
     }
