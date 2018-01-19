@@ -26,6 +26,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.synthetic.main.fragment_station_list.*
+import java.util.ArrayList
 
 /**
  * Created by ApptivityLab on 15/01/2018.
@@ -61,7 +62,7 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
         stationsAdapter.setStationListener(this)
         stationListRecyclerView.adapter = stationsAdapter
 
-        stationsAdapter.updateDataSet(MockDataLoader.loadStations(context!!), false, null)
+        stationsAdapter.updateDataSet(MockDataLoader.loadStations(context!!), false)
     }
 
     override fun onStationSelected(station: Station) {
@@ -116,7 +117,10 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
             this.userLatLng = LatLng(it.latitude, it.longitude)
         }
 
-        stationsAdapter.updateDataSet(MockDataLoader.loadStations(context!!), true, userLatLng)
+        val stations = MockDataLoader.loadStations(context!!)
+
+        setDistanceFromUser(stations, userLatLng)
+        stationsAdapter.updateDataSet(stations, true)
         Toast.makeText(context, R.string.location_updated_string, Toast.LENGTH_SHORT).show()
     }
 
@@ -141,5 +145,26 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
 
     override fun onConnectionFailed(p0: ConnectionResult) {
         Toast.makeText(context, R.string.gooelapi_failed_connection_string, Toast.LENGTH_LONG).show()
+    }
+
+    private fun setDistanceFromUser(stations: ArrayList<Station>, userLatLng: LatLng?) {
+
+        userLatLng?.let {
+            val userLocation = Location(getString(R.string.current_location_string))
+            userLocation.latitude = it.latitude
+            userLocation.longitude = it.longitude
+
+            for (station in stations) {
+                val stationLocation = Location(getString(R.string.destination_string))
+
+                station.stationLatLng?.apply {
+                    stationLocation.latitude = this.latitude
+                    stationLocation.longitude = this.longitude
+                }
+
+                val distance = userLocation.distanceTo(stationLocation) / 1000
+                station.distanceFromUser = distance
+            }
+        }
     }
 }

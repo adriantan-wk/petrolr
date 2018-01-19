@@ -28,4 +28,8 @@
     <string name="longitude_string">Longitude</string>
     <string name="accuracy_string">Accuracy</string>
     <string name="location_updated_string">Location Updated</string>
+    <string name="unavailable_string">Unavailable</string>
+    <string name="distance_km_away_string">KM AWAY</string>
+    <string name="current_location_string">Current Location</string>
+    <string name="destination_string">Destination</string>
 </resources>

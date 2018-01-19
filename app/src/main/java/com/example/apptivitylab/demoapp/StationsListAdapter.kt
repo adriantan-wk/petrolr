@@ -1,5 +1,6 @@
 package com.example.apptivitylab.demoapp
 
+import android.content.Context
 import android.content.res.Resources
 import android.location.Location
 import android.support.v7.widget.RecyclerView
@@ -35,22 +36,21 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val stationViewHolder: StationViewHolder = holder as StationViewHolder
         val station: Station = listOfStations[position]
 
-        stationViewHolder.setStation(station)
+        stationViewHolder.updateViewHolder(station)
     }
 
     override fun getItemCount(): Int {
         return listOfStations.size
     }
 
-    fun updateDataSet(stations: ArrayList<Station>, arrangeByDistance: Boolean, userLatLng: LatLng?) {
+    fun updateDataSet(stations: ArrayList<Station>, arrangeStationsByDistance: Boolean) {
         this.listOfStations.clear()
 
-        if (arrangeByDistance && userLatLng != null) {
-            setDistanceFromUser(stations, userLatLng)
-            this.listOfStations = arrangeStationsByDistance(stations)
+        this.listOfStations = if (arrangeStationsByDistance) {
+            arrangeStationsByDistance(stations)
+        } else {
+            stations
         }
-        else
-            this.listOfStations = stations
 
         this.notifyDataSetChanged()
     }
@@ -74,45 +74,19 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             })
         }
 
-        fun setStation(station: Station) {
+        fun updateViewHolder(station: Station) {
             this.station = station
 
-            updateViewHolder()
-        }
+            stationName.text = station.stationName
+            stationBrand.text = station.stationBrand
 
-        private fun updateViewHolder() {
-            stationName.text = station?.stationName
-            stationBrand.text = station?.stationBrand
-            station?.let {
-                stationDistance.text = if (it.distanceFromUser == null) {
-                    "Unavailable" //How do you use a string resource outside of an activity?
+            stationDistance.text = if (station.distanceFromUser != null) {
+                    "%.2f".format(station.distanceFromUser)
                 } else {
-                    "%.2f".format(it.distanceFromUser)
+                    itemView.context.getString(R.string.unavailable_string)
                 }
             }
         }
-    }
-
-    private fun setDistanceFromUser(stations: ArrayList<Station>, userLatLng: LatLng?) {
-
-        userLatLng?.let {
-            val userLocation = Location("Current Location")
-            userLocation.latitude = it.latitude
-            userLocation.longitude = it.longitude
-
-            for (station in stations) {
-                val stationLocation = Location("Destination")
-
-                station.stationLatLng?.apply {
-                    stationLocation.latitude = this.latitude
-                    stationLocation.longitude = this.longitude
-                }
-
-                val distance = userLocation.distanceTo(stationLocation) / 1000
-                station.distanceFromUser = distance
-            }
-        }
-    }
 
     private fun arrangeStationsByDistance(stations: ArrayList<Station>) : ArrayList<Station> {
         Collections.sort(stations) { o1, o2 ->
@@ -128,4 +102,5 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         return stations
     }
 }
+
 
