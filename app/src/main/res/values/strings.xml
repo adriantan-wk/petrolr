@@ -32,5 +32,5 @@
     <string name="distance_km_away_string">KM AWAY</string>
     <string name="current_location_string">Current Location</string>
     <string name="destination_string">Destination</string>
-    <string name="generating_markers_string">Generating Markers...</string>
+    <string name="generating_markers_string">Generating Markers…</string>
 </resources>
