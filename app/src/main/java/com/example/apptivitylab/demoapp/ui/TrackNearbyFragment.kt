@@ -65,7 +65,7 @@ class TrackNearbyFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         context?.let {
-            listOfStations = MockDataLoader.loadStations(it)
+            listOfStations = MockDataLoader.loadJSONStations(it)
         }
 
         recenterFAB.setOnClickListener {
@@ -159,7 +159,6 @@ class TrackNearbyFragment : Fragment() {
     private fun onLocationChanged(location: Location?) {
 
         location?.let {
-            //The use of these textviews to display coordinates is temporary
             //TODO Change to distance, time and price when information is available
             if (isAdded) {
                 distanceTextView.text = String.format(getString(R.string.latitude_string), it.latitude.toString())

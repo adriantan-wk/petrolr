@@ -2,7 +2,8 @@ package com.example.apptivitylab.demoapp
 
 import android.content.Context
 import com.example.apptivitylab.demoapp.models.Station
-import com.google.android.gms.maps.model.LatLng
+import org.json.JSONArray
+import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
@@ -15,25 +16,22 @@ class MockDataLoader {
 //TODO Delete this class when actual data is available
 
     companion object {
-        fun loadStations (context: Context) : ArrayList<Station> {
-            val listOfStations: ArrayList<Station> = ArrayList()
-
+        fun loadJSONStations (context: Context) : ArrayList<Station> {
+            val stationList : ArrayList<Station> = ArrayList()
             val inputStream : InputStream = context.resources.openRawResource(R.raw.stations)
             val reader : BufferedReader = BufferedReader(InputStreamReader(inputStream))
+            var jsonObject : JSONObject
+            var station : Station
 
-            reader.forEachLine {
-                val tokens : List<String> = it.split(";")
+            val fileContent = reader.readText()
+            jsonObject = JSONObject(fileContent.substring(fileContent.indexOf("{"), fileContent.lastIndexOf("}") + 1))
+            val jsonArray : JSONArray = jsonObject.optJSONArray("stations")
 
-                val stationID = tokens[0]
-                val stationName = tokens[1]
-                val stationBrand = tokens[2]
-                val stationLatLng = LatLng(tokens[3].toDouble(), tokens[4].toDouble())
-
-                val station : Station = Station(stationID, stationName, stationBrand, stationLatLng)
-                listOfStations.add(station)
+            for (s in 0 until jsonArray.length()) {
+                station = Station(jsonArray.getJSONObject(s))
+                stationList.add(station)
             }
-
-            return listOfStations
+            return stationList
         }
     }
 

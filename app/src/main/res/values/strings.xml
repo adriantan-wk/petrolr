@@ -33,4 +33,9 @@
     <string name="current_location_string">Current Location</string>
     <string name="destination_string">Destination</string>
     <string name="generating_markers_string">Generating Markers…</string>
+    <string name="petrol_type_string">Petrol Type</string>
+    <string name="stations_string">Stations</string>
+    <string name="selected_petrol_string">Selected Petrol:</string>
+    <string name="save_string">SAVE</string>
+    <string name="change_preferences_title_string">Change Preferences</string>
 </resources>

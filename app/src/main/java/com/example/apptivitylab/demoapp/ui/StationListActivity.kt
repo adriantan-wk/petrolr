@@ -57,6 +57,13 @@ class StationListActivity : AppCompatActivity(), NavigationView.OnNavigationItem
                 true
             }
 
+            R.id.nav_preferences -> {
+                val preferencesIntent = Intent(this, ChangePreferencesActivity::class.java)
+                startActivity(preferencesIntent)
+
+                true
+            }
+
             R.id.nav_logout -> {
                 AlertDialog.Builder(this)
                         .setIcon(R.drawable.logout)
