@@ -2,11 +2,12 @@ package com.example.apptivitylab.demoapp.ui
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.location.Location
 import android.os.Bundle
-import android.support.design.widget.Snackbar
+import android.os.Looper
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -16,11 +17,7 @@ import android.widget.Toast
 import com.example.apptivitylab.demoapp.MockDataLoader
 import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.models.Station
-import com.google.android.gms.common.api.GoogleApiClient
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.location.LocationListener
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
@@ -34,23 +31,25 @@ import kotlinx.android.synthetic.main.fragment_track_nearby.*
  * Created by ApptivityLab on 12/01/2018.
  */
 
-class TrackNearbyFragment : Fragment(), GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
-    , LocationListener {
+class TrackNearbyFragment : Fragment() {
 
     companion object {
         val ACCESS_FINE_LOCATION_PERMISSIONS = 100
     }
 
-    private var googleApiClient : GoogleApiClient? = null
     private var mapFragment : SupportMapFragment? = null
     private var googleMap : GoogleMap? = null
 
+    private var fusedLocationClient : FusedLocationProviderClient? = null
+    private var locationCallBack : LocationCallback? = null
+
     private var userLocationMarker: Marker? = null
+    private var stationMarkersExist : Boolean = false
     private var userLatLng : LatLng? = null
 
     private var listOfStations : ArrayList<Station> = ArrayList()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?{
 
         if (savedInstanceState == null) {
             setupGoogleMapFragment()
@@ -69,14 +68,6 @@ class TrackNearbyFragment : Fragment(), GoogleApiClient.ConnectionCallbacks, Goo
             listOfStations = MockDataLoader.loadStations(it)
         }
 
-        if (googleApiClient == null) {
-            context?.let {
-                googleApiClient = GoogleApiClient.Builder(it, this, this)
-                        .addApi(LocationServices.API)
-                        .build()
-            }
-        }
-
         recenterFAB.setOnClickListener {
             if (userLatLng == null) {
                 Toast.makeText(context, R.string.feature_unavailable_string, Toast.LENGTH_SHORT).show()
@@ -90,17 +81,9 @@ class TrackNearbyFragment : Fragment(), GoogleApiClient.ConnectionCallbacks, Goo
                 Toast.makeText(context, R.string.recenter_msg_text, Toast.LENGTH_SHORT).show()
             }
         }
-    }
 
-    override fun onStart() {
-        super.onStart()
-        googleApiClient?.connect()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this)
-        googleApiClient?.disconnect()
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(context!!)
+        startLocationUpdates()
     }
 
     private fun setupGoogleMapFragment() {
@@ -126,30 +109,37 @@ class TrackNearbyFragment : Fragment(), GoogleApiClient.ConnectionCallbacks, Goo
     }
 
     private fun startLocationUpdates() {
-        if (googleApiClient?.isConnected == true) {
 
-            this.context?.let {
-                if (ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
+        this.context?.let {
+            if (ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                         ACCESS_FINE_LOCATION_PERMISSIONS)
-                }
             }
+        }
 
-            var request = LocationRequest()
-            request.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-            request.interval = 3000
+        var request = LocationRequest()
+        request.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        request.interval = 5000
+        request.fastestInterval = 3000
 
-            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, request, this)
+        createLocationCallBack()
 
-            generateStationMarkers()
+        fusedLocationClient?.requestLocationUpdates(request, locationCallBack, Looper.myLooper())
+    }
 
-        } else {
-            view?.let {
-                Snackbar.make(it, R.string.googleapi_unavailable_string, Snackbar.LENGTH_SHORT).show()
+    private fun createLocationCallBack() {
+        locationCallBack = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult?) {
+                super.onLocationResult(locationResult)
+
+                locationResult?.let {
+                    onLocationChanged(it.lastLocation)
+                }
             }
         }
     }
+
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when (requestCode) {
@@ -161,34 +151,21 @@ class TrackNearbyFragment : Fragment(), GoogleApiClient.ConnectionCallbacks, Goo
                 } else {
                     val toast = Toast.makeText(context, R.string.location_permissions_denied_string, Toast.LENGTH_SHORT)
                     toast.show()
-                    //TODO If permission is denied
                 }
             } else -> { }
         }
     }
 
-    override fun onConnected(p0: Bundle?) {
-        startLocationUpdates()
-    }
-
-    override fun onConnectionSuspended(p0: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onConnectionFailed(p0: ConnectionResult) {
-        view?.let {
-            Snackbar.make(it, R.string.gooelapi_failed_connection_string, Snackbar.LENGTH_SHORT).show()
-        }
-    }
-
-    override fun onLocationChanged(location: Location?) {
+    private fun onLocationChanged(location: Location?) {
 
         location?.let {
             //The use of these textviews to display coordinates is temporary
             //TODO Change to distance, time and price when information is available
-            distanceTextView.text = getString(R.string.latitude_string) + ": " + it.latitude.toString()
-            timeTextView.text = getString(R.string.longitude_string) + ": "+ it.longitude.toString()
-            priceTextView.text = getString(R.string.accuracy_string) + ": "+ it.accuracy.toString()
+            if (isAdded) {
+                distanceTextView.text = String.format(getString(R.string.latitude_string), it.latitude.toString())
+                timeTextView.text = String.format(getString(R.string.longitude_string), it.longitude.toString())
+                priceTextView.text = String.format(getString(R.string.accuracy_string), it.accuracy.toString())
+            }
 
             userLatLng = LatLng(it.latitude, it.longitude)
 
@@ -205,14 +182,19 @@ class TrackNearbyFragment : Fragment(), GoogleApiClient.ConnectionCallbacks, Goo
                         it.position = userLatLng
                     }
                 }
+            }
+
+            if (!stationMarkersExist) {
+                Toast.makeText(context!!, getString(R.string.generating_markers_string), Toast.LENGTH_SHORT).show()
+                generateStationMarkers()
+            }
         }
-    }
+
 
     private fun generateStationMarkers() {
         for (station in listOfStations) {
             station.stationLatLng?.apply {
-                val stationLatLng = LatLng(this.latitude, this.longitude)
-
+                val stationLatLng = LatLng(latitude, longitude)
                 val bitmapImg: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.gasstation_marker)
                 val resizedBitmapImg = Bitmap.createScaledBitmap(bitmapImg, 100, 100, false)
 
@@ -221,9 +203,16 @@ class TrackNearbyFragment : Fragment(), GoogleApiClient.ConnectionCallbacks, Goo
 
                 googleMap?.let {
                     it.addMarker(stationMarkerOptions)
+                    stationMarkersExist = true
                 }
             }
 
         }
     }
+
+    override fun onStop() {
+        fusedLocationClient?.removeLocationUpdates(locationCallBack)
+        super.onStop()
+    }
+
 }
