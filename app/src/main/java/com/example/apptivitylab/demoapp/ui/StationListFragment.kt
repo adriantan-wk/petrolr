@@ -47,7 +47,7 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
 
         stationsAdapter.setStationListener(this)
         stationListRecyclerView.adapter = stationsAdapter
-        stationsAdapter.updateDataSet(MockDataLoader.loadJSONStations(context!!))
+        stationsAdapter.updateDataSet(MockDataLoader.loadJSONStations(context!!), false)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(context!!)
         startLocationUpdates()
@@ -115,7 +115,7 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
             this.userLatLng = LatLng(it.latitude, it.longitude)
         }
 
-        val stations = MockDataLoader.loadStations(context!!)
+        val stations = MockDataLoader.loadJSONStations(context!!)
 
         setDistanceFromUser(stations, userLatLng)
         stationsAdapter.updateDataSet(stations, true)
