@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.os.Looper
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,6 +49,7 @@ class TrackNearbyFragment : Fragment() {
     private var userLatLng : LatLng? = null
 
     private var listOfStations : ArrayList<Station> = ArrayList()
+    private var nearestStation : Station? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?{
 
@@ -159,12 +161,11 @@ class TrackNearbyFragment : Fragment() {
     private fun onLocationChanged(location: Location?) {
 
         location?.let {
-            //TODO Change to distance, time and price when information is available
-            if (isAdded) {
-                distanceTextView.text = String.format(getString(R.string.latitude_string), it.latitude.toString())
-                timeTextView.text = String.format(getString(R.string.longitude_string), it.longitude.toString())
-                priceTextView.text = String.format(getString(R.string.accuracy_string), it.accuracy.toString())
-            }
+//            if (isAdded) {
+//                distanceTextView.text = String.format(getString(R.string.latitude_string), it.latitude.toString())
+//                timeTextView.text = String.format(getString(R.string.longitude_string), it.longitude.toString())
+//                priceTextView.text = String.format(getString(R.string.accuracy_string), it.accuracy.toString())
+//            }
 
             userLatLng = LatLng(it.latitude, it.longitude)
 
@@ -183,11 +184,36 @@ class TrackNearbyFragment : Fragment() {
                 }
             }
 
+            findNearestStation()
+
             if (!stationMarkersExist) {
                 Toast.makeText(context!!, getString(R.string.generating_markers_string), Toast.LENGTH_SHORT).show()
                 generateStationMarkers()
             }
         }
+
+    private fun findNearestStation() {
+        if (nearestStation == null) {
+            listOfStations[0].distanceFromUser = calculateStationDistance(listOfStations[0])
+            nearestStation = listOfStations[0]
+
+            updateNearestStationViews(false)
+        } else {
+
+            listOfStations.forEach { station->
+                var distanceFromUser = calculateStationDistance(station)
+                station.distanceFromUser = distanceFromUser
+
+                nearestStation?.distanceFromUser?.let {
+                    if (distanceFromUser < it)
+                    {
+                        nearestStation = station
+                    }
+                }
+            }
+            updateNearestStationViews(true)
+        }
+    }
 
 
     private fun generateStationMarkers() {
@@ -207,6 +233,40 @@ class TrackNearbyFragment : Fragment() {
             }
 
         }
+    }
+
+    private fun updateNearestStationViews(nearestStationFound : Boolean) {
+        if (nearestStationFound) {
+            if (isAdded) {
+                nearestStation?.let {
+                    nameTextView.text = it.stationName
+                    addressTextView.text = it.stationAddress
+                    distanceTextView.text = "%.2f".format(it.distanceFromUser) +
+                        " " + getString(R.string.distance_km_away_string)
+                }
+            }
+        } else {
+            nameTextView.text = getString(R.string.searching_string)
+            addressTextView.text = ""
+            distanceTextView.text = ""
+        }
+    }
+
+    private fun calculateStationDistance(station : Station) : Float {
+        var userLocation = Location(getString((R.string.current_location_string)))
+        var stationLocation = Location(getString(R.string.destination_string))
+
+        userLatLng?.let {
+            userLocation.latitude = it.latitude
+            userLocation.longitude = it.longitude
+        }
+
+        station.stationLatLng?.let {
+            stationLocation.latitude = it.latitude
+            stationLocation.longitude = it.longitude
+        }
+
+        return userLocation.distanceTo(stationLocation) / 1000
     }
 
     override fun onStop() {

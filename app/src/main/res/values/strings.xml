@@ -38,4 +38,7 @@
     <string name="selected_petrol_string">Selected Petrol:</string>
     <string name="save_string">SAVE</string>
     <string name="change_preferences_title_string">Change Preferences</string>
+    <string name="nearest_station_string">Nearest Station:</string>
+    <string name="address_string">Address</string>
+    <string name="searching_string">Searching…</string>
 </resources>
