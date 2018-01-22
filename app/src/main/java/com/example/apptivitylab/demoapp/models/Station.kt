@@ -13,6 +13,7 @@ class Station() : Parcelable{
     var stationID : String? = null
     var stationName : String? = null
     var stationBrand : String? = null
+    var stationAddress : String? = null
     var stationLatLng : LatLng? = null
     var distanceFromUser : Float? = null
     var stationPetrolTypes : ArrayList<Petrol> = ArrayList()
@@ -21,22 +22,25 @@ class Station() : Parcelable{
         stationID = parcel.readString()
         stationName = parcel.readString()
         stationBrand = parcel.readString()
+        stationAddress = parcel.readString()
         stationLatLng = parcel.readParcelable(LatLng::class.java.classLoader)
     }
 
-    constructor(stationID : String, stationName : String, stationBrand : String, stationLatLng : LatLng) : this() {
+    constructor(stationID : String, stationName : String, stationBrand : String, stationAddress : String, stationLatLng : LatLng) : this() {
         this.stationID = stationID
         this.stationName = stationName
         this.stationBrand = stationBrand
+        this.stationAddress = stationAddress
         this.stationLatLng = stationLatLng
     }
 
     constructor(jsonObject: JSONObject) : this()
     {
-        stationID = jsonObject.optString("ID:")
-        stationName = jsonObject.optString("Name:")
-        stationBrand = jsonObject.optString("Brand")
-        stationLatLng = LatLng(jsonObject.optDouble("Latitude"), jsonObject.optDouble("Longitude"))
+        stationID = jsonObject.optString("station_id")
+        stationName = jsonObject.optString("station_name")
+        stationBrand = jsonObject.optString("station_brand")
+        stationAddress = jsonObject.optString("station_address")
+        stationLatLng = LatLng(jsonObject.optDouble("station_latitude"), jsonObject.optDouble("station_longitude"))
         //stationPetrolTypes = jsonObject.opt("Petrol")
     }
 
@@ -44,6 +48,7 @@ class Station() : Parcelable{
         parcel.writeString(stationID)
         parcel.writeString(stationName)
         parcel.writeString(stationBrand)
+        parcel.writeString(stationAddress)
         parcel.writeParcelable(stationLatLng, flags)
     }
 

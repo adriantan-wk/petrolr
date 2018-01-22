@@ -65,7 +65,7 @@ class TrackNearbyFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         context?.let {
-            listOfStations = MockDataLoader.loadStations(it)
+            listOfStations = MockDataLoader.loadJSONStations(it)
         }
 
         recenterFAB.setOnClickListener {

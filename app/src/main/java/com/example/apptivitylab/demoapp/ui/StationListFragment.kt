@@ -47,8 +47,7 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
 
         stationsAdapter.setStationListener(this)
         stationListRecyclerView.adapter = stationsAdapter
-
-        stationsAdapter.updateDataSet(MockDataLoader.loadStations(context!!), false)
+        stationsAdapter.updateDataSet(MockDataLoader.loadJSONStations(context!!))
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(context!!)
         startLocationUpdates()
