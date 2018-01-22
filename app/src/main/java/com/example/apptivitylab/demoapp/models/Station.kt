@@ -41,7 +41,6 @@ class Station() : Parcelable{
         stationBrand = jsonObject.optString("station_brand")
         stationAddress = jsonObject.optString("station_address")
         stationLatLng = LatLng(jsonObject.optDouble("station_latitude"), jsonObject.optDouble("station_longitude"))
-        //stationPetrolTypes = jsonObject.opt("Petrol")
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
