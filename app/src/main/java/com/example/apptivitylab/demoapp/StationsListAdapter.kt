@@ -89,6 +89,7 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
 
     private fun arrangeStationsByDistance(stations: ArrayList<Station>) : ArrayList<Station> {
+
         Collections.sort(stations) { o1, o2 ->
             val distance1 = o1.distanceFromUser
             val distance2 = o2.distanceFromUser

@@ -28,9 +28,9 @@ import java.util.ArrayList
 
 class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.onSelectStationListener {
 
-    private var fusedLocationClient : FusedLocationProviderClient? = null
-    private var locationCallBack : LocationCallback? = null
-    private var userLatLng : LatLng? = null
+    private var fusedLocationClient: FusedLocationProviderClient? = null
+    private var locationCallBack: LocationCallback? = null
+    private var userLatLng: LatLng? = null
 
     private val stationsAdapter = StationsListAdapter()
 
@@ -72,7 +72,7 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
             }
         }
 
-        var request = LocationRequest()
+        val request = LocationRequest()
         request.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         request.interval = 15000
         request.fastestInterval = 10000
@@ -98,14 +98,16 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
         when (requestCode) {
             TrackNearbyFragment.ACCESS_FINE_LOCATION_PERMISSIONS -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    val toast = Toast.makeText(context,R.string.location_permissions_granted_string, Toast.LENGTH_SHORT)
+                    val toast = Toast.makeText(context, R.string.location_permissions_granted_string, Toast.LENGTH_SHORT)
                     toast.show()
                     startLocationUpdates()
                 } else {
                     val toast = Toast.makeText(context, R.string.location_permissions_denied_string, Toast.LENGTH_SHORT)
                     toast.show()
                 }
-            } else -> { }
+            }
+            else -> {
+            }
         }
     }
 

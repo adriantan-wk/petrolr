@@ -2,6 +2,7 @@ package com.example.apptivitylab.demoapp.ui
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.location.Location
@@ -161,9 +162,9 @@ class TrackNearbyFragment : Fragment() {
             //The use of these textviews to display coordinates is temporary
             //TODO Change to distance, time and price when information is available
             if (isAdded) {
-                distanceTextView.text = getString(R.string.latitude_string) + ": " + it.latitude.toString()
-                timeTextView.text = getString(R.string.longitude_string) + ": " + it.longitude.toString()
-                priceTextView.text = getString(R.string.accuracy_string) + ": " + it.accuracy.toString()
+                distanceTextView.text = String.format(getString(R.string.latitude_string), it.latitude.toString())
+                timeTextView.text = String.format(getString(R.string.longitude_string), it.longitude.toString())
+                priceTextView.text = String.format(getString(R.string.accuracy_string), it.accuracy.toString())
             }
 
             userLatLng = LatLng(it.latitude, it.longitude)
