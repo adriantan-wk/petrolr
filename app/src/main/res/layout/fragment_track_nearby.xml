@@ -26,10 +26,12 @@
     </FrameLayout>
 
     <LinearLayout
+        android:id="@+id/nearestStationLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorAccent"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:clickable="true">
 
         <ImageView
             android:id="@+id/stationImageView"
@@ -44,30 +46,28 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/nameTextView"
-                style="@style/HeaderText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/stationImageView"
-                android:text="Test"/>
+                android:text="@string/nearest_station_string" />
+
+            <TextView
+                android:id="@+id/nameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/addressTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/distanceTextView"/>
 
             <TextView
                 android:id="@+id/distanceTextView"
-                style="@style/DescriptionText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/nameTextView"
-                android:layout_toRightOf="@id/stationImageView"
-                android:text="@string/distance_string"/>
-
-            <TextView
-                android:id="@+id/timeTextView"
-                style="@style/DescriptionText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/distanceTextView"
-                android:layout_toRightOf="@id/stationImageView"
-                android:text="@string/time_required_string"/>
+                android:layout_below="@id/nameTextView"/>
 
         </LinearLayout>
 
