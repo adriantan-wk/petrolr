@@ -1,6 +1,7 @@
 package com.example.apptivitylab.demoapp.ui
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Bitmap
@@ -49,6 +50,7 @@ class TrackNearbyFragment : Fragment() {
     private var userLatLng : LatLng? = null
 
     private var listOfStations : ArrayList<Station> = ArrayList()
+    private var mapOfStationMarkers : HashMap<String, Marker> = HashMap()
     private var nearestStation : Station? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?{
@@ -105,6 +107,7 @@ class TrackNearbyFragment : Fragment() {
 
             this.googleMap?.let {
                 it.moveCamera(cameraUpdate)
+                it.uiSettings.isCompassEnabled = false
                 }
             }
         }
@@ -161,11 +164,6 @@ class TrackNearbyFragment : Fragment() {
     private fun onLocationChanged(location: Location?) {
 
         location?.let {
-//            if (isAdded) {
-//                distanceTextView.text = String.format(getString(R.string.latitude_string), it.latitude.toString())
-//                timeTextView.text = String.format(getString(R.string.longitude_string), it.longitude.toString())
-//                priceTextView.text = String.format(getString(R.string.accuracy_string), it.accuracy.toString())
-//            }
 
             userLatLng = LatLng(it.latitude, it.longitude)
 
@@ -215,7 +213,6 @@ class TrackNearbyFragment : Fragment() {
         }
     }
 
-
     private fun generateStationMarkers() {
         for (station in listOfStations) {
             station.stationLatLng?.apply {
@@ -227,11 +224,14 @@ class TrackNearbyFragment : Fragment() {
                         .title(station.stationName).icon(BitmapDescriptorFactory.fromBitmap(resizedBitmapImg))
 
                 googleMap?.let {
-                    it.addMarker(stationMarkerOptions)
+                    val stationMarker = it.addMarker(stationMarkerOptions)
                     stationMarkersExist = true
+
+                    station.stationID?.let {
+                        mapOfStationMarkers.put(it, stationMarker)
+                    }
                 }
             }
-
         }
     }
 
@@ -243,6 +243,14 @@ class TrackNearbyFragment : Fragment() {
                     addressTextView.text = it.stationAddress
                     distanceTextView.text = "%.2f".format(it.distanceFromUser) +
                         " " + getString(R.string.distance_km_away_string)
+
+                    nearestStationLinearLayout.setOnClickListener {
+                        nearestStation?.let {
+                            val nearestStationMarker = mapOfStationMarkers[it.stationID]
+                            nearestStationMarker?.showInfoWindow()
+                            googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(it.stationLatLng, 15f))
+                        }
+                    }
                 }
             }
         } else {
