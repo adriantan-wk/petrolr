@@ -1,9 +1,7 @@
 package com.example.apptivitylab.demoapp.ui
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.pm.PackageManager
-import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.location.Location
@@ -11,7 +9,6 @@ import android.os.Bundle
 import android.os.Looper
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,21 +36,21 @@ class TrackNearbyFragment : Fragment() {
         val ACCESS_FINE_LOCATION_PERMISSIONS = 100
     }
 
-    private var mapFragment : SupportMapFragment? = null
-    private var googleMap : GoogleMap? = null
+    private var mapFragment: SupportMapFragment? = null
+    private var googleMap: GoogleMap? = null
 
-    private var fusedLocationClient : FusedLocationProviderClient? = null
-    private var locationCallBack : LocationCallback? = null
+    private var fusedLocationClient: FusedLocationProviderClient? = null
+    private var locationCallBack: LocationCallback? = null
 
     private var userLocationMarker: Marker? = null
-    private var stationMarkersExist : Boolean = false
-    private var userLatLng : LatLng? = null
+    private var stationMarkersExist: Boolean = false
+    private var userLatLng: LatLng? = null
 
-    private var listOfStations : ArrayList<Station> = ArrayList()
-    private var mapOfStationMarkers : HashMap<String, Marker> = HashMap()
-    private var nearestStation : Station? = null
+    private var listOfStations: ArrayList<Station> = ArrayList()
+    private var mapOfStationMarkers: HashMap<String, Marker> = HashMap()
+    private var nearestStation: Station? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?{
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         if (savedInstanceState == null) {
             setupGoogleMapFragment()
@@ -86,6 +83,14 @@ class TrackNearbyFragment : Fragment() {
             }
         }
 
+        nearestStationLinearLayout.setOnClickListener {
+            nearestStation?.let {
+                val nearestStationMarker = mapOfStationMarkers[it.stationID]
+                nearestStationMarker?.showInfoWindow()
+                googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(it.stationLatLng, 15f))
+            }
+        }
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(context!!)
         startLocationUpdates()
     }
@@ -100,14 +105,14 @@ class TrackNearbyFragment : Fragment() {
 
         mapFragment?.let {
             it.getMapAsync { googleMap ->
-            this.googleMap = googleMap
+                this.googleMap = googleMap
 
-            val startLatLng = LatLng(4.2105, 101.9758)
-            val cameraUpdate = CameraUpdateFactory.newLatLngZoom(startLatLng, 6.0f)
+                val startLatLng = LatLng(4.2105, 101.9758)
+                val cameraUpdate = CameraUpdateFactory.newLatLngZoom(startLatLng, 6.0f)
 
-            this.googleMap?.let {
-                it.moveCamera(cameraUpdate)
-                it.uiSettings.isCompassEnabled = false
+                this.googleMap?.let {
+                    it.moveCamera(cameraUpdate)
+                    it.uiSettings.isCompassEnabled = false
                 }
             }
         }
@@ -150,14 +155,14 @@ class TrackNearbyFragment : Fragment() {
         when (requestCode) {
             ACCESS_FINE_LOCATION_PERMISSIONS -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    val toast = Toast.makeText(context,R.string.location_permissions_granted_string, Toast.LENGTH_SHORT)
+                    val toast = Toast.makeText(context, R.string.location_permissions_granted_string, Toast.LENGTH_SHORT)
                     toast.show()
                     startLocationUpdates()
                 } else {
                     val toast = Toast.makeText(context, R.string.location_permissions_denied_string, Toast.LENGTH_SHORT)
                     toast.show()
                 }
-            } else -> { }
+            }
         }
     }
 
@@ -167,50 +172,52 @@ class TrackNearbyFragment : Fragment() {
 
             userLatLng = LatLng(it.latitude, it.longitude)
 
-                if (userLocationMarker == null) {
-                    userLatLng?.let {
-                        val markerOptions = MarkerOptions().position(it).title(getString(R.string.user_marker_string))
+            if (userLocationMarker == null) {
+                userLatLng?.let {
+                    val markerOptions = MarkerOptions().position(it).title(getString(R.string.user_marker_string))
 
-                        googleMap?.let {
-                            userLocationMarker = it.addMarker(markerOptions)
-                        }
-                    }
-                } else {
-                    userLocationMarker?.let {
-                        it.position = userLatLng
+                    googleMap?.let {
+                        userLocationMarker = it.addMarker(markerOptions)
                     }
                 }
-            }
-
-            findNearestStation()
-
-            if (!stationMarkersExist) {
-                Toast.makeText(context!!, getString(R.string.generating_markers_string), Toast.LENGTH_SHORT).show()
-                generateStationMarkers()
+            } else {
+                userLocationMarker?.let {
+                    it.position = userLatLng
+                }
             }
         }
 
-    private fun findNearestStation() {
+        nearestStation = this.findNearestStation()
+
+        if (!stationMarkersExist) {
+            Toast.makeText(context!!, getString(R.string.generating_markers_string), Toast.LENGTH_SHORT).show()
+            generateStationMarkers()
+        }
+    }
+
+    private fun findNearestStation(): Station? {
         if (nearestStation == null) {
-            listOfStations[0].distanceFromUser = calculateStationDistance(listOfStations[0])
-            nearestStation = listOfStations[0]
+            listOfStations[0].distanceFromUser = calculateUserDistanceToStation(listOfStations[0])
 
             updateNearestStationViews(false)
-        } else {
 
-            listOfStations.forEach { station->
-                var distanceFromUser = calculateStationDistance(station)
+            return listOfStations[0]
+        } else {
+            listOfStations.forEach { station ->
+                val distanceFromUser = calculateUserDistanceToStation(station)
                 station.distanceFromUser = distanceFromUser
 
                 nearestStation?.distanceFromUser?.let {
-                    if (distanceFromUser < it)
-                    {
-                        nearestStation = station
+                    if (distanceFromUser < it) {
+                        return station
                     }
                 }
             }
+
             updateNearestStationViews(true)
         }
+
+        return null
     }
 
     private fun generateStationMarkers() {
@@ -235,22 +242,14 @@ class TrackNearbyFragment : Fragment() {
         }
     }
 
-    private fun updateNearestStationViews(nearestStationFound : Boolean) {
+    private fun updateNearestStationViews(nearestStationFound: Boolean) {
         if (nearestStationFound) {
             if (isAdded) {
                 nearestStation?.let {
                     nameTextView.text = it.stationName
                     addressTextView.text = it.stationAddress
                     distanceTextView.text = "%.2f".format(it.distanceFromUser) +
-                        " " + getString(R.string.distance_km_away_string)
-
-                    nearestStationLinearLayout.setOnClickListener {
-                        nearestStation?.let {
-                            val nearestStationMarker = mapOfStationMarkers[it.stationID]
-                            nearestStationMarker?.showInfoWindow()
-                            googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(it.stationLatLng, 15f))
-                        }
-                    }
+                            " " + getString(R.string.distance_km_away_string)
                 }
             }
         } else {
@@ -260,7 +259,7 @@ class TrackNearbyFragment : Fragment() {
         }
     }
 
-    private fun calculateStationDistance(station : Station) : Float {
+    private fun calculateUserDistanceToStation(station: Station): Float {
         var userLocation = Location(getString((R.string.current_location_string)))
         var stationLocation = Location(getString(R.string.destination_string))
 
