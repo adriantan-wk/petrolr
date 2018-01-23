@@ -1,9 +1,8 @@
 package com.example.apptivitylab.demoapp
 
 import android.content.Context
-import android.renderscript.ScriptGroup
 import com.example.apptivitylab.demoapp.models.Brand
-import com.example.apptivitylab.demoapp.models.Petrol
+import com.example.apptivitylab.demoapp.models.PetrolType
 import com.example.apptivitylab.demoapp.models.Station
 import org.json.JSONArray
 import org.json.JSONObject
@@ -37,19 +36,19 @@ class MockDataLoader {
             return stationList
         }
 
-        fun loadJSONPetrolTypes (context: Context) : ArrayList<Petrol> {
-            val petrolTypeList : ArrayList<Petrol> = ArrayList()
+        fun loadJSONPetrolTypes (context: Context) : ArrayList<PetrolType> {
+            val petrolTypeList : ArrayList<PetrolType> = ArrayList()
             val inputStream : InputStream = context.resources.openRawResource(R.raw.petroltypes)
             val reader = BufferedReader(InputStreamReader(inputStream))
             var jsonObject : JSONObject
-            var petrolType : Petrol
+            var petrolType : PetrolType
 
             val fileContent = reader.readText()
             jsonObject = JSONObject(fileContent.substring(fileContent.indexOf("{"), fileContent.lastIndexOf("}") + 1))
             val jsonArray : JSONArray = jsonObject.optJSONArray("petrol_types")
 
             for (pt in 0 until jsonArray.length()) {
-                petrolType = Petrol(jsonArray.getJSONObject(pt))
+                petrolType = PetrolType(jsonArray.getJSONObject(pt))
                 petrolTypeList.add(petrolType)
             }
             return petrolTypeList

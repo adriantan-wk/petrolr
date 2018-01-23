@@ -9,10 +9,10 @@ object UserController {
     lateinit var user: User
 
     fun createMockUser() {
-        val prefBrands: ArrayList<String> = ArrayList()
-        prefBrands.add("SHEL")
-        prefBrands.add("PTNS")
+        val preferredBrands: ArrayList<String> = ArrayList()
+        preferredBrands.add("SHEL")
+        preferredBrands.add("PTNS")
 
-        this.user = User("U001", "adrian", "123", "P004", prefBrands)
+        this.user = User("U001", "adrian", "123", "P004", preferredBrands)
     }
 }

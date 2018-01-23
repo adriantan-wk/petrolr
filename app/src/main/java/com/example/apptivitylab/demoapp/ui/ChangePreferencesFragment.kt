@@ -13,7 +13,7 @@ import com.example.apptivitylab.demoapp.MockDataLoader
 import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.controllers.UserController
 import com.example.apptivitylab.demoapp.models.Brand
-import com.example.apptivitylab.demoapp.models.Petrol
+import com.example.apptivitylab.demoapp.models.PetrolType
 import com.example.apptivitylab.demoapp.models.User
 import kotlinx.android.synthetic.main.fragment_change_preferences.*
 
@@ -23,8 +23,8 @@ import kotlinx.android.synthetic.main.fragment_change_preferences.*
 
 class ChangePreferencesFragment : Fragment() {
 
-    private var listOfPetrolTypes: ArrayList<Petrol> = ArrayList()
-    private var listOfBrands: ArrayList<Brand> = ArrayList()
+    private var petrolTypes: ArrayList<PetrolType> = ArrayList()
+    private var brands: ArrayList<Brand> = ArrayList()
 
     private var radioButtonsByPetrolType: HashMap<String, RadioButton> = HashMap()
     private var checkBoxesByBrand: HashMap<String, CheckBox> = HashMap()
@@ -36,13 +36,13 @@ class ChangePreferencesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        this.listOfPetrolTypes = MockDataLoader.loadJSONPetrolTypes(context!!)
-        this.listOfBrands = MockDataLoader.loadJSONBrands(context!!)
+        this.petrolTypes = MockDataLoader.loadJSONPetrolTypes(context!!)
+        this.brands = MockDataLoader.loadJSONBrands(context!!)
 
         this.selectedPetrolTextView.text = String.format(getString(R.string.preferred_petrol_string, ""))
 
-        this.createPetrolRadioButtons(this.listOfPetrolTypes, this.radioButtonsByPetrolType)
-        this.createBrandCheckBoxes(this.listOfBrands, this.checkBoxesByBrand)
+        this.createPetrolRadioButtons(this.petrolTypes, this.radioButtonsByPetrolType)
+        this.createBrandCheckBoxes(this.brands, this.checkBoxesByBrand)
 
         this.presetCurrentUserPreferences(UserController.user, this.radioButtonsByPetrolType, this.checkBoxesByBrand)
 
@@ -51,8 +51,8 @@ class ChangePreferencesFragment : Fragment() {
         }
     }
 
-    private fun createPetrolRadioButtons(listOfPetrolTypes: ArrayList<Petrol>, radioButtonsByPetrolType: HashMap<String, RadioButton>) {
-        listOfPetrolTypes.forEach { petrol ->
+    private fun createPetrolRadioButtons(petrolTypes: ArrayList<PetrolType>, radioButtonsByPetrolType: HashMap<String, RadioButton>) {
+        petrolTypes.forEach { petrol ->
             val radioButton = RadioButton(context)
             radioButton.text = petrol.petrolName
 
@@ -67,8 +67,8 @@ class ChangePreferencesFragment : Fragment() {
         }
     }
 
-    private fun createBrandCheckBoxes(listOfBrands: ArrayList<Brand>, checkBoxesByBrand: HashMap<String, CheckBox>) {
-        listOfBrands.forEach { brand ->
+    private fun createBrandCheckBoxes(brands: ArrayList<Brand>, checkBoxesByBrand: HashMap<String, CheckBox>) {
+        brands.forEach { brand ->
             val checkBox = CheckBox(context)
             checkBox.text = brand.brandName
             this.brandsLinearLayout.addView(checkBox)
@@ -83,7 +83,7 @@ class ChangePreferencesFragment : Fragment() {
                                              radioButtonsByPetrolType: HashMap<String, RadioButton>,
                                              checkBoxesByBrand: HashMap<String, CheckBox>) {
         for ((petrolID, radioButton) in radioButtonsByPetrolType) {
-            if (petrolID == user.prefPetrol) {
+            if (petrolID == user.preferredPetrol) {
                 radioButton.isChecked = true
                 selectedPetrolTextView.text =
                         String.format(getString(R.string.preferred_petrol_string, radioButton.text))
@@ -91,7 +91,7 @@ class ChangePreferencesFragment : Fragment() {
         }
 
         for ((brandID, checkBox) in checkBoxesByBrand) {
-            if (user.prefBrands.contains(brandID)) {
+            if (user.preferredBrands.contains(brandID)) {
                 checkBox.isChecked = true
             }
         }
@@ -106,8 +106,8 @@ class ChangePreferencesFragment : Fragment() {
                             selectedPetrolTextView.text, produceStringOfPreferredStationBrands(this.checkBoxesByBrand)))
                     .setPositiveButton(R.string.yes_string,
                             { dialog, which ->
-                                user.prefPetrol = getPreferredPetrolType(this.radioButtonsByPetrolType)
-                                user.prefBrands = getPreferredStationBrandsList(this.checkBoxesByBrand)
+                                user.preferredPetrol = getPreferredPetrolType(this.radioButtonsByPetrolType)
+                                user.preferredBrands = getPreferredStationBrandsList(this.checkBoxesByBrand)
 
                                 val trackNearbyIntent = Intent(context, TrackNearActivity::class.java)
                                 startActivity(trackNearbyIntent)

@@ -8,7 +8,7 @@ import kotlin.collections.ArrayList
  * Created by ApptivityLab on 19/01/2018.
  */
 
-class Petrol() {
+class PetrolType() {
     var petrolID : String? = null
     var petrolName : String? = null
     var curPrice : Double? = null
