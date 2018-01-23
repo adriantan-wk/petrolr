@@ -1,7 +1,7 @@
 {
   "stations":[
     {
-      "station_id": "SHE_001321",
+      "station_id": "SHEL_001",
       "station_name": "Station 1",
       "station_brand": "Shell",
       "station_address": "76, Jalan Epal, Bandar Oren, 47500 Selangor",
@@ -9,7 +9,7 @@
       "station_longitude": "101.88976"
     },
     {
-      "station_id": "SBP_142212",
+      "station_id": "BRPE_001",
       "station_name": "Station 2",
       "station_brand": "BP",
       "station_address": "88, Jalan Bunga, Bandar Bunga, 47500 Selangor",
@@ -17,7 +17,7 @@
       "station_longitude": "101.53467"
     },
     {
-      "station_id": "SHE_451222",
+      "station_id": "SHEL_002",
       "station_name": "Station 3",
       "station_brand": "Shell",
       "station_address": "44, Jalan Bahagia, Bandar Selmat, 47500 Selangor",
@@ -25,7 +25,7 @@
       "station_longitude": "101.24332"
     },
     {
-      "station_id": "PETR_55001",
+      "station_id": "PTNS_001",
       "station_name": "Station 4",
       "station_brand": "Petronas",
       "station_address": "11, Jalan Petrol, Bandar Gas, 47500 Selangor",
@@ -33,7 +33,7 @@
       "station_longitude": "101.44678"
     },
     {
-      "station_id": "PETR_66781",
+      "station_id": "PTRN_001",
       "station_name": "Station 5",
       "station_brand": "Petronas",
       "station_address": "9, Jalan Mawar, Bandar Bahagia, 47500 Selangor",
@@ -41,7 +41,7 @@
       "station_longitude": "101.5443"
     },
     {
-      "station_id": "BP_331221",
+      "station_id": "BRPE_002",
       "station_name": "Station 6",
       "station_brand": "BP",
       "station_address": "56, Jalan Tambah, Bandar Kurang, 47500 Selangor",
@@ -49,7 +49,7 @@
       "station_longitude": "101.4452"
     },
     {
-      "station_id": "PeT_A141",
+      "station_id": "PTRN_002",
       "station_name": "Station 7",
       "station_brand": "Petron",
       "station_address": "78, Jalan Kucing, Bandar Anjing, 47500 Selangor",
@@ -57,7 +57,7 @@
       "station_longitude": "101.76441"
     },
     {
-      "station_id": "PeT_C771",
+      "station_id": "PTRN_003",
       "station_name": "Station 8",
       "station_brand": "Petron",
       "station_address": "89, Jalan Kepala, Bandar Kelapa, 47500 Selangor",
@@ -65,7 +65,7 @@
       "station_longitude": "101.899"
     },
     {
-      "station_id": "SHE_008133",
+      "station_id": "SHEL_003",
       "station_name": "Station 9",
       "station_brand": "Shell",
       "station_address": "103, Jalan Tikus, Bandar Tetikus, 47500 Selangor",
@@ -73,7 +73,7 @@
       "station_longitude":"101.586733"
     },
     {
-      "station_id": "SHE_118992",
+      "station_id": "SHEL_004",
       "station_name": "Station 10",
       "station_brand": "Shell",
       "station_address": "448, Jalan Saya Sepasang, Bandar Kasut, 47500 Selangor",

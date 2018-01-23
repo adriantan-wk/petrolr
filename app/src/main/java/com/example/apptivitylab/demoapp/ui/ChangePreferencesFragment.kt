@@ -23,11 +23,11 @@ import kotlinx.android.synthetic.main.fragment_change_preferences.*
 
 class ChangePreferencesFragment : Fragment() {
 
-    private var listOfPetrolTypes : ArrayList<Petrol> = ArrayList()
-    private var listOfBrands : ArrayList<Brand> = ArrayList()
+    private var listOfPetrolTypes: ArrayList<Petrol> = ArrayList()
+    private var listOfBrands: ArrayList<Brand> = ArrayList()
 
-    private var mapOfPetrolTypeRadioBtns : HashMap<String, RadioButton> = HashMap()
-    private var mapOfBrandCheckBoxes : HashMap<String, CheckBox> = HashMap()
+    private var radioButtonsByPetrolType: HashMap<String, RadioButton> = HashMap()
+    private var checkBoxesByBrand: HashMap<String, CheckBox> = HashMap()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_change_preferences, container, false)
@@ -41,54 +41,56 @@ class ChangePreferencesFragment : Fragment() {
 
         this.selectedPetrolTextView.text = String.format(getString(R.string.preferred_petrol_string, ""))
 
-        this.createPetrolRadioBtns(this.mapOfPetrolTypeRadioBtns)
-        this.createBrandCheckBoxes(this.mapOfBrandCheckBoxes)
+        this.createPetrolRadioButtons(this.listOfPetrolTypes, this.radioButtonsByPetrolType)
+        this.createBrandCheckBoxes(this.listOfBrands, this.checkBoxesByBrand)
 
-        this.setCurrentUserPreferences(UserController.user)
+        this.presetCurrentUserPreferences(UserController.user, this.radioButtonsByPetrolType, this.checkBoxesByBrand)
 
         this.saveBtn.setOnClickListener {
             this.updateUserPreferences(UserController.user)
         }
     }
 
-    private fun createPetrolRadioBtns(mapOfPetrolTypeRadioBtns: HashMap<String, RadioButton>) {
-        this.listOfPetrolTypes.forEach { petrol ->
-            val radioBtn = RadioButton(context)
-            radioBtn.text = petrol.petrolName
+    private fun createPetrolRadioButtons(listOfPetrolTypes: ArrayList<Petrol>, radioButtonsByPetrolType: HashMap<String, RadioButton>) {
+        listOfPetrolTypes.forEach { petrol ->
+            val radioButton = RadioButton(context)
+            radioButton.text = petrol.petrolName
 
-            radioBtn.setOnClickListener {
-                selectedPetrolTextView.text = String.format(getString(R.string.preferred_petrol_string, radioBtn.text))
+            radioButton.setOnClickListener {
+                selectedPetrolTextView.text = String.format(getString(R.string.preferred_petrol_string, radioButton.text))
             }
-            this.petrolTypesRadioGroup.addView(radioBtn)
+            this.petrolTypesRadioGroup.addView(radioButton)
 
             petrol.petrolID?.let {
-                mapOfPetrolTypeRadioBtns.put(it, radioBtn)
+                radioButtonsByPetrolType.put(it, radioButton)
             }
         }
     }
 
-    private fun createBrandCheckBoxes(mapOfBrandCheckBoxes: HashMap<String, CheckBox>) {
-        this.listOfBrands.forEach { brand ->
-            val chkBox = CheckBox(context)
-            chkBox.text = brand.brandName
-            this.brandsLinearLayout.addView(chkBox)
+    private fun createBrandCheckBoxes(listOfBrands: ArrayList<Brand>, checkBoxesByBrand: HashMap<String, CheckBox>) {
+        listOfBrands.forEach { brand ->
+            val checkBox = CheckBox(context)
+            checkBox.text = brand.brandName
+            this.brandsLinearLayout.addView(checkBox)
 
             brand.brandID?.let {
-                mapOfBrandCheckBoxes.put(it, chkBox)
+                checkBoxesByBrand.put(it, checkBox)
             }
         }
     }
 
-    private fun setCurrentUserPreferences(user: User) {
-        for ((petrolID, radioBtn) in mapOfPetrolTypeRadioBtns) {
+    private fun presetCurrentUserPreferences(user: User,
+                                             radioButtonsByPetrolType: HashMap<String, RadioButton>,
+                                             checkBoxesByBrand: HashMap<String, CheckBox>) {
+        for ((petrolID, radioButton) in radioButtonsByPetrolType) {
             if (petrolID == user.prefPetrol) {
-                radioBtn.isChecked = true
+                radioButton.isChecked = true
                 selectedPetrolTextView.text =
-                        String.format(getString(R.string.preferred_petrol_string, radioBtn.text))
+                        String.format(getString(R.string.preferred_petrol_string, radioButton.text))
             }
         }
 
-        for ((brandID, checkBox) in mapOfBrandCheckBoxes) {
+        for ((brandID, checkBox) in checkBoxesByBrand) {
             if (user.prefBrands.contains(brandID)) {
                 checkBox.isChecked = true
             }
@@ -101,11 +103,11 @@ class ChangePreferencesFragment : Fragment() {
                     .setIcon(R.drawable.settings)
                     .setTitle(R.string.change_preferences_title_string)
                     .setMessage(String.format(getString(R.string.confirm_change_preferences_string),
-                            selectedPetrolTextView.text, produceStringOfPreferredStationBrands()))
+                            selectedPetrolTextView.text, produceStringOfPreferredStationBrands(this.checkBoxesByBrand)))
                     .setPositiveButton(R.string.yes_string,
                             { dialog, which ->
-                                user.prefPetrol = getPreferredPetrolType()
-                                user.prefBrands = getPreferredStationBrandsList()
+                                user.prefPetrol = getPreferredPetrolType(this.radioButtonsByPetrolType)
+                                user.prefBrands = getPreferredStationBrandsList(this.checkBoxesByBrand)
 
                                 val trackNearbyIntent = Intent(context, TrackNearActivity::class.java)
                                 startActivity(trackNearbyIntent)
@@ -116,19 +118,20 @@ class ChangePreferencesFragment : Fragment() {
     }
 
     private fun isPreferenceValid(): Boolean {
-        if(petrolTypesRadioGroup.checkedRadioButtonId == -1) {
-            messageTextView.text = getString(R.string.invalid_preferences_string)
+        val isRadioButtonInvalid = petrolTypesRadioGroup.checkedRadioButtonId == -1
 
-            return false
+        return if (isRadioButtonInvalid) {
+            messageTextView.text = getString(R.string.invalid_preferences_string)
+            false
         } else {
-            return true
+            true
         }
     }
 
-    private fun produceStringOfPreferredStationBrands(): String {
+    private fun produceStringOfPreferredStationBrands(checkBoxesByBrand: HashMap<String, CheckBox>): String {
         var stringOfPreferredStationBrands = ""
 
-        for ((brandID, checkBox) in mapOfBrandCheckBoxes) {
+        for ((brandID, checkBox) in checkBoxesByBrand) {
             if (checkBox.isChecked) {
                 stringOfPreferredStationBrands += (checkBox.text.toString() + "\n")
             }
@@ -136,22 +139,22 @@ class ChangePreferencesFragment : Fragment() {
         return stringOfPreferredStationBrands
     }
 
-    private fun getPreferredPetrolType(): String {
-        var prefPetrol : String = String()
+    private fun getPreferredPetrolType(radioButtonsByPetrolType: HashMap<String, RadioButton>): String {
+        var preferredPetrol: String = String()
 
-        for ((petrolID, radioBtn) in mapOfPetrolTypeRadioBtns) {
-            if (radioBtn.isChecked) {
-                prefPetrol = petrolID
+        for ((petrolID, radioButton) in radioButtonsByPetrolType) {
+            if (radioButton.isChecked) {
+                preferredPetrol = petrolID
             }
         }
 
-        return prefPetrol
+        return preferredPetrol
     }
 
-    private fun getPreferredStationBrandsList(): ArrayList<String> {
-        var preferredStationBrandsList : ArrayList<String> = ArrayList()
+    private fun getPreferredStationBrandsList(checkBoxesByBrand: HashMap<String, CheckBox>): ArrayList<String> {
+        var preferredStationBrandsList: ArrayList<String> = ArrayList()
 
-        for ((brandID, checkBox) in mapOfBrandCheckBoxes) {
+        for ((brandID, checkBox) in checkBoxesByBrand) {
             if (checkBox.isChecked) {
                 preferredStationBrandsList.add(brandID)
             }

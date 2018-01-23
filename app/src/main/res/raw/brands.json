@@ -1,19 +1,19 @@
 {
   "brands": [
     {
-      "brand_id": "SHE",
+      "brand_id": "SHEL",
       "brand_name": "Shell"
     },
     {
-      "brand_id": "BP",
+      "brand_id": "BRPE",
       "brand_name": "BP"
     },
     {
-      "brand_id": "PETR",
+      "brand_id": "PTNS",
       "brand_name": "Petronas"
     },
     {
-      "brand_id": "PeT",
+      "brand_id": "PTRN",
       "brand_name": "Petron"
     }
   ]

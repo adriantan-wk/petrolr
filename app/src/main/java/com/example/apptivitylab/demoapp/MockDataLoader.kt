@@ -22,7 +22,7 @@ class MockDataLoader {
         fun loadJSONStations (context: Context) : ArrayList<Station> {
             val stationList : ArrayList<Station> = ArrayList()
             val inputStream : InputStream = context.resources.openRawResource(R.raw.stations)
-            val reader  = BufferedReader(InputStreamReader(inputStream))
+            val reader = BufferedReader(InputStreamReader(inputStream))
             var jsonObject : JSONObject
             var station : Station
 
