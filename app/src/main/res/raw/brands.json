@@ -1,0 +1,20 @@
+{
+  "brands": [
+    {
+      "brand_id": "SHE",
+      "brand_name": "Shell"
+    },
+    {
+      "brand_id": "BP",
+      "brand_name": "BP"
+    },
+    {
+      "brand_id": "PETR",
+      "brand_name": "Petronas"
+    },
+    {
+      "brand_id": "PeT",
+      "brand_name": "Petron"
+    }
+  ]
+}

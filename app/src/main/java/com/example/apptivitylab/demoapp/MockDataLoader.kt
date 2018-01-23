@@ -1,6 +1,9 @@
 package com.example.apptivitylab.demoapp
 
 import android.content.Context
+import android.renderscript.ScriptGroup
+import com.example.apptivitylab.demoapp.models.Brand
+import com.example.apptivitylab.demoapp.models.Petrol
 import com.example.apptivitylab.demoapp.models.Station
 import org.json.JSONArray
 import org.json.JSONObject
@@ -19,7 +22,7 @@ class MockDataLoader {
         fun loadJSONStations (context: Context) : ArrayList<Station> {
             val stationList : ArrayList<Station> = ArrayList()
             val inputStream : InputStream = context.resources.openRawResource(R.raw.stations)
-            val reader : BufferedReader = BufferedReader(InputStreamReader(inputStream))
+            val reader  = BufferedReader(InputStreamReader(inputStream))
             var jsonObject : JSONObject
             var station : Station
 
@@ -32,6 +35,42 @@ class MockDataLoader {
                 stationList.add(station)
             }
             return stationList
+        }
+
+        fun loadJSONPetrolTypes (context: Context) : ArrayList<Petrol> {
+            val petrolTypeList : ArrayList<Petrol> = ArrayList()
+            val inputStream : InputStream = context.resources.openRawResource(R.raw.petroltypes)
+            val reader = BufferedReader(InputStreamReader(inputStream))
+            var jsonObject : JSONObject
+            var petrolType : Petrol
+
+            val fileContent = reader.readText()
+            jsonObject = JSONObject(fileContent.substring(fileContent.indexOf("{"), fileContent.lastIndexOf("}") + 1))
+            val jsonArray : JSONArray = jsonObject.optJSONArray("petrol_types")
+
+            for (pt in 0 until jsonArray.length()) {
+                petrolType = Petrol(jsonArray.getJSONObject(pt))
+                petrolTypeList.add(petrolType)
+            }
+            return petrolTypeList
+        }
+
+        fun loadJSONBrands (context: Context) : ArrayList<Brand> {
+            val brandList : ArrayList<Brand> = ArrayList()
+            val inputStream : InputStream = context.resources.openRawResource(R.raw.brands)
+            val reader = BufferedReader(InputStreamReader(inputStream))
+            var jsonObject : JSONObject
+            var brand : Brand
+
+            val fileContent = reader.readText()
+            jsonObject = JSONObject(fileContent.substring(fileContent.indexOf("{"), fileContent.lastIndexOf("}") + 1))
+            val jsonArray : JSONArray = jsonObject.optJSONArray("brands")
+
+            for (pt in 0 until jsonArray.length()) {
+                brand = Brand(jsonArray.getJSONObject(pt))
+                brandList.add(brand)
+            }
+            return brandList
         }
     }
 

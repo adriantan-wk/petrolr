@@ -10,12 +10,21 @@ class User {
     var userID : String? = null
     var username : String? = null
     var password : String? = null
-    var prefPetrol : Petrol? = null
-    var prefBrands : ArrayList<Brand> = ArrayList()
+    var prefPetrol : String? = null
+    var prefBrands : ArrayList<String> = ArrayList()
 
     constructor(jsonObject: JSONObject) {
         userID = jsonObject.optString("userID")
         username = jsonObject.optString("Username")
         password = jsonObject.optString("Password")
+    }
+
+    constructor(userID: String, username: String, password: String,
+                petrolID: String, prefBrands : ArrayList<String>) {
+        this.userID = userID
+        this.username = username
+        this.password = password
+        this.prefPetrol = petrolID
+        this.prefBrands = prefBrands
     }
 }
