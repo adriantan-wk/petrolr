@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.apptivitylab.demoapp.R
+import com.example.apptivitylab.demoapp.controllers.UserController
 import kotlinx.android.synthetic.main.fragment_login.*
 
 /**
@@ -34,8 +35,9 @@ class LoginFragment : Fragment() {
 
         //TODO True login verification functionality
         loginBtn.setOnClickListener {
-            val randomIntent = Intent(context, TrackNearActivity::class.java)
+            UserController.createMockUser()
 
+            val randomIntent = Intent(context, TrackNearActivity::class.java)
             startActivity(randomIntent)
         }
     }
