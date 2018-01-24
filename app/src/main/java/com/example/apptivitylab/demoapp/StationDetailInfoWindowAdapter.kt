@@ -1,12 +1,11 @@
 package com.example.apptivitylab.demoapp
 
 import android.app.Activity
-import android.view.LayoutInflater
 import android.view.View
-import android.widget.TextView
 import com.example.apptivitylab.demoapp.models.Station
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.Marker
+import kotlinx.android.synthetic.main.station_details_infowindow.view.*
 
 /**
  * Created by ApptivityLab on 24/01/2018.
@@ -18,17 +17,18 @@ class StationDetailInfoWindowAdapter(private val context: Activity) : GoogleMap.
         return null
     }
 
-    override fun getInfoContents(marker: Marker?): View {
+    override fun getInfoContents(marker: Marker?): View? {
         val view: View = context.layoutInflater.inflate(R.layout.station_details_infowindow, null)
 
-        val station: Station = marker?.tag as Station
+        return if (marker?.title == context.getString(R.string.user_marker_string)) {
+            null
+        } else {
+            val station: Station = marker?.tag as Station
 
-        val stationNameTextView: TextView = view.findViewById(R.id.stationNameTextView)
-        val stationAddressTextView: TextView = view.findViewById(R.id.stationAddressTextView)
+            view.stationNameTextView.text = station.stationName
+            view.stationAddressTextView.text = station.stationAddress
 
-        stationNameTextView.text = station.stationName
-        stationAddressTextView.text = station.stationAddress
-
-        return view
+            view
+        }
     }
 }

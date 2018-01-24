@@ -30,6 +30,7 @@
         android:text="@string/view_station_details_string"
         android:layout_marginTop="12sp"
         android:textSize="12sp"
-        android:textColor="#0000EE"/>
+        android:textColor="#0000EE"
+        android:textAllCaps="true"/>
 
 </LinearLayout>

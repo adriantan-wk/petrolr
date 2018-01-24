@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.activity_station_details.*
 class StationDetailsActivity : AppCompatActivity() {
 
     companion object {
-        private val STATION_EXTRA = "station_object"
+        const val STATION_EXTRA = "station_object"
 
         fun newLaunchIntent(context: Context, station: Station): Intent {
             val intent = Intent(context, StationDetailsActivity::class.java)

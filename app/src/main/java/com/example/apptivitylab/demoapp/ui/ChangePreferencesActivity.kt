@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.activity_station_list.*
 class ChangePreferencesActivity : AppCompatActivity() {
 
     companion object {
-        private val USER_EXTRA = "user_object"
+        const val USER_EXTRA = "user_object"
 
         fun newLaunchIntent(context: Context, currentUser: User): Intent {
             val intent = Intent(context, ChangePreferencesActivity::class.java)

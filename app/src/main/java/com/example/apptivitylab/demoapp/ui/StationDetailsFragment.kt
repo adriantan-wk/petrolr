@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.fragment_station_details.*
 
 class StationDetailsFragment : Fragment() {
     companion object {
-        private val STATION_DETAILS = "station_details"
+        const val STATION_DETAILS = "station_details"
 
         fun newInstance(station: Station): StationDetailsFragment {
             val fragment = StationDetailsFragment()
