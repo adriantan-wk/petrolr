@@ -1,5 +1,7 @@
 package com.example.apptivitylab.demoapp.ui
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -11,6 +13,9 @@ import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.widget.Toast
 import com.example.apptivitylab.demoapp.R
+import com.example.apptivitylab.demoapp.controllers.UserController
+import com.example.apptivitylab.demoapp.models.User
+import com.example.apptivitylab.demoapp.ui.TrackNearActivity.Companion.CHANGE_PREFERENCES_REQUEST_CODE
 import kotlinx.android.synthetic.main.activity_station_list.*
 
 /**
@@ -18,6 +23,17 @@ import kotlinx.android.synthetic.main.activity_station_list.*
  */
 
 class StationListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+    companion object {
+        const val CHANGE_PREFERENCES_REQUEST_CODE = 200
+        const val USER_EXTRA = "user_object"
+
+        fun newLaunchIntent(context: Context): Intent {
+            val intent = Intent(context, StationListActivity::class.java)
+
+            return intent
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,13 +56,25 @@ class StationListActivity : AppCompatActivity(), NavigationView.OnNavigationItem
                 .commit()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == CHANGE_PREFERENCES_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            val newUserPreferences = data?.getParcelableExtra<User>(getString(R.string.change_preferences_intent_string))
+
+            newUserPreferences?.let {
+                updateUserPreferences(newUserPreferences)
+            }
+        }
+    }
+
     override fun onNavigationItemSelected(item: MenuItem) : Boolean {
         return when (item.itemId) {
         //TODO Other side drawer menu items
 
             R.id.nav_track_nearby -> {
-                val trackNearIntent = Intent(this, TrackNearActivity::class.java)
+                val trackNearIntent = TrackNearActivity.newLaunchIntent(this)
                 startActivity(trackNearIntent)
+
 
                 stationListDrawerLayout.closeDrawers()
                 true
@@ -58,8 +86,8 @@ class StationListActivity : AppCompatActivity(), NavigationView.OnNavigationItem
             }
 
             R.id.nav_preferences -> {
-                val preferencesIntent = Intent(this, ChangePreferencesActivity::class.java)
-                startActivity(preferencesIntent)
+                val preferencesIntent = ChangePreferencesActivity.newLaunchIntent(this, UserController.user)
+                startActivityForResult(preferencesIntent, CHANGE_PREFERENCES_REQUEST_CODE)
 
                 true
             }
@@ -87,5 +115,12 @@ class StationListActivity : AppCompatActivity(), NavigationView.OnNavigationItem
                 false
             }
         }
+    }
+
+    private fun updateUserPreferences(user: User) {
+        UserController.user.preferredPetrolType = user.preferredPetrolType
+        UserController.user.preferredBrands = user.preferredBrands
+
+        //TODO Update fragment that user preferences have changed
     }
 }

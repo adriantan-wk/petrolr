@@ -25,6 +25,7 @@
     <string name="logout_confirm_msg_string">Are you sure you want to log out?</string>
     <string name="yes_string">Yes</string>
     <string name="no_string">No</string>
+    <string name="change_preferences_intent_string">User Preferences</string>
     <string name="longitude_string">Longitude: %1$s</string>
     <string name="accuracy_string">Accuracy: %1$s</string>
     <string name="location_updated_string">Location Updated</string>
