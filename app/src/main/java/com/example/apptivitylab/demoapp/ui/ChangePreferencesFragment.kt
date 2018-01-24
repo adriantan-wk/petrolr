@@ -51,6 +51,12 @@ class ChangePreferencesFragment : Fragment() {
         this.saveBtn.setOnClickListener {
             this.updateUserPreferences(UserController.user)
         }
+
+        this.selectAllButton.setOnClickListener {
+            for (checkBox in this.checkBoxesByBrand.values) {
+                checkBox.isChecked = true
+            }
+        }
     }
 
     private fun createPetrolRadioButtons(petrolTypes: ArrayList<PetrolType>, radioButtonsByPetrolType: HashMap<PetrolType, RadioButton>) {
@@ -119,8 +125,9 @@ class ChangePreferencesFragment : Fragment() {
 
     private fun isPreferenceValid(): Boolean {
         val isRadioButtonInvalid = petrolTypesRadioGroup.checkedRadioButtonId == -1
+        val isCheckBoxInvalid = !checkBoxesByBrand.values.any { it.isChecked }
 
-        return if (isRadioButtonInvalid) {
+        return if (isRadioButtonInvalid || isCheckBoxInvalid) {
             messageTextView.text = getString(R.string.invalid_preferences_string)
             false
         } else {
@@ -136,6 +143,7 @@ class ChangePreferencesFragment : Fragment() {
                 stringOfPreferredStationBrands += (checkBox.text.toString() + "\n")
             }
         }
+
         return stringOfPreferredStationBrands
     }
 
