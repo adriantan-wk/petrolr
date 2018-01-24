@@ -37,12 +37,29 @@
         android:layout_marginTop="8dp"
         style="@style/DescriptionText"/>
 
-    <TextView
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/station_brands_string"
-        style="@style/HeaderText"
-        android:layout_marginTop="32dp"/>
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/station_brands_string"
+            style="@style/HeaderText"
+            android:layout_centerVertical="true"/>
+
+        <Button
+            android:id="@+id/selectAllButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select_all_string"
+            android:textSize="12sp"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/brandsLinearLayout"
@@ -58,7 +75,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
         android:textColor="@android:color/holo_red_light"/>
 
     <Button
@@ -67,6 +85,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="@string/save_string"
-        android:layout_marginTop="12dp"/>
+        android:layout_marginTop="8dp"/>
 
 </LinearLayout>
