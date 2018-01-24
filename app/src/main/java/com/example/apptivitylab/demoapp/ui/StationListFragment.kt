@@ -55,10 +55,8 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
 
     override fun onStationSelected(station: Station) {
 
-        val itemDetailsIntent = Intent(context, StationDetailsActivity::class.java)
-        itemDetailsIntent.putExtra(getString(R.string.station_item_intent_string), station)
-
-        startActivity(itemDetailsIntent)
+        val stationDetailsIntent = StationDetailsActivity.newLaunchIntent(context!!, station)
+        startActivity(stationDetailsIntent)
     }
 
     private fun startLocationUpdates() {

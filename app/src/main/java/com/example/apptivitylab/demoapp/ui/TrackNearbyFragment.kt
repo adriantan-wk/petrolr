@@ -8,7 +8,9 @@ import android.location.Location
 import android.os.Bundle
 import android.os.Looper
 import android.support.v4.app.ActivityCompat
+import android.support.v4.app.ActivityCompat.requestPermissions
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,11 +18,14 @@ import android.widget.Toast
 import com.example.apptivitylab.demoapp.MockDataLoader
 import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.controllers.UserController.user
+import com.example.apptivitylab.demoapp.R.id.*
+import com.example.apptivitylab.demoapp.StationDetailInfoWindowAdapter
 import com.example.apptivitylab.demoapp.models.Station
 import com.example.apptivitylab.demoapp.models.User
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
@@ -198,6 +203,8 @@ class TrackNearbyFragment : Fragment() {
         nearestStation = this.findNearestStation()
 
         if (!stationMarkersExist) {
+            assignInfoWindowAdapterAndListener(StationDetailInfoWindowAdapter(activity!!))
+
             Toast.makeText(context!!, getString(R.string.generating_markers_string), Toast.LENGTH_SHORT).show()
             generateStationMarkers()
         }
@@ -232,6 +239,16 @@ class TrackNearbyFragment : Fragment() {
         return nearestStation
     }
 
+    private fun assignInfoWindowAdapterAndListener(stationDetailInfoWindowAdapter: StationDetailInfoWindowAdapter) {
+        this.googleMap?.let {
+            it.setInfoWindowAdapter(stationDetailInfoWindowAdapter)
+            it.setOnInfoWindowClickListener { marker ->
+                val stationDetailsIntent = StationDetailsActivity.newLaunchIntent(context!!, marker.tag as Station)
+                startActivity(stationDetailsIntent)
+            }
+        }
+    }
+
     private fun generateStationMarkers() {
         for (station in listOfStations) {
             station.stationLatLng?.apply {
@@ -244,6 +261,7 @@ class TrackNearbyFragment : Fragment() {
 
                 googleMap?.let {
                     val stationMarker = it.addMarker(stationMarkerOptions)
+                    stationMarker.tag = station
                     stationMarkersExist = true
 
                     station.stationID?.let {
@@ -290,5 +308,4 @@ class TrackNearbyFragment : Fragment() {
         fusedLocationClient?.removeLocationUpdates(locationCallBack)
         super.onStop()
     }
-
 }
