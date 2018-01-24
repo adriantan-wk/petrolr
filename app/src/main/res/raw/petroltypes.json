@@ -1,0 +1,24 @@
+{
+  "petrol_types": [
+    {
+      "petrol_id": "P001",
+      "petrol_name": "RON95",
+      "petrol_price": "2.3"
+    },
+    {
+      "petrol_id": "P002",
+      "petrol_name": "RON97",
+      "petrol_price": "2.57"
+    },
+    {
+      "petrol_id": "P003",
+      "petrol_name": "EURO 2M",
+      "petrol_price": "2.23"
+    },
+    {
+      "petrol_id": "P004",
+      "petrol_name": "EURO 5",
+      "petrol_price": "2.33"
+    }
+  ]
+}
