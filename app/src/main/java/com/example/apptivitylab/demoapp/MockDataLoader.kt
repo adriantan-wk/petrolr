@@ -19,15 +19,15 @@ class MockDataLoader {
 
     companion object {
         fun loadJSONStations (context: Context) : ArrayList<Station> {
-            val stationList : ArrayList<Station> = ArrayList()
-            val inputStream : InputStream = context.resources.openRawResource(R.raw.stations)
+            val stationList: ArrayList<Station> = ArrayList()
+            val inputStream: InputStream = context.resources.openRawResource(R.raw.stations)
             val reader = BufferedReader(InputStreamReader(inputStream))
-            var jsonObject : JSONObject
-            var station : Station
+            var jsonObject: JSONObject
+            var station: Station
 
             val fileContent = reader.readText()
             jsonObject = JSONObject(fileContent.substring(fileContent.indexOf("{"), fileContent.lastIndexOf("}") + 1))
-            val jsonArray : JSONArray = jsonObject.optJSONArray("stations")
+            val jsonArray: JSONArray = jsonObject.optJSONArray("stations")
 
             for (s in 0 until jsonArray.length()) {
                 station = Station(jsonArray.getJSONObject(s))
@@ -37,15 +37,15 @@ class MockDataLoader {
         }
 
         fun loadJSONPetrolTypes (context: Context) : ArrayList<PetrolType> {
-            val petrolTypeList : ArrayList<PetrolType> = ArrayList()
-            val inputStream : InputStream = context.resources.openRawResource(R.raw.petroltypes)
+            val petrolTypeList: ArrayList<PetrolType> = ArrayList()
+            val inputStream: InputStream = context.resources.openRawResource(R.raw.petroltypes)
             val reader = BufferedReader(InputStreamReader(inputStream))
-            var jsonObject : JSONObject
-            var petrolType : PetrolType
+            var jsonObject: JSONObject
+            var petrolType: PetrolType
 
             val fileContent = reader.readText()
             jsonObject = JSONObject(fileContent.substring(fileContent.indexOf("{"), fileContent.lastIndexOf("}") + 1))
-            val jsonArray : JSONArray = jsonObject.optJSONArray("petrol_types")
+            val jsonArray: JSONArray = jsonObject.optJSONArray("petrol_types")
 
             for (pt in 0 until jsonArray.length()) {
                 petrolType = PetrolType(jsonArray.getJSONObject(pt))
@@ -55,15 +55,15 @@ class MockDataLoader {
         }
 
         fun loadJSONBrands (context: Context) : ArrayList<Brand> {
-            val brandList : ArrayList<Brand> = ArrayList()
-            val inputStream : InputStream = context.resources.openRawResource(R.raw.brands)
+            val brandList: ArrayList<Brand> = ArrayList()
+            val inputStream: InputStream = context.resources.openRawResource(R.raw.brands)
             val reader = BufferedReader(InputStreamReader(inputStream))
-            var jsonObject : JSONObject
-            var brand : Brand
+            var jsonObject: JSONObject
+            var brand: Brand
 
             val fileContent = reader.readText()
             jsonObject = JSONObject(fileContent.substring(fileContent.indexOf("{"), fileContent.lastIndexOf("}") + 1))
-            val jsonArray : JSONArray = jsonObject.optJSONArray("brands")
+            val jsonArray: JSONArray = jsonObject.optJSONArray("brands")
 
             for (pt in 0 until jsonArray.length()) {
                 brand = Brand(jsonArray.getJSONObject(pt))

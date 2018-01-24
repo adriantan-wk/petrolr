@@ -7,11 +7,11 @@ import org.json.JSONObject
  */
 
 class User {
-    var userID : String? = null
-    var username : String? = null
-    var password : String? = null
-    var preferredPetrol: String? = null
-    var preferredBrands: ArrayList<String> = ArrayList()
+    var userID: String? = null
+    var username: String? = null
+    var password: String? = null
+    var preferredPetrolType: PetrolType? = null
+    var preferredBrands: ArrayList<Brand> = ArrayList()
 
     constructor(jsonObject: JSONObject) {
         userID = jsonObject.optString("userID")
@@ -20,11 +20,11 @@ class User {
     }
 
     constructor(userID: String, username: String, password: String,
-                petrolID: String, prefBrands : ArrayList<String>) {
+                petrolType: PetrolType, prefBrands : ArrayList<Brand>) {
         this.userID = userID
         this.username = username
         this.password = password
-        this.preferredPetrol = petrolID
+        this.preferredPetrolType = petrolType
         this.preferredBrands = prefBrands
     }
 }

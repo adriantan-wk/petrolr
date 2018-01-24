@@ -1,5 +1,7 @@
 package com.example.apptivitylab.demoapp.controllers
 
+import com.example.apptivitylab.demoapp.models.Brand
+import com.example.apptivitylab.demoapp.models.PetrolType
 import com.example.apptivitylab.demoapp.models.User
 
 /**
@@ -9,10 +11,15 @@ object UserController {
     lateinit var user: User
 
     fun createMockUser() {
-        val preferredBrands: ArrayList<String> = ArrayList()
-        preferredBrands.add("SHEL")
-        preferredBrands.add("PTNS")
+        val brand1 = Brand("SHEL", "Shell")
+        val brand2 = Brand("PTNS", "Petronas")
 
-        this.user = User("U001", "adrian", "123", "P004", preferredBrands)
+        val preferredBrands: ArrayList<Brand> = ArrayList()
+        preferredBrands.add(brand1)
+        preferredBrands.add(brand2)
+
+        val petrolType = PetrolType("P004", "EURO 5", 2.33)
+
+        this.user = User("U001", "adrian", "123", petrolType, preferredBrands)
     }
 }
