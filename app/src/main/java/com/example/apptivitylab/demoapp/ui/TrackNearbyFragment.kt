@@ -15,7 +15,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.example.apptivitylab.demoapp.MockDataLoader
 import com.example.apptivitylab.demoapp.R
+import com.example.apptivitylab.demoapp.controllers.UserController.user
 import com.example.apptivitylab.demoapp.models.Station
+import com.example.apptivitylab.demoapp.models.User
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -34,6 +36,12 @@ class TrackNearbyFragment : Fragment() {
 
     companion object {
         val ACCESS_FINE_LOCATION_PERMISSIONS = 100
+
+        fun newInstance(): TrackNearbyFragment {
+            val fragment = TrackNearbyFragment()
+
+            return fragment
+        }
     }
 
     private var mapFragment: SupportMapFragment? = null
@@ -196,28 +204,32 @@ class TrackNearbyFragment : Fragment() {
     }
 
     private fun findNearestStation(): Station? {
-        if (nearestStation == null) {
-            listOfStations[0].distanceFromUser = calculateUserDistanceToStation(listOfStations[0])
+        var nearestStation: Station? = this.nearestStation
 
-            updateNearestStationViews(false)
+        if (this.listOfStations.isNotEmpty()) {
+            if (nearestStation == null) {
+                this.listOfStations[0].distanceFromUser = calculateUserDistanceToStation(this.listOfStations[0])
 
-            return listOfStations[0]
-        } else {
-            listOfStations.forEach { station ->
-                val distanceFromUser = calculateUserDistanceToStation(station)
-                station.distanceFromUser = distanceFromUser
+                updateNearestStationViews(nearestStation)
 
-                nearestStation?.distanceFromUser?.let {
-                    if (distanceFromUser < it) {
-                        return station
+                nearestStation = this.listOfStations[0]
+            } else {
+                this.listOfStations.forEach { station ->
+                    val distanceFromUser = calculateUserDistanceToStation(station)
+                    station.distanceFromUser = distanceFromUser
+
+                    nearestStation?.distanceFromUser?.let {
+                        if (distanceFromUser < it) {
+                            nearestStation = station
+                        }
                     }
                 }
+                updateNearestStationViews(nearestStation)
             }
-
-            updateNearestStationViews(true)
+        } else {
+            nearestStation = null
         }
-
-        return null
+        return nearestStation
     }
 
     private fun generateStationMarkers() {
@@ -242,15 +254,13 @@ class TrackNearbyFragment : Fragment() {
         }
     }
 
-    private fun updateNearestStationViews(nearestStationFound: Boolean) {
-        if (nearestStationFound) {
+    private fun updateNearestStationViews(nearestStation: Station?) {
+        if (nearestStation != null) {
             if (isAdded) {
-                nearestStation?.let {
-                    nameTextView.text = it.stationName
-                    addressTextView.text = it.stationAddress
-                    distanceTextView.text = "%.2f".format(it.distanceFromUser) +
-                            " " + getString(R.string.distance_km_away_string)
-                }
+                nameTextView.text = nearestStation.stationName
+                addressTextView.text = nearestStation.stationAddress
+                distanceTextView.text = "%.2f".format(nearestStation.distanceFromUser) +
+                        " " + getString(R.string.distance_km_away_string)
             }
         } else {
             nameTextView.text = getString(R.string.searching_string)
