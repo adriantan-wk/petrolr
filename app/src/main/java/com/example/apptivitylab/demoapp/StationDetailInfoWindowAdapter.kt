@@ -1,11 +1,13 @@
 package com.example.apptivitylab.demoapp
 
 import android.app.Activity
+
 import android.view.View
 import com.example.apptivitylab.demoapp.models.Station
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.Marker
 import kotlinx.android.synthetic.main.station_details_infowindow.view.*
+
 
 /**
  * Created by ApptivityLab on 24/01/2018.
