@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.apptivitylab.demoapp.R.raw.stations
 import com.example.apptivitylab.demoapp.R.string.unavailable_string
 import com.example.apptivitylab.demoapp.models.Station
 import com.google.android.gms.maps.model.LatLng
@@ -45,15 +46,9 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         return listOfStations.size
     }
 
-    fun updateDataSet(stations: ArrayList<Station>, arrangeStationsByDistance: Boolean) {
+    fun updateDataSet(stations: ArrayList<Station>) {
         this.listOfStations.clear()
-
-        if (arrangeStationsByDistance) {
-            this.listOfStations.addAll(arrangeStationsByDistance(stations))
-        } else {
-            this.listOfStations.addAll(stations)
-        }
-
+        this.listOfStations.addAll(stations)
         this.notifyDataSetChanged()
     }
 
@@ -89,21 +84,6 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 }
             }
         }
-
-    private fun arrangeStationsByDistance(stations: ArrayList<Station>): ArrayList<Station> {
-
-        Collections.sort(stations) { o1, o2 ->
-            val distance1 = o1.distanceFromUser
-            val distance2 = o2.distanceFromUser
-
-            if (distance1 != null && distance2 != null)
-                (distance1 - distance2).toInt()
-            else
-                0
-        }
-
-        return stations
-    }
 }
 
 

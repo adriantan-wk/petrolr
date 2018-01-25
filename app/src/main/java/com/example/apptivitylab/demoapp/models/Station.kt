@@ -43,8 +43,8 @@ class Station() : Parcelable{
         stationLatLng = LatLng(jsonObject.optDouble("station_latitude"), jsonObject.optDouble("station_longitude"))
 
         val petrolIDJsonArray = jsonObject.optJSONArray("station_petrol_types")
-        for (pID in 0 until petrolIDJsonArray.length()) {
-            stationPetrolTypeIDs.add(petrolIDJsonArray.getString(pID))
+        for (petrolID in 0 until petrolIDJsonArray.length()) {
+            stationPetrolTypeIDs.add(petrolIDJsonArray.getString(petrolID))
         }
     }
 

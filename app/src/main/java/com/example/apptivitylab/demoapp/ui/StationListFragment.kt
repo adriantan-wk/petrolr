@@ -24,7 +24,8 @@ import com.example.apptivitylab.demoapp.models.User
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.synthetic.main.fragment_station_list.*
-import java.util.ArrayList
+import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Created by ApptivityLab on 15/01/2018.
@@ -75,7 +76,7 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
 
         stationsAdapter.setStationListener(this)
         stationListRecyclerView.adapter = stationsAdapter
-        stationsAdapter.updateDataSet(stations, false)
+        updateAdapterDataSet(this.stationsAdapter, this.stations, this.userLatLng)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(context!!)
         startLocationUpdates()
@@ -141,10 +142,24 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
             this.userLatLng = LatLng(it.latitude, it.longitude)
         }
 
-        val stations = StationController.listOfStations
+        updateAdapterDataSet(this.stationsAdapter, this.stations, this.userLatLng)
+    }
 
-        setDistanceFromUser(stations, userLatLng)
-        stationsAdapter.updateDataSet(stations, true)
+
+    private fun updateAdapterDataSet(stationsAdapter: StationsListAdapter
+                                     , stations: ArrayList<Station>, userLatLng: LatLng?) {
+        var readyListOfStations = ArrayList<Station>()
+
+        if (userLatLng == null) {
+            readyListOfStations.addAll(stations)
+        } else {
+            readyListOfStations.addAll(stations)
+
+            setDistanceFromUser(readyListOfStations, userLatLng)
+            readyListOfStations = arrangeStationsByDistance(readyListOfStations)
+        }
+
+        stationsAdapter.updateDataSet(readyListOfStations)
         Toast.makeText(context, R.string.location_updated_string, Toast.LENGTH_SHORT).show()
     }
 
@@ -168,6 +183,22 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
             }
         }
     }
+
+    private fun arrangeStationsByDistance(stations: ArrayList<Station>): ArrayList<Station> {
+        val listOfDistanceSortedStations = ArrayList<Station>()
+        listOfDistanceSortedStations.addAll(stations)
+
+            Collections.sort(listOfDistanceSortedStations) { o1, o2 ->
+                val distance1 = o1.distanceFromUser
+                val distance2 = o2.distanceFromUser
+
+                if (distance1 != null && distance2 != null)
+                    (distance1 - distance2).toInt()
+                else
+                    0
+            }
+            return listOfDistanceSortedStations
+        }
 
     private fun arrangeListByPreferences(stations: ArrayList<Station>, user: User): ArrayList<Any> {
         val listOfPreferredStations = ArrayList<Station>()
