@@ -47,5 +47,6 @@
     <string name="invalid_preferences_string">Preferences invalid.\nPlease select a preferred petrol type and\nat least one preferred brand</string>
     <string name="select_all_string">Select All</string>
     <string name="view_station_details_string">View Station Details</string>
+    <string name="preferred_stations_string">Preferred Stations</string>
 
 </resources>

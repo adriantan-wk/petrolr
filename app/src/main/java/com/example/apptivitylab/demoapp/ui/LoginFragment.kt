@@ -3,10 +3,12 @@ package com.example.apptivitylab.demoapp.ui
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.apptivitylab.demoapp.R
+import com.example.apptivitylab.demoapp.controllers.StationController
 import com.example.apptivitylab.demoapp.controllers.UserController
 import com.example.apptivitylab.demoapp.controllers.UserController.user
 import com.example.apptivitylab.demoapp.models.User
@@ -38,8 +40,9 @@ class LoginFragment : Fragment() {
         //TODO True login verification functionality
         loginBtn.setOnClickListener {
             UserController.createMockUser()
+            StationController.loadMockStations(context!!)
 
-            val randomIntent = TrackNearActivity.newLaunchIntent(context!!)
+            val randomIntent = TrackNearActivity.newLaunchIntent(context!!, StationController.listOfStations)
             startActivity(randomIntent)
         }
     }

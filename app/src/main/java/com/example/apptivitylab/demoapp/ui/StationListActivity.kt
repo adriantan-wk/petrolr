@@ -13,7 +13,9 @@ import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.widget.Toast
 import com.example.apptivitylab.demoapp.R
+import com.example.apptivitylab.demoapp.controllers.StationController
 import com.example.apptivitylab.demoapp.controllers.UserController
+import com.example.apptivitylab.demoapp.models.Station
 import com.example.apptivitylab.demoapp.models.User
 import com.example.apptivitylab.demoapp.ui.TrackNearActivity.Companion.CHANGE_PREFERENCES_REQUEST_CODE
 import kotlinx.android.synthetic.main.activity_station_list.*
@@ -27,13 +29,17 @@ class StationListActivity : AppCompatActivity(), NavigationView.OnNavigationItem
     companion object {
         const val CHANGE_PREFERENCES_REQUEST_CODE = 200
         const val USER_EXTRA = "user_object"
+        const val STATION_LIST_EXTRA = "station_list"
 
-        fun newLaunchIntent(context: Context): Intent {
+        fun newLaunchIntent(context: Context, stations: ArrayList<Station>): Intent {
             val intent = Intent(context, StationListActivity::class.java)
+            intent.putExtra(STATION_LIST_EXTRA, stations)
 
             return intent
         }
     }
+
+    private lateinit var stationListFragment: StationListFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,9 +56,13 @@ class StationListActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         stationListNavView.inflateMenu(R.menu.navigation_drawer_home_menu)
         stationListNavView.setNavigationItemSelectedListener(this)
 
+        val stations = intent.getParcelableArrayListExtra<Station>(STATION_LIST_EXTRA)
+
+        stationListFragment = StationListFragment.newInstance(UserController.user, stations)
+
         supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.containerFrameLayout, StationListFragment())
+                .replace(R.id.containerFrameLayout, stationListFragment)
                 .commit()
     }
 
@@ -72,7 +82,7 @@ class StationListActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         //TODO Other side drawer menu items
 
             R.id.nav_track_nearby -> {
-                val trackNearIntent = TrackNearActivity.newLaunchIntent(this)
+                val trackNearIntent = TrackNearActivity.newLaunchIntent(this, StationController.listOfStations)
                 startActivity(trackNearIntent)
 
 

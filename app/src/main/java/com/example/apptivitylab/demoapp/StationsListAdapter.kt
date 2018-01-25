@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.location.Location
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import com.example.apptivitylab.demoapp.models.Station
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.synthetic.main.cell_station.view.*
 import java.util.*
+import java.util.Collections.addAll
 import kotlin.Comparator
 
 /**
@@ -46,10 +48,10 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     fun updateDataSet(stations: ArrayList<Station>, arrangeStationsByDistance: Boolean) {
         this.listOfStations.clear()
 
-        this.listOfStations = if (arrangeStationsByDistance) {
-            arrangeStationsByDistance(stations)
+        if (arrangeStationsByDistance) {
+            this.listOfStations.addAll(arrangeStationsByDistance(stations))
         } else {
-            stations
+            this.listOfStations.addAll(stations)
         }
 
         this.notifyDataSetChanged()
@@ -88,7 +90,7 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             }
         }
 
-    private fun arrangeStationsByDistance(stations: ArrayList<Station>) : ArrayList<Station> {
+    private fun arrangeStationsByDistance(stations: ArrayList<Station>): ArrayList<Station> {
 
         Collections.sort(stations) { o1, o2 ->
             val distance1 = o1.distanceFromUser

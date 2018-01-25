@@ -38,10 +38,15 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
 
     companion object {
         val ACCESS_FINE_LOCATION_PERMISSIONS = 100
+        const val STATION_LIST_EXTRA = "station_list"
 
-        fun newInstance(): TrackNearbyFragment {
+        fun newInstance(stations: ArrayList<Station>): TrackNearbyFragment {
             val fragment = TrackNearbyFragment()
 
+            val args = Bundle()
+            args.putParcelableArrayList(STATION_LIST_EXTRA, stations)
+
+            fragment.arguments = args
             return fragment
         }
     }
@@ -75,7 +80,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
         super.onViewCreated(view, savedInstanceState)
 
         context?.let {
-            listOfStations = MockDataLoader.loadJSONStations(it)
+            listOfStations = arguments!!.getParcelableArrayList(STATION_LIST_EXTRA)
         }
 
         nearestStationLinearLayout.setOnClickListener {

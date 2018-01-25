@@ -9,14 +9,18 @@ import android.os.Looper
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.MockDataLoader
+import com.example.apptivitylab.demoapp.R.raw.stations
 import com.example.apptivitylab.demoapp.StationsListAdapter
+import com.example.apptivitylab.demoapp.controllers.StationController
 import com.example.apptivitylab.demoapp.models.Station
+import com.example.apptivitylab.demoapp.models.User
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.synthetic.main.fragment_station_list.*
@@ -28,9 +32,28 @@ import java.util.ArrayList
 
 class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.onSelectStationListener {
 
+    companion object {
+        const val USER_EXTRA = "user_object"
+        const val STATION_LIST_EXTRA = "station_list"
+
+        fun newInstance(currentUser: User, stations: ArrayList<Station>): StationListFragment {
+            val fragment = StationListFragment()
+
+            val args = Bundle()
+            args.putParcelable(USER_EXTRA, currentUser)
+            args.putParcelableArrayList(STATION_LIST_EXTRA, stations)
+
+            fragment.arguments = args
+            return fragment
+        }
+    }
+
     private var fusedLocationClient: FusedLocationProviderClient? = null
     private var locationCallBack: LocationCallback? = null
     private var userLatLng: LatLng? = null
+
+    private lateinit var currentUser: User
+    private lateinit var stations: ArrayList<Station>
 
     private val stationsAdapter = StationsListAdapter()
 
@@ -42,12 +65,17 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        arguments?.let {
+            this.currentUser = it.getParcelable(USER_EXTRA)
+            this.stations = it.getParcelableArrayList(STATION_LIST_EXTRA)
+        }
+
         val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         stationListRecyclerView.layoutManager = layoutManager
 
         stationsAdapter.setStationListener(this)
         stationListRecyclerView.adapter = stationsAdapter
-        stationsAdapter.updateDataSet(MockDataLoader.loadJSONStations(context!!), false)
+        stationsAdapter.updateDataSet(stations, false)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(context!!)
         startLocationUpdates()
@@ -113,7 +141,7 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
             this.userLatLng = LatLng(it.latitude, it.longitude)
         }
 
-        val stations = MockDataLoader.loadJSONStations(context!!)
+        val stations = StationController.listOfStations
 
         setDistanceFromUser(stations, userLatLng)
         stationsAdapter.updateDataSet(stations, true)
@@ -139,6 +167,25 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
                 station.distanceFromUser = distance
             }
         }
+    }
+
+    private fun arrangeListByPreferences(stations: ArrayList<Station>, user: User): ArrayList<Any> {
+        val listOfPreferredStations = ArrayList<Station>()
+        val listOfArrangedStations = ArrayList<Any>()
+
+        val preferredPetrolType = user.preferredPetrolType
+        val preferredBrands = user.preferredBrands
+
+        stations.forEach { station ->
+            //TODO Remove stations without the petrol type
+        }
+
+        listOfArrangedStations.add(getString(R.string.preferred_stations_string))
+        listOfPreferredStations.forEach {
+            //TODO Arrange preferred brands on top, rest below
+        }
+
+        return listOfArrangedStations
     }
 
     override fun onStop() {
