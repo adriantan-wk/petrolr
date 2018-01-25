@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    android:padding="12dp">
+    android:padding="12dp"
+    android:background="@android:color/white">
 
     <TextView
         android:id="@+id/stationNameTextView"
