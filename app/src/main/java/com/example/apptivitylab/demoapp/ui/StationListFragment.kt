@@ -200,25 +200,6 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
             return listOfDistanceSortedStations
         }
 
-    private fun arrangeListByPreferences(stations: ArrayList<Station>, user: User): ArrayList<Any> {
-        val listOfPreferredStations = ArrayList<Station>()
-        val listOfArrangedStations = ArrayList<Any>()
-
-        val preferredPetrolType = user.preferredPetrolType
-        val preferredBrands = user.preferredBrands
-
-        stations.forEach { station ->
-            //TODO Remove stations without the petrol type
-        }
-
-        listOfArrangedStations.add(getString(R.string.preferred_stations_string))
-        listOfPreferredStations.forEach {
-            //TODO Arrange preferred brands on top, rest below
-        }
-
-        return listOfArrangedStations
-    }
-
     override fun onStop() {
         fusedLocationClient?.removeLocationUpdates(locationCallBack)
         super.onStop()
