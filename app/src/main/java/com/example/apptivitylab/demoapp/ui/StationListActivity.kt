@@ -55,11 +55,11 @@ class StationListActivity : AppCompatActivity(), NavigationView.OnNavigationItem
 
         val stations = intent.getParcelableArrayListExtra<Station>(STATION_LIST_EXTRA)
 
-        stationListFragment = StationListFragment.newInstance(UserController.user, stations)
+        this.stationListFragment = StationListFragment.newInstance(UserController.user, stations)
 
         supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.containerFrameLayout, stationListFragment)
+                .replace(R.id.containerFrameLayout, this.stationListFragment)
                 .commit()
     }
 

@@ -39,6 +39,7 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     }
 
     private lateinit var stations: ArrayList<Station>
+    private lateinit var trackNearbyFragment: TrackNearbyFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,9 +58,11 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
         this.stations = intent.getParcelableArrayListExtra<Station>(STATION_LIST_EXTRA)
 
+        this.trackNearbyFragment = TrackNearbyFragment.newInstance(UserController.user, stations)
+
         supportFragmentManager
         .beginTransaction()
-        .replace(R.id.containerFrameLayout, TrackNearbyFragment.newInstance(stations))
+        .replace(R.id.containerFrameLayout, this.trackNearbyFragment)
         .commit()
 
     }
@@ -128,7 +131,7 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         UserController.user.preferredPetrolType = user.preferredPetrolType
         UserController.user.preferredBrands = user.preferredBrands
 
-        //TODO Update fragment that user preferences have changed
+        this.trackNearbyFragment.onUserPreferencesChanged(user)
     }
 
 }
