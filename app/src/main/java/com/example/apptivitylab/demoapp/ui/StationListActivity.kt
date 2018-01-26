@@ -131,6 +131,6 @@ class StationListActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         UserController.user.preferredPetrolType = user.preferredPetrolType
         UserController.user.preferredBrands = user.preferredBrands
 
-        //TODO Update fragment that user preferences have changed
+        stationListFragment.onUserPreferencesChanged(user)
     }
 }

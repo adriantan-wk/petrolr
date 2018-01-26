@@ -1,54 +1,81 @@
 package com.example.apptivitylab.demoapp
 
-import android.content.Context
-import android.content.res.Resources
-import android.location.Location
+import android.app.Activity
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.example.apptivitylab.demoapp.R.raw.stations
-import com.example.apptivitylab.demoapp.R.string.unavailable_string
 import com.example.apptivitylab.demoapp.models.Station
-import com.google.android.gms.maps.model.LatLng
+import kotlinx.android.synthetic.main.cell_header.view.*
 import kotlinx.android.synthetic.main.cell_station.view.*
 import java.util.*
-import java.util.Collections.addAll
-import kotlin.Comparator
 
 /**
  * Created by ApptivityLab on 15/01/2018.
  */
 
 class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var listOfStations: ArrayList<Station> = ArrayList()
+    private val STATION: Int = 0
+    private val HEADER: Int = 1
+
+    private var listOfStationsAndHeaders: ArrayList<Any> = ArrayList()
     private lateinit var stationListener: StationViewHolder.onSelectStationListener
 
     fun setStationListener(stationListener: StationViewHolder.onSelectStationListener) {
         this.stationListener = stationListener
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
+    override fun getItemViewType(position: Int): Int {
+        if (listOfStationsAndHeaders[position] is Station) {
+            return STATION
+        } else {
+            return HEADER
+        }
+    }
 
-        return StationViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.cell_station,
-                parent, false), stationListener)
+    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
+        val inflater: LayoutInflater = LayoutInflater.from(parent!!.context)
+
+        var viewHolder: RecyclerView.ViewHolder = when (viewType) {
+            STATION -> {
+                StationViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.cell_station,
+                        parent, false), stationListener)
+            }
+            else -> {
+                HeaderViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.cell_header,
+                        parent, false))
+            }
+        }
+
+        return viewHolder
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val stationViewHolder: StationViewHolder = holder as StationViewHolder
-        val station: Station = listOfStations[position]
+        when (holder.itemViewType) {
+            STATION -> {
+                val stationViewHolder: StationViewHolder = holder as StationViewHolder
+                val station: Station = listOfStationsAndHeaders[position] as Station
 
-        stationViewHolder.updateViewHolder(station)
+                stationViewHolder.updateStationViewHolder(station)
+            }
+            else -> {
+                val headerViewHolder: HeaderViewHolder = holder as HeaderViewHolder
+                val header: String = listOfStationsAndHeaders[position] as String
+
+                headerViewHolder.updateHeaderViewHolder(header)
+            }
+        }
     }
 
     override fun getItemCount(): Int {
-        return listOfStations.size
+        return listOfStationsAndHeaders.size
     }
 
-    fun updateDataSet(stations: ArrayList<Station>) {
-        this.listOfStations.clear()
-        this.listOfStations.addAll(stations)
+    fun updateDataSet(listOfStationsAndHeaders: ArrayList<Any>) {
+        this.listOfStationsAndHeaders.clear()
+        this.listOfStationsAndHeaders.addAll(listOfStationsAndHeaders)
         this.notifyDataSetChanged()
     }
 
@@ -71,7 +98,7 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             })
         }
 
-        fun updateViewHolder(station: Station) {
+        fun updateStationViewHolder(station: Station) {
             this.station = station
 
             stationName.text = station.stationName
@@ -84,6 +111,14 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 }
             }
         }
+
+    class HeaderViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+        private val headerTitle = itemView.headerTextView
+
+        fun updateHeaderViewHolder(header: String) {
+            this.headerTitle.text = header
+        }
+    }
 }
 
 

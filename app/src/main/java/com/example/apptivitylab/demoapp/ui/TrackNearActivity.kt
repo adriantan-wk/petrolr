@@ -9,9 +9,11 @@ import android.support.v7.app.AppCompatActivity
 import com.example.apptivitylab.demoapp.R
 import android.content.Intent
 import android.support.v7.app.AlertDialog
+import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import com.example.apptivitylab.demoapp.R.raw.stations
+import com.example.apptivitylab.demoapp.controllers.StationController
 import com.example.apptivitylab.demoapp.controllers.UserController
 import com.example.apptivitylab.demoapp.models.Station
 import com.example.apptivitylab.demoapp.models.User

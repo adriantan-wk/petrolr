@@ -24,6 +24,7 @@ class Station() : Parcelable{
         stationBrand = parcel.readString()
         stationAddress = parcel.readString()
         stationLatLng = parcel.readParcelable(LatLng::class.java.classLoader)
+        stationPetrolTypeIDs = parcel.readArrayList(String::class.java.classLoader) as ArrayList<String>
     }
 
     constructor(stationID : String, stationName : String, stationBrand : String, stationAddress : String, stationLatLng : LatLng) : this() {
@@ -54,6 +55,7 @@ class Station() : Parcelable{
         parcel.writeString(stationBrand)
         parcel.writeString(stationAddress)
         parcel.writeParcelable(stationLatLng, flags)
+        parcel.writeList(stationPetrolTypeIDs)
     }
 
     override fun describeContents(): Int {
@@ -69,4 +71,5 @@ class Station() : Parcelable{
             return arrayOfNulls(size)
         }
     }
+
 }
