@@ -12,7 +12,7 @@
         android:id="@+id/appLogoImageView"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:src="@drawable/fuellogo" />
+        android:src="@drawable/ic_fuellogo" />
 
     <TextView
         android:layout_width="wrap_content"

@@ -101,7 +101,7 @@ class StationListActivity : AppCompatActivity(), NavigationView.OnNavigationItem
 
             R.id.nav_logout -> {
                 AlertDialog.Builder(this)
-                        .setIcon(R.drawable.logout)
+                        .setIcon(R.drawable.ic_logout)
                         .setTitle(R.string.logout_dialog_title_string)
                         .setMessage(R.string.logout_confirm_msg_string)
                         .setPositiveButton(R.string.yes_string,

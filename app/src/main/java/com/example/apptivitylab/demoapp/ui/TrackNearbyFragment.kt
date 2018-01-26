@@ -283,7 +283,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
         for (station in filteredStationList) {
             station.stationLatLng?.apply {
                 val stationLatLng = LatLng(latitude, longitude)
-                val bitmapImg: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.gasstation_marker)
+                val bitmapImg: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.ic_gasstation_marker)
                 val resizedBitmapImg = Bitmap.createScaledBitmap(bitmapImg, 100, 100, false)
 
                 val stationMarkerOptions: MarkerOptions = MarkerOptions().position(stationLatLng)

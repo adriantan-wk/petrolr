@@ -128,7 +128,7 @@ class ChangePreferencesFragment : Fragment() {
     private fun updateUserPreferences(currentUser: User) {
         if (isPreferenceValid()) {
             AlertDialog.Builder(context!!)
-                    .setIcon(R.drawable.settings)
+                    .setIcon(R.drawable.ic_settings)
                     .setTitle(R.string.change_preferences_title_string)
                     .setMessage(String.format(getString(R.string.confirm_change_preferences_string),
                             selectedPetrolTextView.text, produceStringOfPreferredStationBrands(this.checkBoxesByBrand)))
