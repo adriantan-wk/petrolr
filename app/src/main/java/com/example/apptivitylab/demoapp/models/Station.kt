@@ -15,8 +15,8 @@ class Station() : Parcelable{
     var stationBrand: String? = null
     var stationAddress: String? = null
     var stationLatLng: LatLng? = null
+    var stationPetrolTypeIDs: ArrayList<String> = ArrayList()
     var distanceFromUser: Float? = null
-    var stationPetrolTypes: ArrayList<PetrolType> = ArrayList()
 
     constructor(parcel: Parcel) : this() {
         stationID = parcel.readString()
@@ -41,6 +41,11 @@ class Station() : Parcelable{
         stationBrand = jsonObject.optString("station_brand")
         stationAddress = jsonObject.optString("station_address")
         stationLatLng = LatLng(jsonObject.optDouble("station_latitude"), jsonObject.optDouble("station_longitude"))
+
+        val petrolIDJsonArray = jsonObject.optJSONArray("station_petrol_types")
+        for (petrolID in 0 until petrolIDJsonArray.length()) {
+            stationPetrolTypeIDs.add(petrolIDJsonArray.getString(petrolID))
+        }
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

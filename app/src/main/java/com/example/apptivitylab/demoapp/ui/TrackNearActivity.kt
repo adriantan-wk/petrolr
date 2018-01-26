@@ -11,7 +11,9 @@ import android.content.Intent
 import android.support.v7.app.AlertDialog
 import android.view.MenuItem
 import android.widget.Toast
+import com.example.apptivitylab.demoapp.R.raw.stations
 import com.example.apptivitylab.demoapp.controllers.UserController
+import com.example.apptivitylab.demoapp.models.Station
 import com.example.apptivitylab.demoapp.models.User
 import kotlinx.android.synthetic.main.activity_track_nearby.*
 
@@ -24,13 +26,17 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     companion object {
         const val CHANGE_PREFERENCES_REQUEST_CODE = 200
         const val USER_EXTRA = "user_object"
+        const val STATION_LIST_EXTRA = "station_list"
 
-        fun newLaunchIntent(context: Context): Intent {
+        fun newLaunchIntent(context: Context, stations: ArrayList<Station>): Intent {
             val intent = Intent(context, TrackNearActivity::class.java)
+            intent.putExtra(STATION_LIST_EXTRA, stations)
 
             return intent
         }
     }
+
+    private lateinit var stations: ArrayList<Station>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,9 +53,11 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         trackNearNavView.inflateMenu(R.menu.navigation_drawer_home_menu)
         trackNearNavView.setNavigationItemSelectedListener(this)
 
+        this.stations = intent.getParcelableArrayListExtra<Station>(STATION_LIST_EXTRA)
+
         supportFragmentManager
         .beginTransaction()
-        .replace(R.id.containerFrameLayout, TrackNearbyFragment.newInstance())
+        .replace(R.id.containerFrameLayout, TrackNearbyFragment.newInstance(stations))
         .commit()
 
     }
@@ -75,7 +83,7 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             }
 
             R.id.nav_station_list -> {
-                val stationListIntent = StationListActivity.newLaunchIntent(this)
+                val stationListIntent = StationListActivity.newLaunchIntent(this, this.stations)
                 startActivity(stationListIntent)
 
                 trackNearDrawerLayout.closeDrawers()

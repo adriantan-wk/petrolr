@@ -9,18 +9,23 @@ import android.os.Looper
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.MockDataLoader
+import com.example.apptivitylab.demoapp.R.raw.stations
 import com.example.apptivitylab.demoapp.StationsListAdapter
+import com.example.apptivitylab.demoapp.controllers.StationController
 import com.example.apptivitylab.demoapp.models.Station
+import com.example.apptivitylab.demoapp.models.User
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.synthetic.main.fragment_station_list.*
-import java.util.ArrayList
+import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Created by ApptivityLab on 15/01/2018.
@@ -28,9 +33,28 @@ import java.util.ArrayList
 
 class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.onSelectStationListener {
 
+    companion object {
+        const val USER_EXTRA = "user_object"
+        const val STATION_LIST_EXTRA = "station_list"
+
+        fun newInstance(currentUser: User, stations: ArrayList<Station>): StationListFragment {
+            val fragment = StationListFragment()
+
+            val args = Bundle()
+            args.putParcelable(USER_EXTRA, currentUser)
+            args.putParcelableArrayList(STATION_LIST_EXTRA, stations)
+
+            fragment.arguments = args
+            return fragment
+        }
+    }
+
     private var fusedLocationClient: FusedLocationProviderClient? = null
     private var locationCallBack: LocationCallback? = null
     private var userLatLng: LatLng? = null
+
+    private lateinit var currentUser: User
+    private lateinit var stations: ArrayList<Station>
 
     private val stationsAdapter = StationsListAdapter()
 
@@ -42,12 +66,17 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        arguments?.let {
+            this.currentUser = it.getParcelable(USER_EXTRA)
+            this.stations = it.getParcelableArrayList(STATION_LIST_EXTRA)
+        }
+
         val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         stationListRecyclerView.layoutManager = layoutManager
 
         stationsAdapter.setStationListener(this)
         stationListRecyclerView.adapter = stationsAdapter
-        stationsAdapter.updateDataSet(MockDataLoader.loadJSONStations(context!!), false)
+        updateAdapterDataSet(this.stationsAdapter, this.stations, this.userLatLng)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(context!!)
         startLocationUpdates()
@@ -113,10 +142,21 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
             this.userLatLng = LatLng(it.latitude, it.longitude)
         }
 
-        val stations = MockDataLoader.loadJSONStations(context!!)
+        updateAdapterDataSet(this.stationsAdapter, this.stations, this.userLatLng)
+    }
 
-        setDistanceFromUser(stations, userLatLng)
-        stationsAdapter.updateDataSet(stations, true)
+
+    private fun updateAdapterDataSet(stationsAdapter: StationsListAdapter
+                                     , stations: ArrayList<Station>, userLatLng: LatLng?) {
+        var listOfStations = ArrayList<Station>()
+        listOfStations.addAll(stations)
+
+        if (userLatLng != null) {
+            setDistanceFromUser(listOfStations, userLatLng)
+            listOfStations = arrangeStationsByDistance(listOfStations)
+        }
+
+        stationsAdapter.updateDataSet(listOfStations)
         Toast.makeText(context, R.string.location_updated_string, Toast.LENGTH_SHORT).show()
     }
 
@@ -140,6 +180,22 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
             }
         }
     }
+
+    private fun arrangeStationsByDistance(stations: ArrayList<Station>): ArrayList<Station> {
+        val listOfDistanceSortedStations = ArrayList<Station>()
+        listOfDistanceSortedStations.addAll(stations)
+
+            Collections.sort(listOfDistanceSortedStations) { o1, o2 ->
+                val distance1 = o1.distanceFromUser
+                val distance2 = o2.distanceFromUser
+
+                if (distance1 != null && distance2 != null)
+                    (distance1 - distance2).toInt()
+                else
+                    0
+            }
+            return listOfDistanceSortedStations
+        }
 
     override fun onStop() {
         fusedLocationClient?.removeLocationUpdates(locationCallBack)
