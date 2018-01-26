@@ -148,18 +148,15 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
 
     private fun updateAdapterDataSet(stationsAdapter: StationsListAdapter
                                      , stations: ArrayList<Station>, userLatLng: LatLng?) {
-        var readyListOfStations = ArrayList<Station>()
+        var listOfStations = ArrayList<Station>()
+        listOfStations.addAll(stations)
 
-        if (userLatLng == null) {
-            readyListOfStations.addAll(stations)
-        } else {
-            readyListOfStations.addAll(stations)
-
-            setDistanceFromUser(readyListOfStations, userLatLng)
-            readyListOfStations = arrangeStationsByDistance(readyListOfStations)
+        if (userLatLng != null) {
+            setDistanceFromUser(listOfStations, userLatLng)
+            listOfStations = arrangeStationsByDistance(listOfStations)
         }
 
-        stationsAdapter.updateDataSet(readyListOfStations)
+        stationsAdapter.updateDataSet(listOfStations)
         Toast.makeText(context, R.string.location_updated_string, Toast.LENGTH_SHORT).show()
     }
 
