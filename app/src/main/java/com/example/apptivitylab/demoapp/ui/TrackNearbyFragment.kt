@@ -9,7 +9,9 @@ import android.location.Location
 import android.os.Bundle
 import android.os.Looper
 import android.support.v4.app.ActivityCompat
+import android.support.v4.app.ActivityCompat.requestPermissions
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat.startActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +20,7 @@ import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.models.PetrolType
 import com.example.apptivitylab.demoapp.models.Station
 import com.example.apptivitylab.demoapp.models.User
+import com.example.apptivitylab.demoapp.ui.TrackNearbyFragment.Companion.ACCESS_FINE_LOCATION_PERMISSIONS
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -82,9 +85,9 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        context?.let {
-            this.currentUser = arguments!!.getParcelable(USER_EXTRA)
-            this.stationList = arguments!!.getParcelableArrayList(STATION_LIST_EXTRA)
+        arguments?.let {
+            this.currentUser = it.getParcelable(USER_EXTRA)
+            this.stationList = it.getParcelableArrayList(STATION_LIST_EXTRA)
         }
 
         nearestStationLinearLayout.setOnClickListener {
