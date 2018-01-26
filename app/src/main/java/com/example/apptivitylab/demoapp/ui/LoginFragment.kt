@@ -1,18 +1,13 @@
 package com.example.apptivitylab.demoapp.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.controllers.StationController
 import com.example.apptivitylab.demoapp.controllers.UserController
-import com.example.apptivitylab.demoapp.controllers.UserController.user
-import com.example.apptivitylab.demoapp.models.Station
-import com.example.apptivitylab.demoapp.models.User
 import kotlinx.android.synthetic.main.fragment_login.*
 
 /**
@@ -43,7 +38,7 @@ class LoginFragment : Fragment() {
             UserController.createMockUser()
             StationController.loadMockStations(context!!)
 
-            val randomIntent = TrackNearActivity.newLaunchIntent(context!!, StationController.listOfStations)
+            val randomIntent = TrackNearActivity.newLaunchIntent(context!!, StationController.stationList)
             startActivity(randomIntent)
         }
     }

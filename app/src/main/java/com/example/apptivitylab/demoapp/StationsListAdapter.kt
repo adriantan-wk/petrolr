@@ -1,12 +1,9 @@
 package com.example.apptivitylab.demoapp
 
-import android.app.Activity
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import com.example.apptivitylab.demoapp.R.raw.stations
 import com.example.apptivitylab.demoapp.models.Station
 import kotlinx.android.synthetic.main.cell_header.view.*
 import kotlinx.android.synthetic.main.cell_station.view.*
@@ -20,7 +17,7 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val STATION: Int = 0
     private val HEADER: Int = 1
 
-    private var listOfStationsAndHeaders: ArrayList<Any> = ArrayList()
+    private var stationsAndHeadersList: ArrayList<Any> = ArrayList()
     private lateinit var stationListener: StationViewHolder.onSelectStationListener
 
     fun setStationListener(stationListener: StationViewHolder.onSelectStationListener) {
@@ -28,7 +25,7 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (listOfStationsAndHeaders[position] is Station) {
+        if (stationsAndHeadersList[position] is Station) {
             return STATION
         } else {
             return HEADER
@@ -56,13 +53,13 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         when (holder.itemViewType) {
             STATION -> {
                 val stationViewHolder: StationViewHolder = holder as StationViewHolder
-                val station: Station = listOfStationsAndHeaders[position] as Station
+                val station: Station = stationsAndHeadersList[position] as Station
 
                 stationViewHolder.updateStationViewHolder(station)
             }
             else -> {
                 val headerViewHolder: HeaderViewHolder = holder as HeaderViewHolder
-                val header: String = listOfStationsAndHeaders[position] as String
+                val header: String = stationsAndHeadersList[position] as String
 
                 headerViewHolder.updateHeaderViewHolder(header)
             }
@@ -70,12 +67,12 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return listOfStationsAndHeaders.size
+        return stationsAndHeadersList.size
     }
 
-    fun updateDataSet(listOfStationsAndHeaders: ArrayList<Any>) {
-        this.listOfStationsAndHeaders.clear()
-        this.listOfStationsAndHeaders.addAll(listOfStationsAndHeaders)
+    fun updateDataSet(stationsAndHeadersList: ArrayList<Any>) {
+        this.stationsAndHeadersList.clear()
+        this.stationsAndHeadersList.addAll(stationsAndHeadersList)
         this.notifyDataSetChanged()
     }
 

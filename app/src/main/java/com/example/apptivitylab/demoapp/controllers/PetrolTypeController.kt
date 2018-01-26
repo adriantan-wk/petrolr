@@ -14,7 +14,7 @@ import java.io.InputStreamReader
  */
 
 object PetrolTypeController {
-    private lateinit var listOfPetrolTypes: ArrayList<PetrolType>
+    private lateinit var petrolTypeList: ArrayList<PetrolType>
 
     fun loadMockPetrolTypes(context: Context) {
         val petrolTypeList: ArrayList<PetrolType> = ArrayList()
@@ -32,6 +32,6 @@ object PetrolTypeController {
             petrolTypeList.add(petrolType)
         }
 
-        listOfPetrolTypes = petrolTypeList
+        this.petrolTypeList = petrolTypeList
     }
 }

@@ -148,18 +148,18 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
 
     private fun updateAdapterDataSet(stationsAdapter: StationsListAdapter
                                      , stations: ArrayList<Station>, userLatLng: LatLng?) {
-        var listOfStationsAndHeaders = ArrayList<Any>()
-        var listOfStations = ArrayList<Station>()
-        listOfStations.addAll(stations)
+        var stationsAndHeadersList = ArrayList<Any>()
+        var stationList = ArrayList<Station>()
+        stationList.addAll(stations)
 
 
         if (userLatLng != null) {
-            setDistanceFromUser(listOfStations, userLatLng)
-            listOfStations = arrangeStationsByDistance(listOfStations)
-            listOfStationsAndHeaders = arrangeListByPreferences(listOfStations, currentUser)
+            setDistanceFromUser(stationList, userLatLng)
+            stationList = arrangeStationsByDistance(stationList)
+            stationsAndHeadersList = arrangeListByPreferences(stationList, currentUser)
         }
 
-        stationsAdapter.updateDataSet(listOfStationsAndHeaders)
+        stationsAdapter.updateDataSet(stationsAndHeadersList)
         Toast.makeText(context, R.string.location_updated_string, Toast.LENGTH_SHORT).show()
     }
 
@@ -185,10 +185,10 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
     }
 
     private fun arrangeStationsByDistance(stations: ArrayList<Station>): ArrayList<Station> {
-        val listOfDistanceSortedStations = ArrayList<Station>()
-        listOfDistanceSortedStations.addAll(stations)
+        val distanceSortedStationList = ArrayList<Station>()
+        distanceSortedStationList.addAll(stations)
 
-        Collections.sort(listOfDistanceSortedStations) { o1, o2 ->
+        Collections.sort(distanceSortedStationList) { o1, o2 ->
             val distance1 = o1.distanceFromUser
             val distance2 = o2.distanceFromUser
 
@@ -197,14 +197,14 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
             else
                 0
         }
-        return listOfDistanceSortedStations
+        return distanceSortedStationList
     }
 
     private fun arrangeListByPreferences(stations: ArrayList<Station>, user: User): ArrayList<Any> {
 
         val stationsWithCorrectPetrolType = ArrayList<Station>()
-        val listOfPreferredStations = ArrayList<Station>()
-        val listOfArrangedStationsAndHeaders = ArrayList<Any>()
+        val preferredStationList = ArrayList<Station>()
+        val arrangedStationsAndHeadersList = ArrayList<Any>()
 
         val userPreferredPetrolType = user.preferredPetrolType?.petrolID
         val userPreferredBrands: ArrayList<Brand> = user.preferredBrands
@@ -219,18 +219,18 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
             if (userPreferredBrands.any { brand ->
                 brand.brandName == station.stationBrand
             }) {
-                listOfPreferredStations.add(station)
+                preferredStationList.add(station)
             }
         }
 
-        listOfArrangedStationsAndHeaders.add(getString(R.string.preferred_stations_string))
-        listOfArrangedStationsAndHeaders.addAll(listOfPreferredStations)
+        arrangedStationsAndHeadersList.add(getString(R.string.preferred_stations_string))
+        arrangedStationsAndHeadersList.addAll(preferredStationList)
 
-        stationsWithCorrectPetrolType.removeAll(listOfPreferredStations)
-        listOfArrangedStationsAndHeaders.add(getString(R.string.non_preferred_stations_string))
-        listOfArrangedStationsAndHeaders.addAll(stationsWithCorrectPetrolType)
+        stationsWithCorrectPetrolType.removeAll(preferredStationList)
+        arrangedStationsAndHeadersList.add(getString(R.string.non_preferred_stations_string))
+        arrangedStationsAndHeadersList.addAll(stationsWithCorrectPetrolType)
 
-        return listOfArrangedStationsAndHeaders
+        return arrangedStationsAndHeadersList
     }
 
     override fun onStop() {

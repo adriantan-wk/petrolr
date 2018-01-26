@@ -2,12 +2,10 @@ package com.example.apptivitylab.demoapp.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.location.Location
-import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
 import android.support.v4.app.ActivityCompat
@@ -16,7 +14,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.example.apptivitylab.demoapp.MockDataLoader
 import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.models.Station
 import com.google.android.gms.location.*
@@ -60,7 +57,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
     private var userLatLng: LatLng? = null
     private var performInitialUserLocationZoom = true
 
-    private var listOfStations: ArrayList<Station> = ArrayList()
+    private var stationList: ArrayList<Station> = ArrayList()
     private var mapOfStationMarkers: HashMap<String, Marker> = HashMap()
     private var nearestStation: Station? = null
 
@@ -80,7 +77,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
         super.onViewCreated(view, savedInstanceState)
 
         context?.let {
-            listOfStations = arguments!!.getParcelableArrayList(STATION_LIST_EXTRA)
+            stationList = arguments!!.getParcelableArrayList(STATION_LIST_EXTRA)
         }
 
         nearestStationLinearLayout.setOnClickListener {
@@ -204,15 +201,15 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
     private fun findNearestStation(): Station? {
         var nearestStation: Station? = this.nearestStation
 
-        if (this.listOfStations.isNotEmpty()) {
+        if (this.stationList.isNotEmpty()) {
             if (nearestStation == null) {
-                this.listOfStations[0].distanceFromUser = calculateUserDistanceToStation(this.listOfStations[0])
+                this.stationList[0].distanceFromUser = calculateUserDistanceToStation(this.stationList[0])
 
                 updateNearestStationViews(nearestStation)
 
-                nearestStation = this.listOfStations[0]
+                nearestStation = this.stationList[0]
             } else {
-                this.listOfStations.forEach { station ->
+                this.stationList.forEach { station ->
                     val distanceFromUser = calculateUserDistanceToStation(station)
                     station.distanceFromUser = distanceFromUser
 
@@ -241,7 +238,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
     }
 
     private fun generateStationMarkers() {
-        for (station in listOfStations) {
+        for (station in stationList) {
             station.stationLatLng?.apply {
                 val stationLatLng = LatLng(latitude, longitude)
                 val bitmapImg: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.gasstation_marker)

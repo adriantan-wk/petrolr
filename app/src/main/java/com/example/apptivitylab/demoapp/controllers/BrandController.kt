@@ -14,7 +14,7 @@ import java.io.InputStreamReader
  */
 
 object BrandController {
-    private lateinit var listOfBrands: ArrayList<Brand>
+    private lateinit var brandList: ArrayList<Brand>
 
     private fun loadMockBrands(context: Context) {
         val brandList: ArrayList<Brand> = ArrayList()
@@ -32,6 +32,6 @@ object BrandController {
             brandList.add(brand)
         }
 
-        listOfBrands = brandList
+        this.brandList = brandList
     }
 }
