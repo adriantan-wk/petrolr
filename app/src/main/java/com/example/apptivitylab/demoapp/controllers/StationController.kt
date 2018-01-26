@@ -14,7 +14,7 @@ import java.io.InputStreamReader
  */
 
 object StationController {
-    lateinit var listOfStations: ArrayList<Station>
+    lateinit var stationList: ArrayList<Station>
 
     fun loadMockStations(context: Context) {
         val stationList: ArrayList<Station> = ArrayList()
@@ -32,6 +32,6 @@ object StationController {
             stationList.add(station)
         }
 
-        this.listOfStations = stationList
+        this.stationList = stationList
     }
 }

@@ -5,11 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
-import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.widget.Toast
 import com.example.apptivitylab.demoapp.R
@@ -17,7 +15,6 @@ import com.example.apptivitylab.demoapp.controllers.StationController
 import com.example.apptivitylab.demoapp.controllers.UserController
 import com.example.apptivitylab.demoapp.models.Station
 import com.example.apptivitylab.demoapp.models.User
-import com.example.apptivitylab.demoapp.ui.TrackNearActivity.Companion.CHANGE_PREFERENCES_REQUEST_CODE
 import kotlinx.android.synthetic.main.activity_station_list.*
 
 /**
@@ -82,7 +79,7 @@ class StationListActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         //TODO Other side drawer menu items
 
             R.id.nav_track_nearby -> {
-                val trackNearIntent = TrackNearActivity.newLaunchIntent(this, StationController.listOfStations)
+                val trackNearIntent = TrackNearActivity.newLaunchIntent(this, StationController.stationList)
                 startActivity(trackNearIntent)
 
 
@@ -131,6 +128,6 @@ class StationListActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         UserController.user.preferredPetrolType = user.preferredPetrolType
         UserController.user.preferredBrands = user.preferredBrands
 
-        //TODO Update fragment that user preferences have changed
+        stationListFragment.onUserPreferencesChanged(user)
     }
 }

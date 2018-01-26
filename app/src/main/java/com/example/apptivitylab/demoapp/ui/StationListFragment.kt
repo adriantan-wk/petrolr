@@ -1,7 +1,6 @@
 package com.example.apptivitylab.demoapp.ui
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
@@ -9,16 +8,13 @@ import android.os.Looper
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.apptivitylab.demoapp.R
-import com.example.apptivitylab.demoapp.MockDataLoader
-import com.example.apptivitylab.demoapp.R.raw.stations
 import com.example.apptivitylab.demoapp.StationsListAdapter
-import com.example.apptivitylab.demoapp.controllers.StationController
+import com.example.apptivitylab.demoapp.models.Brand
 import com.example.apptivitylab.demoapp.models.Station
 import com.example.apptivitylab.demoapp.models.User
 import com.google.android.gms.location.*
@@ -145,18 +141,25 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
         updateAdapterDataSet(this.stationsAdapter, this.stations, this.userLatLng)
     }
 
+    public fun onUserPreferencesChanged(user: User) {
+        this.currentUser = user
+        updateAdapterDataSet(this.stationsAdapter, this.stations, this.userLatLng)
+    }
 
     private fun updateAdapterDataSet(stationsAdapter: StationsListAdapter
                                      , stations: ArrayList<Station>, userLatLng: LatLng?) {
-        var listOfStations = ArrayList<Station>()
-        listOfStations.addAll(stations)
+        var stationsAndHeadersList = ArrayList<Any>()
+        var stationList = ArrayList<Station>()
+        stationList.addAll(stations)
+
 
         if (userLatLng != null) {
-            setDistanceFromUser(listOfStations, userLatLng)
-            listOfStations = arrangeStationsByDistance(listOfStations)
+            setDistanceFromUser(stationList, userLatLng)
+            stationList = arrangeStationsByDistance(stationList)
+            stationsAndHeadersList = arrangeListByPreferences(stationList, currentUser)
         }
 
-        stationsAdapter.updateDataSet(listOfStations)
+        stationsAdapter.updateDataSet(stationsAndHeadersList)
         Toast.makeText(context, R.string.location_updated_string, Toast.LENGTH_SHORT).show()
     }
 
@@ -182,20 +185,53 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
     }
 
     private fun arrangeStationsByDistance(stations: ArrayList<Station>): ArrayList<Station> {
-        val listOfDistanceSortedStations = ArrayList<Station>()
-        listOfDistanceSortedStations.addAll(stations)
+        val distanceSortedStationList = ArrayList<Station>()
+        distanceSortedStationList.addAll(stations)
 
-            Collections.sort(listOfDistanceSortedStations) { o1, o2 ->
-                val distance1 = o1.distanceFromUser
-                val distance2 = o2.distanceFromUser
+        Collections.sort(distanceSortedStationList) { o1, o2 ->
+            val distance1 = o1.distanceFromUser
+            val distance2 = o2.distanceFromUser
 
-                if (distance1 != null && distance2 != null)
-                    (distance1 - distance2).toInt()
-                else
-                    0
-            }
-            return listOfDistanceSortedStations
+            if (distance1 != null && distance2 != null)
+                (distance1 - distance2).toInt()
+            else
+                0
         }
+        return distanceSortedStationList
+    }
+
+    private fun arrangeListByPreferences(stations: ArrayList<Station>, user: User): ArrayList<Any> {
+
+        val stationsWithCorrectPetrolType = ArrayList<Station>()
+        val preferredStationList = ArrayList<Station>()
+        val arrangedStationsAndHeadersList = ArrayList<Any>()
+
+        val userPreferredPetrolType = user.preferredPetrolType?.petrolID
+        val userPreferredBrands: ArrayList<Brand> = user.preferredBrands
+
+        stations.forEach { station ->
+            if (station.stationPetrolTypeIDs.contains(userPreferredPetrolType)) {
+                stationsWithCorrectPetrolType.add(station)
+            }
+        }
+
+        stationsWithCorrectPetrolType.forEach { station ->
+            if (userPreferredBrands.any { brand ->
+                brand.brandName == station.stationBrand
+            }) {
+                preferredStationList.add(station)
+            }
+        }
+
+        arrangedStationsAndHeadersList.add(getString(R.string.preferred_stations_string))
+        arrangedStationsAndHeadersList.addAll(preferredStationList)
+
+        stationsWithCorrectPetrolType.removeAll(preferredStationList)
+        arrangedStationsAndHeadersList.add(getString(R.string.non_preferred_stations_string))
+        arrangedStationsAndHeadersList.addAll(stationsWithCorrectPetrolType)
+
+        return arrangedStationsAndHeadersList
+    }
 
     override fun onStop() {
         fusedLocationClient?.removeLocationUpdates(locationCallBack)
