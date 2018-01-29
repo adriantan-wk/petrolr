@@ -63,7 +63,8 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
     private var performInitialUserLocationZoom = true
 
     private var stationList: ArrayList<Station> = ArrayList()
-    private var filteredStationList: ArrayList<Station> = ArrayList()
+    private var correctPetrolTypeStationList: ArrayList<Station> = ArrayList()
+    private var preferredStationList: ArrayList<Station> = ArrayList()
     private var mapOfStationMarkers: HashMap<String, Marker> = HashMap()
     private var nearestStation: Station? = null
 
@@ -123,8 +124,8 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
                 }
 
                 assignInfoWindowAdapterAndListener(this)
-                this.filteredStationList = filterStationsByPreferredPetrol(this.stationList, this.currentUser)
-                generateStationMarkers(filteredStationList)
+                this.correctPetrolTypeStationList = filterStationsByPreferredPetrol(this.stationList, this.currentUser)
+                generateStationMarkers(correctPetrolTypeStationList)
             }
         }
     }
@@ -220,13 +221,13 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
         fusedLocationClient?.removeLocationUpdates(locationCallBack)
 
         this.currentUser = user
-        this.filteredStationList = this.filterStationsByPreferredPetrol(this.stationList, this.currentUser)
+        this.correctPetrolTypeStationList = this.filterStationsByPreferredPetrol(this.stationList, this.currentUser)
 
         this.mapOfStationMarkers.values.forEach { marker ->
             marker.remove()
         }
         this.mapOfStationMarkers.clear()
-        this.generateStationMarkers(this.filteredStationList)
+        this.generateStationMarkers(this.correctPetrolTypeStationList)
 
         this.nearestStation = null
 
@@ -237,15 +238,15 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
     private fun findNearestStation(): Station? {
         var nearestStation: Station? = this.nearestStation
 
-        if (this.filteredStationList.isNotEmpty()) {
+        if (this.preferredStationList.isNotEmpty()) {
             if (nearestStation == null) {
-                this.filteredStationList[0].distanceFromUser = calculateUserDistanceToStation(this.filteredStationList[0])
+                this.preferredStationList[0].distanceFromUser = calculateUserDistanceToStation(this.preferredStationList[0])
 
                 updateNearestStationViews(nearestStation)
 
-                nearestStation = this.filteredStationList[0]
+                nearestStation = this.preferredStationList[0]
             } else {
-                this.filteredStationList.forEach { station ->
+                this.preferredStationList.forEach { station ->
                     val distanceFromUser = calculateUserDistanceToStation(station)
                     station.distanceFromUser = distanceFromUser
 
@@ -277,11 +278,25 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
     }
 
     private fun generateStationMarkers(filteredStationList: ArrayList<Station>) {
+        preferredStationList.clear()
+
         for (station in filteredStationList) {
             station.stationLatLng?.apply {
                 val stationLatLng = LatLng(latitude, longitude)
-                val bitmapImg: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.ic_gasstation_marker)
-                val resizedBitmapImg = Bitmap.createScaledBitmap(bitmapImg, 100, 100, false)
+
+                val bitmapImg: Bitmap
+                val resizedBitmapImg: Bitmap
+
+                if (currentUser.preferredBrands.any { brand ->
+                    brand.brandName == station.stationBrand
+                }) {
+                    bitmapImg = BitmapFactory.decodeResource(resources, R.drawable.ic_gasstation_marker)
+                    resizedBitmapImg = Bitmap.createScaledBitmap(bitmapImg, 100, 100, false)
+                    preferredStationList.add(station)
+                } else {
+                    bitmapImg = BitmapFactory.decodeResource(resources, R.drawable.ic_dot_marker)
+                    resizedBitmapImg = Bitmap.createScaledBitmap(bitmapImg, 50, 50, false)
+                }
 
                 val stationMarkerOptions: MarkerOptions = MarkerOptions().position(stationLatLng)
                         .title(station.stationName).icon(BitmapDescriptorFactory.fromBitmap(resizedBitmapImg))
