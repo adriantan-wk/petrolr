@@ -63,7 +63,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
     private var performInitialUserLocationZoom = true
 
     private var stationList: ArrayList<Station> = ArrayList()
-    private var correctPetrolTypeStationList: ArrayList<Station> = ArrayList()
+    private var filteredStationList: ArrayList<Station> = ArrayList()
     private var preferredStationList: ArrayList<Station> = ArrayList()
     private var mapOfStationMarkers: HashMap<String, Marker> = HashMap()
     private var nearestStation: Station? = null
@@ -124,8 +124,8 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
                 }
 
                 assignInfoWindowAdapterAndListener(this)
-                this.correctPetrolTypeStationList = filterStationsByPreferredPetrol(this.stationList, this.currentUser)
-                generateStationMarkers(correctPetrolTypeStationList)
+                this.filteredStationList = filterStationsByPreferredPetrol(this.stationList, this.currentUser)
+                generateStationMarkers(filteredStationList)
             }
         }
     }
@@ -221,13 +221,13 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
         fusedLocationClient?.removeLocationUpdates(locationCallBack)
 
         this.currentUser = user
-        this.correctPetrolTypeStationList = this.filterStationsByPreferredPetrol(this.stationList, this.currentUser)
+        this.filteredStationList = this.filterStationsByPreferredPetrol(this.stationList, this.currentUser)
 
         this.mapOfStationMarkers.values.forEach { marker ->
             marker.remove()
         }
         this.mapOfStationMarkers.clear()
-        this.generateStationMarkers(this.correctPetrolTypeStationList)
+        this.generateStationMarkers(this.filteredStationList)
 
         this.nearestStation = null
 
