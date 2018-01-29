@@ -39,7 +39,7 @@
     <string name="preferred_petrol">Preferred Petrol: %1$s</string>
     <string name="save">SAVE</string>
     <string name="change_preferences_title">Change Preferences</string>
-    <string name="nearest_station">Nearest Station:</string>
+    <string name="nearest_station">Nearest Preferred Station:</string>
     <string name="address">Address</string>
     <string name="searching">Searching…</string>
     <string name="station_brands">Station Brands</string>
