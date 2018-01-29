@@ -7,7 +7,7 @@
     <string name="confirm_pass">Confirm Password</string>
     <string name="distance">Distance</string>
     <string name="time_required">Time Required</string>
-    <string name="price">Price</string>
+    <string name="petrol_price">Price of %1$s:</string>
     <string name="logout">Log Out</string>
     <string name="open_drawer">Open Drawer</string>
     <string name="close_drawer">Close Drawer</string>
@@ -50,5 +50,6 @@
     <string name="preferred_stations">Preferred Stations</string>
     <string name="non_preferred_stations">Non-Preferred Stations</string>
     <string name="preferences_updated">Your preferences have been updated</string>
+    <string name="price_value">RM %1$.2f</string>
 
 </resources>
