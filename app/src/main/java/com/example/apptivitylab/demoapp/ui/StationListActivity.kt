@@ -16,6 +16,7 @@ import com.example.apptivitylab.demoapp.controllers.UserController
 import com.example.apptivitylab.demoapp.models.Station
 import com.example.apptivitylab.demoapp.models.User
 import kotlinx.android.synthetic.main.activity_station_list.*
+import kotlinx.android.synthetic.main.activity_track_nearby.*
 
 /**
  * Created by ApptivityLab on 17/01/2018.
@@ -67,6 +68,8 @@ class StationListActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == CHANGE_PREFERENCES_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             val newUserPreferences = data?.getParcelableExtra<User>(getString(R.string.change_preferences_intent))
+
+            stationListDrawerLayout.closeDrawers()
 
             newUserPreferences?.let {
                 updateUserPreferences(newUserPreferences)

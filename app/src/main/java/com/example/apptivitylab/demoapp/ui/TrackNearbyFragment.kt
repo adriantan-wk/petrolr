@@ -96,6 +96,11 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
             }
         }
 
+        this.currentUser.preferredPetrolType?.let {
+            priceTextView.text = getString(R.string.petrol_price, it.petrolName)
+            priceValueTextView.text = getString(R.string.price_value, it.currentPrice)
+        }
+
         this.fusedLocationClient = LocationServices.getFusedLocationProviderClient(context!!)
         startLocationUpdates()
     }
@@ -222,6 +227,11 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
 
         this.currentUser = user
         this.filteredStationList = this.filterStationsByPreferredPetrol(this.stationList, this.currentUser)
+
+        this.currentUser.preferredPetrolType?.let {
+            priceTextView.text = getString(R.string.petrol_price, it.petrolName)
+            priceValueTextView.text = getString(R.string.price_value, it.currentPrice)
+        }
 
         this.mapOfStationMarkers.values.forEach { marker ->
             marker.remove()
