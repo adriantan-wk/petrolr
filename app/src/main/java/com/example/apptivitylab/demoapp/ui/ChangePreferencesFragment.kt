@@ -4,9 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.app.AlertDialog
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,12 +12,9 @@ import android.widget.CheckBox
 import android.widget.RadioButton
 import com.example.apptivitylab.demoapp.MockDataLoader
 import com.example.apptivitylab.demoapp.R
-import com.example.apptivitylab.demoapp.R.id.*
-import com.example.apptivitylab.demoapp.controllers.UserController
 import com.example.apptivitylab.demoapp.controllers.UserController.user
 import com.example.apptivitylab.demoapp.models.Brand
 import com.example.apptivitylab.demoapp.models.PetrolType
-import com.example.apptivitylab.demoapp.models.Station
 import com.example.apptivitylab.demoapp.models.User
 import kotlinx.android.synthetic.main.fragment_change_preferences.*
 
@@ -65,7 +60,7 @@ class ChangePreferencesFragment : Fragment() {
         this.petrolTypes = MockDataLoader.loadJSONPetrolTypes(context!!)
         this.brands = MockDataLoader.loadJSONBrands(context!!)
 
-        this.selectedPetrolTextView.text = String.format(getString(R.string.preferred_petrol_string, ""))
+        this.selectedPetrolTextView.text = String.format(getString(R.string.preferred_petrol, ""))
 
         this.createPetrolRadioButtons(this.petrolTypes, this.radioButtonsByPetrolType)
         this.createBrandCheckBoxes(this.brands, this.checkBoxesByBrand)
@@ -89,7 +84,7 @@ class ChangePreferencesFragment : Fragment() {
             radioButton.text = petrolType.petrolName
 
             radioButton.setOnClickListener {
-                selectedPetrolTextView.text = String.format(getString(R.string.preferred_petrol_string, radioButton.text))
+                selectedPetrolTextView.text = String.format(getString(R.string.preferred_petrol, radioButton.text))
             }
             this.petrolTypesRadioGroup.addView(radioButton)
 
@@ -114,7 +109,7 @@ class ChangePreferencesFragment : Fragment() {
             if (petrolType.petrolID == currentUser.preferredPetrolType?.petrolID) {
                 radioButton.isChecked = true
                 selectedPetrolTextView.text =
-                        String.format(getString(R.string.preferred_petrol_string, radioButton.text))
+                        String.format(getString(R.string.preferred_petrol, radioButton.text))
             }
         }
 
@@ -129,21 +124,21 @@ class ChangePreferencesFragment : Fragment() {
         if (isPreferenceValid()) {
             AlertDialog.Builder(context!!)
                     .setIcon(R.drawable.ic_settings)
-                    .setTitle(R.string.change_preferences_title_string)
-                    .setMessage(String.format(getString(R.string.confirm_change_preferences_string),
+                    .setTitle(R.string.change_preferences_title)
+                    .setMessage(String.format(getString(R.string.confirm_change_preferences),
                             selectedPetrolTextView.text, produceStringOfPreferredStationBrands(this.checkBoxesByBrand)))
-                    .setPositiveButton(R.string.yes_string,
+                    .setPositiveButton(R.string.yes,
                             { dialog, which ->
                                 currentUser.preferredPetrolType = getPreferredPetrolType(this.radioButtonsByPetrolType)
                                 currentUser.preferredBrands = getPreferredStationBrandsList(this.checkBoxesByBrand)
 
                                 val intent = Intent()
-                                intent.putExtra(getString(R.string.change_preferences_intent_string), currentUser)
+                                intent.putExtra(getString(R.string.change_preferences_intent), currentUser)
 
                                 activity?.setResult(Activity.RESULT_OK, intent)
                                 activity?.finish()
                             })
-                    .setNegativeButton(R.string.no_string, null)
+                    .setNegativeButton(R.string.no, null)
                     .show()
         }
     }
@@ -153,7 +148,7 @@ class ChangePreferencesFragment : Fragment() {
         val isCheckBoxInvalid = !checkBoxesByBrand.values.any { it.isChecked }
 
         return if (isRadioButtonInvalid || isCheckBoxInvalid) {
-            messageTextView.text = getString(R.string.invalid_preferences_string)
+            messageTextView.text = getString(R.string.invalid_preferences)
             false
         } else {
             true

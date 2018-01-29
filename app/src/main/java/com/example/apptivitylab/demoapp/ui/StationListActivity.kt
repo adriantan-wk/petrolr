@@ -43,10 +43,10 @@ class StationListActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         setContentView(R.layout.activity_station_list)
 
         setSupportActionBar(stationListToolbar)
-        supportActionBar?.title = getString(R.string.station_list_title_string)
+        supportActionBar?.title = getString(R.string.station_list_title)
 
         val drawerToggle = ActionBarDrawerToggle(this, stationListDrawerLayout, stationListToolbar,
-                R.string.open_drawer_string, R.string.close_drawer_string)
+                R.string.open_drawer, R.string.close_drawer)
         stationListDrawerLayout.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
 
@@ -66,7 +66,7 @@ class StationListActivity : AppCompatActivity(), NavigationView.OnNavigationItem
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == CHANGE_PREFERENCES_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            val newUserPreferences = data?.getParcelableExtra<User>(getString(R.string.change_preferences_intent_string))
+            val newUserPreferences = data?.getParcelableExtra<User>(getString(R.string.change_preferences_intent))
 
             newUserPreferences?.let {
                 updateUserPreferences(newUserPreferences)
@@ -102,21 +102,21 @@ class StationListActivity : AppCompatActivity(), NavigationView.OnNavigationItem
             R.id.nav_logout -> {
                 AlertDialog.Builder(this)
                         .setIcon(R.drawable.ic_logout)
-                        .setTitle(R.string.logout_dialog_title_string)
-                        .setMessage(R.string.logout_confirm_msg_string)
-                        .setPositiveButton(R.string.yes_string,
+                        .setTitle(R.string.logout_dialog_title)
+                        .setMessage(R.string.logout_confirm_msg)
+                        .setPositiveButton(R.string.yes,
                                 { dialog, which ->
                                     val logOutIntent = Intent(this, TitleActivity::class.java)
                                     startActivity(logOutIntent)
                                 })
-                        .setNegativeButton(R.string.no_string, null)
+                        .setNegativeButton(R.string.no, null)
                         .show()
 
                 true
             }
 
             else -> {
-                val toast = Toast.makeText(this, R.string.feature_unavailable_string, Toast.LENGTH_SHORT)
+                val toast = Toast.makeText(this, R.string.feature_unavailable, Toast.LENGTH_SHORT)
                 toast.show()
 
                 false

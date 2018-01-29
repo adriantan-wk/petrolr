@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="@string/register_string"
+            android:text="@string/register"
             style="@style/HeaderText"/>
 
     </LinearLayout>
@@ -39,7 +39,7 @@
                 android:id="@+id/usernameEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/username_string"/>
+                android:hint="@string/username"/>
 
         </android.support.design.widget.TextInputLayout>
 
@@ -52,7 +52,7 @@
                 android:id="@+id/passwordEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/password_string"
+                android:hint="@string/password"
                 android:inputType="textPassword"/>
 
         </android.support.design.widget.TextInputLayout>
@@ -67,7 +67,7 @@
                 android:id="@+id/confirmPassEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/confirm_pass_string"
+                android:hint="@string/confirm_pass"
                 android:inputType="textPassword"/>
 
         </android.support.design.widget.TextInputLayout>
@@ -78,7 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="64dp"
-            android:text="@string/register_string" />
+            android:text="@string/register" />
 
     </LinearLayout>
 </LinearLayout>

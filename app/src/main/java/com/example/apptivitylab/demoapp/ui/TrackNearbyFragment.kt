@@ -9,9 +9,7 @@ import android.location.Location
 import android.os.Bundle
 import android.os.Looper
 import android.support.v4.app.ActivityCompat
-import android.support.v4.app.ActivityCompat.requestPermissions
 import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat.startActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +18,6 @@ import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.models.PetrolType
 import com.example.apptivitylab.demoapp.models.Station
 import com.example.apptivitylab.demoapp.models.User
-import com.example.apptivitylab.demoapp.ui.TrackNearbyFragment.Companion.ACCESS_FINE_LOCATION_PERMISSIONS
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -193,11 +190,11 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
         when (requestCode) {
             ACCESS_FINE_LOCATION_PERMISSIONS -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    val toast = Toast.makeText(context, R.string.location_permissions_granted_string, Toast.LENGTH_SHORT)
+                    val toast = Toast.makeText(context, R.string.location_permissions_granted, Toast.LENGTH_SHORT)
                     toast.show()
                     startLocationUpdates()
                 } else {
-                    val toast = Toast.makeText(context, R.string.location_permissions_denied_string, Toast.LENGTH_SHORT)
+                    val toast = Toast.makeText(context, R.string.location_permissions_denied, Toast.LENGTH_SHORT)
                     toast.show()
                 }
             }
@@ -233,7 +230,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
 
         this.nearestStation = null
 
-        Toast.makeText(context!!, getString(R.string.preferences_updated_string), Toast.LENGTH_LONG).show()
+        Toast.makeText(context!!, getString(R.string.preferences_updated), Toast.LENGTH_LONG).show()
         startLocationUpdates()
     }
 
@@ -307,18 +304,18 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
                 nameTextView.text = nearestStation.stationName
                 addressTextView.text = nearestStation.stationAddress
                 distanceTextView.text = "%.2f".format(nearestStation.distanceFromUser) +
-                        " " + getString(R.string.distance_km_away_string)
+                        " " + getString(R.string.distance_km_away)
             }
         } else {
-            nameTextView.text = getString(R.string.searching_string)
+            nameTextView.text = getString(R.string.searching)
             addressTextView.text = ""
             distanceTextView.text = ""
         }
     }
 
     private fun calculateUserDistanceToStation(station: Station): Float {
-        var userLocation = Location(getString((R.string.current_location_string)))
-        var stationLocation = Location(getString(R.string.destination_string))
+        var userLocation = Location(getString((R.string.current_location)))
+        var stationLocation = Location(getString(R.string.destination))
 
         userLatLng?.let {
             userLocation.latitude = it.latitude

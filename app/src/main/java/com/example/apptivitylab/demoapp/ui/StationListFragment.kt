@@ -120,11 +120,11 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
         when (requestCode) {
             TrackNearbyFragment.ACCESS_FINE_LOCATION_PERMISSIONS -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    val toast = Toast.makeText(context, R.string.location_permissions_granted_string, Toast.LENGTH_SHORT)
+                    val toast = Toast.makeText(context, R.string.location_permissions_granted, Toast.LENGTH_SHORT)
                     toast.show()
                     startLocationUpdates()
                 } else {
-                    val toast = Toast.makeText(context, R.string.location_permissions_denied_string, Toast.LENGTH_SHORT)
+                    val toast = Toast.makeText(context, R.string.location_permissions_denied, Toast.LENGTH_SHORT)
                     toast.show()
                 }
             }
@@ -160,18 +160,18 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
         }
 
         stationsAdapter.updateDataSet(stationsAndHeadersList)
-        Toast.makeText(context, R.string.location_updated_string, Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, R.string.location_updated, Toast.LENGTH_SHORT).show()
     }
 
     private fun setDistanceFromUser(stations: ArrayList<Station>, userLatLng: LatLng?) {
 
         userLatLng?.let {
-            val userLocation = Location(getString(R.string.current_location_string))
+            val userLocation = Location(getString(R.string.current_location))
             userLocation.latitude = it.latitude
             userLocation.longitude = it.longitude
 
             for (station in stations) {
-                val stationLocation = Location(getString(R.string.destination_string))
+                val stationLocation = Location(getString(R.string.destination))
 
                 station.stationLatLng?.apply {
                     stationLocation.latitude = this.latitude
@@ -223,11 +223,11 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
             }
         }
 
-        arrangedStationsAndHeadersList.add(getString(R.string.preferred_stations_string))
+        arrangedStationsAndHeadersList.add(getString(R.string.preferred_stations))
         arrangedStationsAndHeadersList.addAll(preferredStationList)
 
         stationsWithCorrectPetrolType.removeAll(preferredStationList)
-        arrangedStationsAndHeadersList.add(getString(R.string.non_preferred_stations_string))
+        arrangedStationsAndHeadersList.add(getString(R.string.non_preferred_stations))
         arrangedStationsAndHeadersList.addAll(stationsWithCorrectPetrolType)
 
         return arrangedStationsAndHeadersList
