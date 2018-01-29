@@ -69,6 +69,8 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             if (requestCode == CHANGE_PREFERENCES_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
                 val newUserPreferences = data?.getParcelableExtra<User>(getString(R.string.change_preferences_intent))
 
+                trackNearDrawerLayout.closeDrawers()
+
                 newUserPreferences?.let {
                     updateUserPreferences(newUserPreferences)
                 }
