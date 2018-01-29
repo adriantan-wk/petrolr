@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/petrol_type_string"
+        android:text="@string/petrol_type"
         style="@style/HeaderText"/>
 
     <LinearLayout
@@ -33,7 +33,7 @@
         android:id="@+id/selectedPetrolTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/preferred_petrol_string"
+        android:text="@string/preferred_petrol"
         android:layout_marginTop="8dp"
         style="@style/DescriptionText"/>
 
@@ -47,7 +47,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/station_brands_string"
+            android:text="@string/station_brands"
             style="@style/HeaderText"
             android:layout_centerVertical="true"/>
 
@@ -55,7 +55,7 @@
             android:id="@+id/selectAllButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/select_all_string"
+            android:text="@string/select_all"
             android:textSize="12sp"
             android:layout_alignParentRight="true"/>
 
@@ -84,7 +84,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="@string/save_string"
+        android:text="@string/save"
         android:layout_marginTop="8dp"/>
 
 </LinearLayout>

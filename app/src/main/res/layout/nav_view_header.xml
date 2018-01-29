@@ -12,7 +12,7 @@
         android:id="@+id/navHeaderImageView"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@drawable/fuellogo"/>
+        android:src="@drawable/ic_fuellogo"/>
 
     <TextView
         android:id="@+id/navHeaderUserTextView"

@@ -3,31 +3,31 @@
 
     <item
         android:id="@+id/nav_track_nearby"
-        android:icon="@drawable/tracknearby"
+        android:icon="@drawable/ic_tracknearby"
         android:title="Track Nearby" />
 
     <item
         android:id="@+id/nav_station_list"
-        android:icon="@drawable/fuellogo"
+        android:icon="@drawable/ic_fuellogo"
         android:title="Station List" />
 
     <item
         android:id="@+id/nav_create_trip"
-        android:icon="@drawable/add"
+        android:icon="@drawable/ic_add"
         android:title="Create a Trip" />
 
     <item
         android:id="@+id/nav_price_history"
-        android:icon="@drawable/history"
+        android:icon="@drawable/ic_history"
         android:title="Price History" />
 
     <item
         android:id="@+id/nav_preferences"
-        android:icon="@drawable/settings"
+        android:icon="@drawable/ic_settings"
         android:title="Preferences" />
 
     <item
         android:id="@+id/nav_logout"
-        android:icon="@drawable/logout"
-        android:title="@string/logout_string" />
+        android:icon="@drawable/ic_logout"
+        android:title="@string/logout" />
 </menu>

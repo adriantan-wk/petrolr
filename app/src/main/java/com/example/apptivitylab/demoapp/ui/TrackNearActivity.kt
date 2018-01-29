@@ -9,11 +9,8 @@ import android.support.v7.app.AppCompatActivity
 import com.example.apptivitylab.demoapp.R
 import android.content.Intent
 import android.support.v7.app.AlertDialog
-import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
-import com.example.apptivitylab.demoapp.R.raw.stations
-import com.example.apptivitylab.demoapp.controllers.StationController
 import com.example.apptivitylab.demoapp.controllers.UserController
 import com.example.apptivitylab.demoapp.models.Station
 import com.example.apptivitylab.demoapp.models.User
@@ -39,6 +36,7 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     }
 
     private lateinit var stations: ArrayList<Station>
+    private lateinit var trackNearbyFragment: TrackNearbyFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +46,7 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
         val drawerToggle = ActionBarDrawerToggle(this, trackNearDrawerLayout,
-                trackNearToolbar, R.string.open_drawer_string, R.string.close_drawer_string)
+                trackNearToolbar, R.string.open_drawer, R.string.close_drawer)
         trackNearDrawerLayout.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
 
@@ -57,9 +55,11 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
         this.stations = intent.getParcelableArrayListExtra<Station>(STATION_LIST_EXTRA)
 
+        this.trackNearbyFragment = TrackNearbyFragment.newInstance(UserController.user, stations)
+
         supportFragmentManager
         .beginTransaction()
-        .replace(R.id.containerFrameLayout, TrackNearbyFragment.newInstance(stations))
+        .replace(R.id.containerFrameLayout, this.trackNearbyFragment)
         .commit()
 
     }
@@ -67,7 +67,7 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
             if (requestCode == CHANGE_PREFERENCES_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-                val newUserPreferences = data?.getParcelableExtra<User>(getString(R.string.change_preferences_intent_string))
+                val newUserPreferences = data?.getParcelableExtra<User>(getString(R.string.change_preferences_intent))
 
                 newUserPreferences?.let {
                     updateUserPreferences(newUserPreferences)
@@ -101,22 +101,22 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
             R.id.nav_logout -> {
                 AlertDialog.Builder(this)
-                        .setIcon(R.drawable.logout)
-                        .setTitle(R.string.logout_dialog_title_string)
-                        .setMessage(R.string.logout_confirm_msg_string)
-                        .setPositiveButton(R.string.yes_string,
+                        .setIcon(R.drawable.ic_logout)
+                        .setTitle(R.string.logout_dialog_title)
+                        .setMessage(R.string.logout_confirm_msg)
+                        .setPositiveButton(R.string.yes,
                                 { dialog, which ->
                                     val logOutIntent = Intent(this, TitleActivity::class.java)
                                     startActivity(logOutIntent)
                                 })
-                        .setNegativeButton(R.string.no_string, null)
+                        .setNegativeButton(R.string.no, null)
                         .show()
 
                 true
             }
 
             else -> {
-                val toast = Toast.makeText(this, R.string.feature_unavailable_string, Toast.LENGTH_SHORT)
+                val toast = Toast.makeText(this, R.string.feature_unavailable, Toast.LENGTH_SHORT)
                 toast.show()
 
                 false
@@ -128,7 +128,7 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         UserController.user.preferredPetrolType = user.preferredPetrolType
         UserController.user.preferredBrands = user.preferredBrands
 
-        //TODO Update fragment that user preferences have changed
+        this.trackNearbyFragment.onUserPreferencesChanged(user)
     }
 
 }

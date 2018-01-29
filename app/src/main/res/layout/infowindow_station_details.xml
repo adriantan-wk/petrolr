@@ -28,7 +28,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/view_station_details_string"
+        android:text="@string/view_station_details"
         android:layout_marginTop="12sp"
         android:textSize="12sp"
         android:textColor="#0000EE"

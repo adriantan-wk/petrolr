@@ -104,7 +104,7 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             stationDistance.text = if (station.distanceFromUser != null) {
                     "%.2f".format(station.distanceFromUser)
                 } else {
-                    itemView.context.getString(R.string.unavailable_string)
+                    itemView.context.getString(R.string.unavailable)
                 }
             }
         }
