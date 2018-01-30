@@ -99,7 +99,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
         }
 
         showNearestStationsButton.setOnClickListener {
-            updateUserLocation()
+            this.updateUserLocation()
         }
 
         this.currentUser.preferredPetrolType?.let {
@@ -121,7 +121,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
             } else {
                 if (this.performInitialMapZoom) {
                     this.performInitialMapZoom = false
-                    updateUserLocation()
+                    this.updateUserLocation()
                 }
             }
         }
@@ -137,7 +137,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
 
                     if (this.performInitialMapZoom) {
                         this.performInitialMapZoom = false
-                        updateUserLocation()
+                        this.updateUserLocation()
                     }
                 } else {
                     val toast = Toast.makeText(context, R.string.location_permissions_denied, Toast.LENGTH_SHORT)
@@ -165,7 +165,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
                     val cameraUpdate = CameraUpdateFactory.newLatLngZoom(startLatLng, 6.0f)
                     googleMap?.moveCamera(cameraUpdate)
                 } else {
-                    recenterMapCamera()
+                    this.recenterMapCamera()
                 }
 
                 with(googleMap){
@@ -174,9 +174,9 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
                     isMyLocationEnabled = true
                 }
 
-                assignInfoWindowAdapterAndListener(this)
+                this.assignInfoWindowAdapterAndListener(this)
                 this.filteredStationList = filterStationsByPreferredPetrol(this.stationList, this.currentUser)
-                generateStationMarkers(filteredStationList)
+                this.generateStationMarkers(filteredStationList)
             }
         }
     }
@@ -209,12 +209,14 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
     @SuppressLint("MissingPermission")
     private fun updateUserLocation() {
         this.fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-            this.userLatLng = LatLng(location.latitude, location.longitude)
+            if (location != null) {
+                this.userLatLng = LatLng(location.latitude, location.longitude)
 
-            nearestStation = this.findNearestStation()
-            updateNearestStationViews(this.nearestStation)
+                nearestStation = this.findNearestStation()
+                this.updateNearestStationViews(this.nearestStation)
 
-            recenterMapCamera()
+                this.recenterMapCamera()
+            }
         }
     }
 
@@ -224,7 +226,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
         if (this.preferredStationList.isNotEmpty()) {
             val distanceArrangedStationList = sortStationListByDistance(preferredStationList)
             nearestStation = distanceArrangedStationList[0]
-            updateNearestStationViews(nearestStation)
+            this.updateNearestStationViews(nearestStation)
         } else {
             nearestStation = null
         }
@@ -270,7 +272,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
                 bounds.include(this.userLatLng)
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 100))
 
-                generateMapCircle(nearestStations.last())
+                this.generateMapCircle(nearestStations.last())
             }
         }
     }
@@ -291,7 +293,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
 
     private fun sortStationListByDistance(preferredStationList: ArrayList<Station>): ArrayList<Station> {
         preferredStationList.forEach { station ->
-            station.distanceFromUser = calculateUserDistanceToStation(station)
+            station.distanceFromUser = this.calculateUserDistanceToStation(station)
         }
 
         val distanceSortedStationList = ArrayList<Station>()
@@ -346,7 +348,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
         this.nearestStation = null
 
         Toast.makeText(context!!, getString(R.string.preferences_updated), Toast.LENGTH_LONG).show()
-        updateUserLocation()
+        this.updateUserLocation()
     }
 
     private fun filterStationsByPreferredPetrol(stationList: ArrayList<Station>, currentUser: User): ArrayList<Station> {
