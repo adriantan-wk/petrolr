@@ -2,12 +2,14 @@ package com.example.apptivitylab.demoapp.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.location.Location
 import android.os.Bundle
-import android.os.Looper
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -15,6 +17,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.apptivitylab.demoapp.R
+import com.example.apptivitylab.demoapp.R.id.*
 import com.example.apptivitylab.demoapp.models.PetrolType
 import com.example.apptivitylab.demoapp.models.Station
 import com.example.apptivitylab.demoapp.models.User
@@ -22,12 +25,11 @@ import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import kotlinx.android.synthetic.main.fragment_track_nearby.*
 import kotlinx.android.synthetic.main.infowindow_station_details.view.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Created by ApptivityLab on 12/01/2018.
@@ -54,13 +56,13 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
 
     private var mapFragment: SupportMapFragment? = null
     private var googleMap: GoogleMap? = null
+    private var performInitialMapZoom = true
 
-    private var fusedLocationClient: FusedLocationProviderClient? = null
-    private var locationCallBack: LocationCallback? = null
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private lateinit var currentUser: User
     private var userLatLng: LatLng? = null
-    private var performInitialUserLocationZoom = true
+    private var mapCircle: Circle? = null
 
     private var stationList: ArrayList<Station> = ArrayList()
     private var filteredStationList: ArrayList<Station> = ArrayList()
@@ -92,8 +94,12 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
             this.nearestStation?.let {
                 val nearestStationMarker = this.mapOfStationMarkers[it.stationID]
                 nearestStationMarker?.showInfoWindow()
-                this.googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(it.stationLatLng, 15f))
+                this.googleMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(it.stationLatLng, 15f))
             }
+        }
+
+        showNearestStationsButton.setOnClickListener {
+            this.updateUserLocation()
         }
 
         this.currentUser.preferredPetrolType?.let {
@@ -102,7 +108,43 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
         }
 
         this.fusedLocationClient = LocationServices.getFusedLocationProviderClient(context!!)
-        startLocationUpdates()
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        this.context?.let {
+            if (ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                        ACCESS_FINE_LOCATION_PERMISSIONS)
+            } else {
+                if (this.performInitialMapZoom) {
+                    this.performInitialMapZoom = false
+                    this.updateUserLocation()
+                }
+            }
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            ACCESS_FINE_LOCATION_PERMISSIONS -> {
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    val toast = Toast.makeText(context, R.string.location_permissions_granted, Toast.LENGTH_SHORT)
+                    toast.show()
+
+                    if (this.performInitialMapZoom) {
+                        this.performInitialMapZoom = false
+                        this.updateUserLocation()
+                    }
+                } else {
+                    val toast = Toast.makeText(context, R.string.location_permissions_denied, Toast.LENGTH_SHORT)
+                    toast.show()
+                }
+            }
+        }
     }
 
     @SuppressLint("MissingPermission")
@@ -118,19 +160,23 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
             it.getMapAsync { googleMap ->
                 this.googleMap = googleMap
 
-                val startLatLng = LatLng(4.2105, 101.9758)
-                val cameraUpdate = CameraUpdateFactory.newLatLngZoom(startLatLng, 6.0f)
+                if (this.userLatLng == null) {
+                    val startLatLng = LatLng(4.2105, 101.9758)
+                    val cameraUpdate = CameraUpdateFactory.newLatLngZoom(startLatLng, 6.0f)
+                    googleMap?.moveCamera(cameraUpdate)
+                } else {
+                    this.recenterMapCamera()
+                }
 
                 with(googleMap){
-                    moveCamera(cameraUpdate)
                     uiSettings?.isCompassEnabled = false
                     uiSettings?.isZoomControlsEnabled = true
                     isMyLocationEnabled = true
                 }
 
-                assignInfoWindowAdapterAndListener(this)
+                this.assignInfoWindowAdapterAndListener(this)
                 this.filteredStationList = filterStationsByPreferredPetrol(this.stationList, this.currentUser)
-                generateStationMarkers(filteredStationList)
+                this.generateStationMarkers(filteredStationList)
             }
         }
     }
@@ -160,70 +206,130 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
         }
     }
 
-    private fun startLocationUpdates() {
+    @SuppressLint("MissingPermission")
+    private fun updateUserLocation() {
+        this.fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+            if (location != null) {
+                this.userLatLng = LatLng(location.latitude, location.longitude)
 
-        this.context?.let {
-            if (ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                        ACCESS_FINE_LOCATION_PERMISSIONS)
-            }
-        }
+                nearestStation = this.findNearestStation()
+                this.updateNearestStationViews(this.nearestStation)
 
-        var request = LocationRequest()
-        request.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        request.interval = 5000
-        request.fastestInterval = 3000
-
-        createLocationCallBack()
-
-        fusedLocationClient?.requestLocationUpdates(request, locationCallBack, Looper.myLooper())
-    }
-
-    private fun createLocationCallBack() {
-        locationCallBack = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult?) {
-                super.onLocationResult(locationResult)
-
-                locationResult?.let {
-                    onLocationChanged(it.lastLocation)
-                }
+                this.recenterMapCamera()
             }
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        when (requestCode) {
-            ACCESS_FINE_LOCATION_PERMISSIONS -> {
-                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    val toast = Toast.makeText(context, R.string.location_permissions_granted, Toast.LENGTH_SHORT)
-                    toast.show()
-                    startLocationUpdates()
+    private fun findNearestStation(): Station? {
+        var nearestStation: Station? = this.nearestStation
+
+        if (this.preferredStationList.isNotEmpty()) {
+            val distanceArrangedStationList = sortStationListByDistance(preferredStationList)
+            nearestStation = distanceArrangedStationList[0]
+            this.updateNearestStationViews(nearestStation)
+        } else {
+            nearestStation = null
+        }
+        return nearestStation
+    }
+
+    private fun updateNearestStationViews(nearestStation: Station?) {
+        if (nearestStation != null) {
+            if (isAdded) {
+                nameTextView.text = nearestStation.stationName
+                addressTextView.text = nearestStation.stationAddress
+                distanceTextView.text = "%.2f".format(nearestStation.distanceFromUser) +
+                        " " + getString(R.string.distance_km_away)
+            }
+        } else {
+            nameTextView.text = getString(R.string.searching)
+            addressTextView.text = ""
+            distanceTextView.text = ""
+        }
+    }
+
+    private fun recenterMapCamera() {
+        this.googleMap?.let { googleMap ->
+            this.userLatLng?.let { userLatLng ->
+                val stationList = sortStationListByDistance(this.preferredStationList)
+                val nearestStations = ArrayList<Station>()
+
+                if (stationList.size < 5) {
+                    nearestStations.addAll(stationList)
                 } else {
-                    val toast = Toast.makeText(context, R.string.location_permissions_denied, Toast.LENGTH_SHORT)
-                    toast.show()
+                    nearestStations.addAll(stationList.take(5))
                 }
+
+                val bounds = LatLngBounds.Builder()
+
+                nearestStations.forEach { station ->
+                    station.stationLatLng?.let {
+                        val stationLatLng = LatLng(it.latitude, it.longitude)
+                        bounds.include(stationLatLng)
+                    }
+                }
+
+                bounds.include(this.userLatLng)
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 100))
+
+                this.generateMapCircle(nearestStations.last())
             }
         }
     }
 
-    private fun onLocationChanged(location: Location?) {
-
-        location?.let {
-            userLatLng = LatLng(it.latitude, it.longitude)
-
-            if (this.performInitialUserLocationZoom) {
-                val cameraUpdate = CameraUpdateFactory.newLatLngZoom(userLatLng, 15f)
-                googleMap?.animateCamera(cameraUpdate)
-                this.performInitialUserLocationZoom = false
-            }
+    private fun generateMapCircle(furthestStation: Station) {
+        if (this.mapCircle != null) {
+            this.mapCircle?.remove()
         }
 
-        nearestStation = this.findNearestStation()
+        furthestStation.distanceFromUser?.let {
+            this.mapCircle = this.googleMap?.addCircle(CircleOptions()
+                    .center(this.userLatLng)
+                    .radius(it.toDouble() * 1000)
+                    .strokeColor(Color.argb(100, 0, 0, 255))
+                    .fillColor(Color.argb(100, 0, 191 , 255)))
+        }
+    }
+
+    private fun sortStationListByDistance(preferredStationList: ArrayList<Station>): ArrayList<Station> {
+        preferredStationList.forEach { station ->
+            station.distanceFromUser = this.calculateUserDistanceToStation(station)
+        }
+
+        val distanceSortedStationList = ArrayList<Station>()
+        distanceSortedStationList.addAll(preferredStationList)
+
+        Collections.sort(distanceSortedStationList) { o1, o2 ->
+            val distance1 = o1.distanceFromUser
+            val distance2 = o2.distanceFromUser
+
+            if (distance1 != null && distance2 != null)
+                (distance1 - distance2).toInt()
+            else
+                0
+        }
+        return distanceSortedStationList
+    }
+
+
+    private fun calculateUserDistanceToStation(station: Station): Float {
+        val userLocation = Location(getString((R.string.current_location)))
+        val stationLocation = Location(getString(R.string.destination))
+
+        userLatLng?.let {
+            userLocation.latitude = it.latitude
+            userLocation.longitude = it.longitude
+        }
+
+        station.stationLatLng?.let {
+            stationLocation.latitude = it.latitude
+            stationLocation.longitude = it.longitude
+        }
+
+        return userLocation.distanceTo(stationLocation) / 1000
     }
 
     public fun onUserPreferencesChanged(user: User) {
-        fusedLocationClient?.removeLocationUpdates(locationCallBack)
 
         this.currentUser = user
         this.filteredStationList = this.filterStationsByPreferredPetrol(this.stationList, this.currentUser)
@@ -242,36 +348,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
         this.nearestStation = null
 
         Toast.makeText(context!!, getString(R.string.preferences_updated), Toast.LENGTH_LONG).show()
-        startLocationUpdates()
-    }
-
-    private fun findNearestStation(): Station? {
-        var nearestStation: Station? = this.nearestStation
-
-        if (this.preferredStationList.isNotEmpty()) {
-            if (nearestStation == null) {
-                this.preferredStationList[0].distanceFromUser = calculateUserDistanceToStation(this.preferredStationList[0])
-
-                updateNearestStationViews(nearestStation)
-
-                nearestStation = this.preferredStationList[0]
-            } else {
-                this.preferredStationList.forEach { station ->
-                    val distanceFromUser = calculateUserDistanceToStation(station)
-                    station.distanceFromUser = distanceFromUser
-
-                    nearestStation?.distanceFromUser?.let {
-                        if (distanceFromUser < it) {
-                            nearestStation = station
-                        }
-                    }
-                }
-                updateNearestStationViews(nearestStation)
-            }
-        } else {
-            nearestStation = null
-        }
-        return nearestStation
+        this.updateUserLocation()
     }
 
     private fun filterStationsByPreferredPetrol(stationList: ArrayList<Station>, currentUser: User): ArrayList<Station> {
@@ -321,42 +398,5 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
                 }
             }
         }
-    }
-
-    private fun updateNearestStationViews(nearestStation: Station?) {
-        if (nearestStation != null) {
-            if (isAdded) {
-                nameTextView.text = nearestStation.stationName
-                addressTextView.text = nearestStation.stationAddress
-                distanceTextView.text = "%.2f".format(nearestStation.distanceFromUser) +
-                        " " + getString(R.string.distance_km_away)
-            }
-        } else {
-            nameTextView.text = getString(R.string.searching)
-            addressTextView.text = ""
-            distanceTextView.text = ""
-        }
-    }
-
-    private fun calculateUserDistanceToStation(station: Station): Float {
-        var userLocation = Location(getString((R.string.current_location)))
-        var stationLocation = Location(getString(R.string.destination))
-
-        userLatLng?.let {
-            userLocation.latitude = it.latitude
-            userLocation.longitude = it.longitude
-        }
-
-        station.stationLatLng?.let {
-            stationLocation.latitude = it.latitude
-            stationLocation.longitude = it.longitude
-        }
-
-        return userLocation.distanceTo(stationLocation) / 1000
-    }
-
-    override fun onStop() {
-        fusedLocationClient?.removeLocationUpdates(locationCallBack)
-        super.onStop()
     }
 }

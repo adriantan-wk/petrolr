@@ -51,5 +51,6 @@
     <string name="non_preferred_stations">Non-Preferred Stations</string>
     <string name="preferences_updated">Your preferences have been updated</string>
     <string name="price_value">RM %1$.2f</string>
+    <string name="show_5_nearest_stations">Show 5 Nearest Stations</string>
 
 </resources>
