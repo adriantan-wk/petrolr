@@ -15,9 +15,11 @@ import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.R.string.latitude
 import com.example.apptivitylab.demoapp.R.string.longitude
 import com.example.apptivitylab.demoapp.controllers.PetrolTypeController
+import com.example.apptivitylab.demoapp.models.PetrolType
 import com.example.apptivitylab.demoapp.models.Station
 import kotlinx.android.synthetic.main.fragment_station_details.*
 import java.util.*
+import java.util.Locale.filter
 import kotlin.collections.ArrayList
 
 /**
@@ -84,21 +86,14 @@ class StationDetailsFragment : Fragment() {
     }
 
     private fun updateView() {
-        nameTextView.text = this.station.stationName
-        idTextView.text = this.station.stationID
-        brandTextView.text = this.station.stationBrand
-        addressTextView.text = this.station.stationAddress
+        this.nameTextView.text = this.station.stationName
+        this.idTextView.text = this.station.stationID
+        this.brandTextView.text = this.station.stationBrand
+        this.addressTextView.text = this.station.stationAddress
 
-        val petrolTypeList = PetrolTypeController.petrolTypeList
-        var petrolTypesAvailable: String = ""
-
-        petrolTypeList.forEach { petrol ->
-            if (this.station.stationPetrolTypeIDs.contains(petrol.petrolID)) {
-                petrolTypesAvailable += (petrol.petrolName + getString(R.string.list_separator))
-            }
-        }
-
-        petrolTypesAvailable = petrolTypesAvailable.removeSuffix(getString(R.string.list_separator))
-        petrolTypesTextView.text = petrolTypesAvailable
+        this.petrolTypesTextView.text = PetrolTypeController.petrolTypeList
+                .filter { petrol -> this.station.stationPetrolTypeIDs.contains(petrol.petrolID) }
+                .map { it.petrolName }
+                .joinToString(getString(R.string.list_separator))
     }
 }
