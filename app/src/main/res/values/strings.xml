@@ -52,5 +52,11 @@
     <string name="preferences_updated">Your preferences have been updated</string>
     <string name="price_value">RM %1$.2f</string>
     <string name="show_5_nearest_stations">Show 5 Nearest Stations</string>
-
+    <string name="petrol_types_available">Petrol Types Available</string>
+    <string name="brand">Station Brand</string>
+    <string name="go">Go</string>
+    <string name="list_separator">\u0020\u0020|\u0020\u0020  </string>
+    <string name="uri_location">geo:%1$s,%2$s?z=%3$s</string>
+    <string name="navigate">Navigate</string>
+    <string name="no_navigation_apps">You do not have any navigation apps</string>
 </resources>

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.apptivitylab.demoapp.R
+import com.example.apptivitylab.demoapp.controllers.PetrolTypeController
 import com.example.apptivitylab.demoapp.controllers.StationController
 import com.example.apptivitylab.demoapp.controllers.UserController
 import kotlinx.android.synthetic.main.fragment_login.*
@@ -37,6 +38,7 @@ class LoginFragment : Fragment() {
         loginBtn.setOnClickListener {
             UserController.createMockUser()
             StationController.loadMockStations(context!!)
+            PetrolTypeController.loadMockPetrolTypes(context!!)
 
             val randomIntent = TrackNearActivity.newLaunchIntent(context!!, StationController.stationList)
             startActivity(randomIntent)
