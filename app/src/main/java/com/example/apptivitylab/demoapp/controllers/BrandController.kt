@@ -14,7 +14,7 @@ import java.io.InputStreamReader
  */
 
 object BrandController {
-    private lateinit var brandList: ArrayList<Brand>
+    lateinit var brandList: ArrayList<Brand>
 
     private fun loadMockBrands(context: Context) {
         val brandList: ArrayList<Brand> = ArrayList()
