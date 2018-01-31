@@ -56,7 +56,6 @@
     <string name="brand">Station Brand</string>
     <string name="go">Go</string>
     <string name="list_separator">\u0020\u0020|\u0020\u0020  </string>
-    <string name="uri_location">geo:%1$s,%2$s?z=%3$s</string>
     <string name="navigate">Navigate</string>
     <string name="no_navigation_apps">You do not have any navigation apps</string>
 </resources>

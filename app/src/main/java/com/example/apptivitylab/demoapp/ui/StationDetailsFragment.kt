@@ -47,7 +47,6 @@ class StationDetailsFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_station_details, container, false)
     }
 
-    @SuppressLint("NewApi")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -65,8 +64,7 @@ class StationDetailsFragment : Fragment() {
     private fun navigateToStation(station: Station) {
         station.stationLatLng?.let {
 
-            val locationUri = Uri.parse("geo:0,0?q=" + it.latitude + "," +
-                    it.longitude)
+            val locationUri = Uri.parse("geo:0,0?q=${it.latitude},${it.longitude}")
 
             val navigateIntent = Intent(Intent.ACTION_VIEW, locationUri)
 
