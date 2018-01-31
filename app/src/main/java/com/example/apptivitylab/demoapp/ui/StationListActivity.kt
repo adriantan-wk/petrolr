@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.widget.Toast
 import com.example.apptivitylab.demoapp.R
+import com.example.apptivitylab.demoapp.controllers.PetrolTypeController
 import com.example.apptivitylab.demoapp.controllers.StationController
 import com.example.apptivitylab.demoapp.controllers.UserController
 import com.example.apptivitylab.demoapp.models.Station
@@ -92,6 +93,13 @@ class StationListActivity : AppCompatActivity(), NavigationView.OnNavigationItem
 
             R.id.nav_station_list -> {
                 stationListDrawerLayout.closeDrawers()
+                true
+            }
+
+            R.id.nav_price_history -> {
+                val priceHistoryIntent = PetrolPriceHistoryActivity.newLaunchIntent(this, UserController.user, PetrolTypeController.petrolTypeList)
+                startActivity(priceHistoryIntent)
+
                 true
             }
 

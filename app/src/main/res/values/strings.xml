@@ -61,4 +61,9 @@
     <string name="unable_receive_location">Location Permissions Disabled.\nUnable to retrieve location updates</string>
     <string name="location_not_changed">Your location has not changed</string>
     <string name="updating_location">Updating User Location…</string>
+    <string name="price_history">Petrol Price History</string>
+    <string name="current_price">Current Price:</string>
+    <string name="previous_prices">Previous Prices</string>
+    <string name="since_value">Since %1$s</string>
+    <string name="changed_on">Changed on %1$s</string>
 </resources>
