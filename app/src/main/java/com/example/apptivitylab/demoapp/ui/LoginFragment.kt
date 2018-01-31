@@ -37,10 +37,10 @@ class LoginFragment : Fragment() {
         //TODO True login verification functionality
         loginBtn.setOnClickListener {
             UserController.createMockUser()
-            StationController.loadMockStations(context!!)
-            PetrolTypeController.loadMockPetrolTypes(context!!)
+            StationController.loadMockStations(this.context!!)
+            PetrolTypeController.loadMockPetrolTypes(this.context!!)
 
-            val randomIntent = TrackNearActivity.newLaunchIntent(context!!, StationController.stationList)
+            val randomIntent = TrackNearActivity.newLaunchIntent(this.context!!, StationController.stationList)
             startActivity(randomIntent)
         }
     }
