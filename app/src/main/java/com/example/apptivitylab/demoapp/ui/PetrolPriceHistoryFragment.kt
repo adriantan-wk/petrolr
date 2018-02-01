@@ -21,13 +21,13 @@ import java.text.SimpleDateFormat
 class PetrolPriceHistoryFragment : Fragment() {
 
     companion object {
-        const val PETROLTYPE_EXTRA = "petrolType_object"
+        const val PETROL_TYPE_EXTRA = "petrol_type_object"
 
         fun newInstance(petrolType: PetrolType): PetrolPriceHistoryFragment {
             val fragment = PetrolPriceHistoryFragment()
 
             val args: Bundle = Bundle()
-            args.putParcelable(PETROLTYPE_EXTRA, petrolType)
+            args.putParcelable(PETROL_TYPE_EXTRA, petrolType)
 
             fragment.arguments = args
             return fragment
@@ -44,7 +44,7 @@ class PetrolPriceHistoryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         arguments?.let {
-            this.petrolType = it.getParcelable(PETROLTYPE_EXTRA)
+            this.petrolType = it.getParcelable(PETROL_TYPE_EXTRA)
         }
 
         this.setCurrentPriceViews()

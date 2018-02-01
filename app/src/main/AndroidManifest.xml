@@ -19,11 +19,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.TrackNearActivity"></activity>
-        <activity android:name=".ui.StationListActivity"></activity>
-        <activity android:name=".ui.StationDetailsActivity"></activity>
-        <activity android:name=".ui.ChangePreferencesActivity"></activity>
-        <activity android:name=".ui.PetrolPriceHistoryActivity"></activity>
+        <activity android:name=".ui.TrackNearActivity"/>
+        <activity android:name=".ui.StationListActivity"/>
+        <activity android:name=".ui.StationDetailsActivity"/>
+        <activity android:name=".ui.ChangePreferencesActivity"/>
+        <activity android:name=".ui.PetrolPriceHistoryActivity"/>
 
         <meta-data
             android:name="com.google.android.gms.version"

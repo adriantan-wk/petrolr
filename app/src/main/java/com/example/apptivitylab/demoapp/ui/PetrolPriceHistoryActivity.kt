@@ -18,13 +18,13 @@ class PetrolPriceHistoryActivity : AppCompatActivity() {
 
     companion object {
         const val USER_EXTRA = "user_object"
-        const val PETROLTYPE_LIST_EXTRA = "petrolType_list"
+        const val PETROL_TYPE_LIST_EXTRA = "petrol_type_list"
 
         fun newLaunchIntent(context: Context, currentUser: User, petrolTypeList: ArrayList<PetrolType>): Intent {
             val intent = Intent(context, PetrolPriceHistoryActivity::class.java)
 
             intent.putExtra(USER_EXTRA, currentUser)
-            intent.putExtra(PETROLTYPE_LIST_EXTRA, petrolTypeList)
+            intent.putExtra(PETROL_TYPE_LIST_EXTRA, petrolTypeList)
 
             return intent
         }
@@ -43,7 +43,7 @@ class PetrolPriceHistoryActivity : AppCompatActivity() {
         })
 
         val currentUser = intent.getParcelableExtra<User>(USER_EXTRA)
-        val petrolTypeList = intent.getParcelableArrayListExtra<PetrolType>(PETROLTYPE_LIST_EXTRA)
+        val petrolTypeList = intent.getParcelableArrayListExtra<PetrolType>(PETROL_TYPE_LIST_EXTRA)
 
         var preferredPetrolType = PetrolType()
 
