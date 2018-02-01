@@ -32,9 +32,6 @@ class User() : Parcelable {
         if (petrolType != null) {
             this.preferredPetrolType = PetrolType(petrolType)
         }
-//        jsonObject.optJSONObject("preferred_petrol_type")?.let {
-//            this.preferredPetrolType = PetrolType(it)
-//        }
 
         val preferredBrandsJSONArray = jsonObject.optJSONArray("preferred_brands")
         for (brand in 0 until preferredBrandsJSONArray.length()) {

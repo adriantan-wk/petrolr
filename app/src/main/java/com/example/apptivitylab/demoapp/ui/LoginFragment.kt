@@ -10,7 +10,6 @@ import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.controllers.PetrolTypeController
 import com.example.apptivitylab.demoapp.controllers.StationController
 import com.example.apptivitylab.demoapp.controllers.UserController
-import com.example.apptivitylab.demoapp.controllers.UserController.user
 import com.example.apptivitylab.demoapp.models.User
 import kotlinx.android.synthetic.main.fragment_login.*
 
@@ -29,7 +28,7 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        registerBtn.setOnClickListener {
+        this.registerBtn.setOnClickListener {
             activity?.let {
                 it.supportFragmentManager
                     .beginTransaction()
@@ -39,7 +38,7 @@ class LoginFragment : Fragment() {
             }
         }
 
-        loginBtn.setOnClickListener {
+        this.loginBtn.setOnClickListener {
             if (this.usernameEditText.isEmpty() || this.passwordEditText.isEmpty()) {
                 this.messageTextView.text = getString(R.string.fields_empty)
             } else {
@@ -68,11 +67,11 @@ class LoginFragment : Fragment() {
 
         allUsersList.forEach { user ->
             if (user.username == username) {
-                if (user.password == password) {
+                return if (user.password == password) {
                     UserController.setCurrentUser(user)
-                    return true
+                    true
                 } else {
-                    return false
+                    false
                 }
             }
         }

@@ -2,8 +2,6 @@ package com.example.apptivitylab.demoapp.controllers
 
 import android.content.Context
 import com.example.apptivitylab.demoapp.R
-import com.example.apptivitylab.demoapp.models.Brand
-import com.example.apptivitylab.demoapp.models.PetrolType
 import com.example.apptivitylab.demoapp.models.User
 import org.json.JSONArray
 import org.json.JSONObject
