@@ -31,11 +31,11 @@ class ChangePreferencesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_blank_toolbar)
 
-        setSupportActionBar(toolbar)
+        setSupportActionBar(this.toolbar)
         supportActionBar?.title = getString(R.string.change_preferences_title)
 
-        toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_material)
-        toolbar.setNavigationOnClickListener(View.OnClickListener {
+        this.toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_material)
+        this.toolbar.setNavigationOnClickListener(View.OnClickListener {
             finish()
         })
 

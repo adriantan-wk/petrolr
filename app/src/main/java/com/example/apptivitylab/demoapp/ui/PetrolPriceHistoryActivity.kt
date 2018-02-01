@@ -40,8 +40,8 @@ class PetrolPriceHistoryActivity : AppCompatActivity() {
         setSupportActionBar(this.toolbar)
         supportActionBar?.title = getString(R.string.price_history)
 
-        toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_material)
-        toolbar.setNavigationOnClickListener (View.OnClickListener {
+        this.toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_material)
+        this.toolbar.setNavigationOnClickListener (View.OnClickListener {
             finish()
         })
 
