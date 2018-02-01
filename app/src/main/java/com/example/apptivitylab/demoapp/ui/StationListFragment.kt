@@ -83,7 +83,7 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
         this.stationListRecyclerView.adapter = this.stationsAdapter
         this.updateAdapterDataSet(this.stationsAdapter, this.stations, this.userLatLng)
 
-        this.fusedLocationClient = LocationServices.getFusedLocationProviderClient(context!!)
+        this.fusedLocationClient = LocationServices.getFusedLocationProviderClient(this.context!!)
     }
 
     override fun onStart() {
@@ -104,11 +104,11 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
         when (requestCode) {
             TrackNearbyFragment.ACCESS_FINE_LOCATION_PERMISSIONS -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    val toast = Toast.makeText(context, R.string.location_permissions_granted, Toast.LENGTH_SHORT)
+                    val toast = Toast.makeText(this.context!!, R.string.location_permissions_granted, Toast.LENGTH_SHORT)
                     toast.show()
                     this.updateUserLocation()
                 } else {
-                    val toast = Toast.makeText(context, R.string.location_permissions_denied, Toast.LENGTH_SHORT)
+                    val toast = Toast.makeText(this.context!!, R.string.location_permissions_denied, Toast.LENGTH_SHORT)
                     toast.show()
                 }
             }
@@ -119,11 +119,11 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
 
     override fun onStationSelected(station: Station) {
 
-        val stationDetailsIntent = StationDetailsActivity.newLaunchIntent(context!!, station)
+        val stationDetailsIntent = StationDetailsActivity.newLaunchIntent(this.context!!, station)
         startActivity(stationDetailsIntent)
     }
 
-    public fun onUserPreferencesChanged(user: User) {
+    fun onUserPreferencesChanged(user: User) {
         this.currentUser = user
 
         this.updateUserLocation()
@@ -135,13 +135,13 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
         request.interval = 3000
         request.fastestInterval = 1000
 
-        if (ActivityCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION)
+        if (ActivityCompat.checkSelfPermission(this.context!!, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             this.createLocationCallBack()
             this.fusedLocationClient.requestLocationUpdates(request, this.locationCallBack, Looper.myLooper())
-            Toast.makeText(context!!, getString(R.string.updating_location), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this.context!!, getString(R.string.updating_location), Toast.LENGTH_SHORT).show()
         } else {
-            Toast.makeText(context!!, getString(R.string.unable_receive_location), Toast.LENGTH_LONG).show()
+            Toast.makeText(this.context!!, getString(R.string.unable_receive_location), Toast.LENGTH_LONG).show()
             this.swipeRefreshLayout.isRefreshing = false
         }
     }
@@ -161,18 +161,20 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
     private fun onLocationChanged(location: Location) {
         if (this.locationChangeCounter < 5) {
             if (location.latitude != this.userLatLng?.latitude || location.longitude != this.userLatLng?.longitude) {
-                this.updateUserLocation()
-                this.swipeRefreshLayout.isRefreshing = false
                 this.locationChangeCounter = 0
-                this.fusedLocationClient?.removeLocationUpdates(this.locationCallBack)
+                this.fusedLocationClient.removeLocationUpdates(this.locationCallBack)
+
+                this.swipeRefreshLayout.isRefreshing = false
+                this.updateUserLocation()
             } else {
                 this.locationChangeCounter++
             }
         } else {
-            Toast.makeText(context!!, R.string.location_not_changed, Toast.LENGTH_LONG).show()
-            this.swipeRefreshLayout.isRefreshing = false
+            this.fusedLocationClient.removeLocationUpdates(this.locationCallBack)
             this.locationChangeCounter = 0
-            this.fusedLocationClient?.removeLocationUpdates(this.locationCallBack)
+
+            this.swipeRefreshLayout.isRefreshing = false
+            Toast.makeText(this.context!!, R.string.location_not_changed, Toast.LENGTH_LONG).show()
         }
     }
 
@@ -181,7 +183,7 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
         this.fusedLocationClient.lastLocation.addOnSuccessListener { location ->
             if (location != null) {
                 this.userLatLng = LatLng(location.latitude, location.longitude)
-                Toast.makeText(context, R.string.location_updated, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this.context!!, R.string.location_updated, Toast.LENGTH_SHORT).show()
                 this.updateAdapterDataSet(this.stationsAdapter, this.stations, this.userLatLng)
             }
         }
