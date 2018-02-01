@@ -11,6 +11,7 @@ import android.content.Intent
 import android.support.v7.app.AlertDialog
 import android.view.MenuItem
 import android.widget.Toast
+import com.example.apptivitylab.demoapp.controllers.PetrolTypeController
 import com.example.apptivitylab.demoapp.controllers.UserController
 import com.example.apptivitylab.demoapp.models.Station
 import com.example.apptivitylab.demoapp.models.User
@@ -24,11 +25,11 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
     companion object {
         const val CHANGE_PREFERENCES_REQUEST_CODE = 200
-        const val USER_EXTRA = "user_object"
         const val STATION_LIST_EXTRA = "station_list"
 
         fun newLaunchIntent(context: Context, stations: ArrayList<Station>): Intent {
             val intent = Intent(context, TrackNearActivity::class.java)
+
             intent.putExtra(STATION_LIST_EXTRA, stations)
 
             return intent
@@ -55,7 +56,7 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
         this.stations = intent.getParcelableArrayListExtra<Station>(STATION_LIST_EXTRA)
 
-        this.trackNearbyFragment = TrackNearbyFragment.newInstance(UserController.user, stations)
+        this.trackNearbyFragment = TrackNearbyFragment.newInstance(UserController.user, this.stations)
 
         supportFragmentManager
         .beginTransaction()
@@ -91,6 +92,13 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 startActivity(stationListIntent)
 
                 trackNearDrawerLayout.closeDrawers()
+                true
+            }
+
+            R.id.nav_price_history -> {
+                val priceHistoryIntent = PetrolPriceHistoryActivity.newLaunchIntent(this, UserController.user, PetrolTypeController.petrolTypeList)
+                startActivity(priceHistoryIntent)
+
                 true
             }
 

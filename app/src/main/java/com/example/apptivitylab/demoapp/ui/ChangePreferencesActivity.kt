@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.models.User
-import kotlinx.android.synthetic.main.activity_change_preferences.*
+import kotlinx.android.synthetic.main.activity_blank_toolbar.*
 
 /**
  * Created by ApptivityLab on 19/01/2018.
@@ -29,13 +29,13 @@ class ChangePreferencesActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_change_preferences)
+        setContentView(R.layout.activity_blank_toolbar)
 
-        setSupportActionBar(changePrefToolbar)
+        setSupportActionBar(this.toolbar)
         supportActionBar?.title = getString(R.string.change_preferences_title)
 
-        changePrefToolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_material)
-        changePrefToolbar.setNavigationOnClickListener(View.OnClickListener {
+        this.toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_material)
+        this.toolbar.setNavigationOnClickListener(View.OnClickListener {
             finish()
         })
 
@@ -43,7 +43,7 @@ class ChangePreferencesActivity : AppCompatActivity() {
 
         supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.changePrefContainer, ChangePreferencesFragment.newInstance(user))
+                .replace(R.id.container, ChangePreferencesFragment.newInstance(user))
                 .commit()
     }
 }
