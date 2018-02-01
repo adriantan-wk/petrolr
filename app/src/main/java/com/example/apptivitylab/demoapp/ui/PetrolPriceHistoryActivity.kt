@@ -3,10 +3,7 @@ package com.example.apptivitylab.demoapp.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.support.v7.app.AppCompatActivity
-import android.text.TextUtils.replace
-import android.util.Log
 import android.view.View
 import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.models.PetrolType
