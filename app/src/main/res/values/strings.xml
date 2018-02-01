@@ -58,4 +58,7 @@
     <string name="list_separator">\u0020\u0020|\u0020\u0020  </string>
     <string name="navigate">Navigate</string>
     <string name="no_navigation_apps">You do not have any navigation apps</string>
+    <string name="unable_receive_location">Location Permissions Disabled.\nUnable to retrieve location updates</string>
+    <string name="location_not_changed">Your location has not changed</string>
+    <string name="updating_location">Updating User Location…</string>
 </resources>

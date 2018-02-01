@@ -1,12 +1,15 @@
 package com.example.apptivitylab.demoapp.ui
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.os.Looper
 import android.support.v4.app.ActivityCompat
+import android.support.v4.app.ActivityCompat.requestPermissions
 import android.support.v4.app.Fragment
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -19,6 +22,7 @@ import com.example.apptivitylab.demoapp.models.Station
 import com.example.apptivitylab.demoapp.models.User
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
+import kotlinx.android.synthetic.main.activity_station_list.*
 import kotlinx.android.synthetic.main.fragment_station_list.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -27,7 +31,8 @@ import kotlin.collections.ArrayList
  * Created by ApptivityLab on 15/01/2018.
  */
 
-class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.onSelectStationListener {
+class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.onSelectStationListener,
+        SwipeRefreshLayout.OnRefreshListener {
 
     companion object {
         const val USER_EXTRA = "user_object"
@@ -45,8 +50,10 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
         }
     }
 
-    private var fusedLocationClient: FusedLocationProviderClient? = null
-    private var locationCallBack: LocationCallback? = null
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var locationCallBack: LocationCallback
+    private var locationChangeCounter = 0
+
     private var userLatLng: LatLng? = null
 
     private lateinit var currentUser: User
@@ -67,45 +74,80 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
             this.stations = it.getParcelableArrayList(STATION_LIST_EXTRA)
         }
 
+        this.swipeRefreshLayout.setOnRefreshListener(this)
+
         val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        stationListRecyclerView.layoutManager = layoutManager
+        this.stationListRecyclerView.layoutManager = layoutManager
 
-        stationsAdapter.setStationListener(this)
-        stationListRecyclerView.adapter = stationsAdapter
-        updateAdapterDataSet(this.stationsAdapter, this.stations, this.userLatLng)
+        this.stationsAdapter.setStationListener(this)
+        this.stationListRecyclerView.adapter = this.stationsAdapter
+        this.updateAdapterDataSet(this.stationsAdapter, this.stations, this.userLatLng)
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(context!!)
-        startLocationUpdates()
+        this.fusedLocationClient = LocationServices.getFusedLocationProviderClient(this.context!!)
     }
 
-    override fun onStationSelected(station: Station) {
-
-        val stationDetailsIntent = StationDetailsActivity.newLaunchIntent(context!!, station)
-        startActivity(stationDetailsIntent)
-    }
-
-    private fun startLocationUpdates() {
+    override fun onStart() {
+        super.onStart()
 
         this.context?.let {
             if (ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                         TrackNearbyFragment.ACCESS_FINE_LOCATION_PERMISSIONS)
+            } else {
+                this.updateUserLocation()
             }
         }
+    }
 
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            TrackNearbyFragment.ACCESS_FINE_LOCATION_PERMISSIONS -> {
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    val toast = Toast.makeText(this.context!!, R.string.location_permissions_granted, Toast.LENGTH_SHORT)
+                    toast.show()
+                    this.updateUserLocation()
+                } else {
+                    val toast = Toast.makeText(this.context!!, R.string.location_permissions_denied, Toast.LENGTH_SHORT)
+                    toast.show()
+                }
+            }
+            else -> {
+            }
+        }
+    }
+
+    override fun onStationSelected(station: Station) {
+
+        val stationDetailsIntent = StationDetailsActivity.newLaunchIntent(this.context!!, station)
+        startActivity(stationDetailsIntent)
+    }
+
+    fun onUserPreferencesChanged(user: User) {
+        this.currentUser = user
+
+        this.updateUserLocation()
+    }
+
+    override fun onRefresh() {
         val request = LocationRequest()
         request.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        request.interval = 15000
-        request.fastestInterval = 10000
+        request.interval = 3000
+        request.fastestInterval = 1000
 
-        createLocationCallBack()
-
-        fusedLocationClient?.requestLocationUpdates(request, locationCallBack, Looper.myLooper())
+        if (ActivityCompat.checkSelfPermission(this.context!!, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            this.createLocationCallBack()
+            this.fusedLocationClient.requestLocationUpdates(request, this.locationCallBack, Looper.myLooper())
+            Toast.makeText(this.context!!, getString(R.string.updating_location), Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this.context!!, getString(R.string.unable_receive_location), Toast.LENGTH_LONG).show()
+            this.swipeRefreshLayout.isRefreshing = false
+        }
     }
 
     private fun createLocationCallBack() {
-        locationCallBack = object : LocationCallback() {
+        this.locationCallBack = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult?) {
                 super.onLocationResult(locationResult)
 
@@ -116,34 +158,35 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        when (requestCode) {
-            TrackNearbyFragment.ACCESS_FINE_LOCATION_PERMISSIONS -> {
-                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    val toast = Toast.makeText(context, R.string.location_permissions_granted, Toast.LENGTH_SHORT)
-                    toast.show()
-                    startLocationUpdates()
-                } else {
-                    val toast = Toast.makeText(context, R.string.location_permissions_denied, Toast.LENGTH_SHORT)
-                    toast.show()
-                }
+    private fun onLocationChanged(location: Location) {
+        if (this.locationChangeCounter < 5) {
+            if (location.latitude != this.userLatLng?.latitude || location.longitude != this.userLatLng?.longitude) {
+                this.locationChangeCounter = 0
+                this.fusedLocationClient.removeLocationUpdates(this.locationCallBack)
+
+                this.swipeRefreshLayout.isRefreshing = false
+                this.updateUserLocation()
+            } else {
+                this.locationChangeCounter++
             }
-            else -> {
-            }
+        } else {
+            this.fusedLocationClient.removeLocationUpdates(this.locationCallBack)
+            this.locationChangeCounter = 0
+
+            this.swipeRefreshLayout.isRefreshing = false
+            Toast.makeText(this.context!!, R.string.location_not_changed, Toast.LENGTH_LONG).show()
         }
     }
 
-    private fun onLocationChanged(location: Location?) {
-        location?.let {
-            this.userLatLng = LatLng(it.latitude, it.longitude)
+    @SuppressLint("MissingPermission")
+    private fun updateUserLocation() {
+        this.fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+            if (location != null) {
+                this.userLatLng = LatLng(location.latitude, location.longitude)
+                Toast.makeText(this.context!!, R.string.location_updated, Toast.LENGTH_SHORT).show()
+                this.updateAdapterDataSet(this.stationsAdapter, this.stations, this.userLatLng)
+            }
         }
-
-        updateAdapterDataSet(this.stationsAdapter, this.stations, this.userLatLng)
-    }
-
-    public fun onUserPreferencesChanged(user: User) {
-        this.currentUser = user
-        updateAdapterDataSet(this.stationsAdapter, this.stations, this.userLatLng)
     }
 
     private fun updateAdapterDataSet(stationsAdapter: StationsListAdapter
@@ -154,13 +197,12 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
 
 
         if (userLatLng != null) {
-            setDistanceFromUser(stationList, userLatLng)
-            stationList = arrangeStationsByDistance(stationList)
-            stationsAndHeadersList = arrangeListByPreferences(stationList, currentUser)
+            this.setDistanceFromUser(stationList, userLatLng)
+            stationList = this.arrangeStationsByDistance(stationList)
+            stationsAndHeadersList = this.arrangeListByPreferences(stationList, currentUser)
         }
 
         stationsAdapter.updateDataSet(stationsAndHeadersList)
-        Toast.makeText(context, R.string.location_updated, Toast.LENGTH_SHORT).show()
     }
 
     private fun setDistanceFromUser(stations: ArrayList<Station>, userLatLng: LatLng?) {
@@ -231,10 +273,5 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
         arrangedStationsAndHeadersList.addAll(stationsWithCorrectPetrolType)
 
         return arrangedStationsAndHeadersList
-    }
-
-    override fun onStop() {
-        fusedLocationClient?.removeLocationUpdates(locationCallBack)
-        super.onStop()
     }
 }
