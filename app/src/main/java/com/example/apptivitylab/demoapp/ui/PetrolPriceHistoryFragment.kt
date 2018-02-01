@@ -1,16 +1,13 @@
 package com.example.apptivitylab.demoapp.ui
 
-import android.graphics.Typeface
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
 import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.models.PetrolType
+import kotlinx.android.synthetic.main.cell_price.view.*
 import kotlinx.android.synthetic.main.fragment_petrol_price_history.*
 import java.text.SimpleDateFormat
 
@@ -61,33 +58,15 @@ class PetrolPriceHistoryFragment : Fragment() {
 
     private fun generatePreviousPriceViews() {
         for (count in 1 until this.petrolType.previousPrices.size) {
-            val linearLayout = LinearLayout(this.context!!)
-            linearLayout.setBackgroundColor(ContextCompat.getColor(this.context!!, R.color.colorAccent))
-            linearLayout.orientation = LinearLayout.VERTICAL
-
-            val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            layoutParams.setMargins(0, 32, 0, 16)
-
-            linearLayout.layoutParams = layoutParams
-            linearLayout.setPadding(32, 32, 32, 32)
-
-            layoutParams.setMargins(0, 8, 0, 8)
-
-            val priceTextView = TextView(this.context!!)
-            priceTextView.layoutParams = layoutParams
-            priceTextView.textSize = 24f
-            priceTextView.typeface = Typeface.DEFAULT_BOLD
-            priceTextView.text = getString(R.string.price_value, petrolType.previousPrices[count])
+            val layoutInflater: LayoutInflater = LayoutInflater.from(this.context)
+            val previousPriceCell = layoutInflater.inflate(R.layout.cell_price, this.priceHistoryLinearLayout, false)
 
             val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy")
-            val dateTextView = TextView(this.context!!)
-            dateTextView.layoutParams = layoutParams
-            dateTextView.textSize = 16f
-            dateTextView.text = getString(R.string.changed_on, simpleDateFormat.format(this.petrolType.priceChangeDates[count]))
 
-            linearLayout.addView(priceTextView)
-            linearLayout.addView(dateTextView)
-            this.priceHistoryLinearLayout.addView(linearLayout)
+            previousPriceCell.priceTextView.text = getString(R.string.price_value, petrolType.previousPrices[count])
+            previousPriceCell.dateTextView.text = getString(R.string.changed_on, simpleDateFormat.format(this.petrolType.priceChangeDates[count]))
+
+            this.priceHistoryLinearLayout.addView(previousPriceCell)
         }
     }
 }
