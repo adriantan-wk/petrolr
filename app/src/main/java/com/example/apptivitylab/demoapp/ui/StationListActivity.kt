@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.controllers.PetrolTypeController
@@ -17,6 +18,7 @@ import com.example.apptivitylab.demoapp.controllers.UserController
 import com.example.apptivitylab.demoapp.models.Station
 import com.example.apptivitylab.demoapp.models.User
 import kotlinx.android.synthetic.main.activity_station_list.*
+import kotlinx.android.synthetic.main.nav_view_header.view.*
 
 /**
  * Created by ApptivityLab on 17/01/2018.
@@ -26,7 +28,6 @@ class StationListActivity : AppCompatActivity(), NavigationView.OnNavigationItem
 
     companion object {
         const val CHANGE_PREFERENCES_REQUEST_CODE = 200
-        const val USER_EXTRA = "user_object"
         const val STATION_LIST_EXTRA = "station_list"
 
         fun newLaunchIntent(context: Context, stations: ArrayList<Station>): Intent {
@@ -43,16 +44,19 @@ class StationListActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_station_list)
 
-        setSupportActionBar(stationListToolbar)
+        setSupportActionBar(this.stationListToolbar)
         supportActionBar?.title = getString(R.string.station_list_title)
 
         val drawerToggle = ActionBarDrawerToggle(this, stationListDrawerLayout, stationListToolbar,
                 R.string.open_drawer, R.string.close_drawer)
-        stationListDrawerLayout.addDrawerListener(drawerToggle)
+        this.stationListDrawerLayout.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
 
-        stationListNavView.inflateMenu(R.menu.navigation_drawer_home_menu)
-        stationListNavView.setNavigationItemSelectedListener(this)
+        this.stationListNavView.inflateMenu(R.menu.navigation_drawer_home_menu)
+        this.stationListNavView.setNavigationItemSelectedListener(this)
+
+        val navigationViewHeader: View = this.stationListNavView.getHeaderView(0)
+        navigationViewHeader.navHeaderUserTextView.text = UserController.user.username
 
         val stations = intent.getParcelableArrayListExtra<Station>(STATION_LIST_EXTRA)
 
@@ -69,7 +73,7 @@ class StationListActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         if (requestCode == CHANGE_PREFERENCES_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             val newUserPreferences = data?.getParcelableExtra<User>(getString(R.string.change_preferences_intent))
 
-            stationListDrawerLayout.closeDrawers()
+            this.stationListDrawerLayout.closeDrawers()
 
             newUserPreferences?.let {
                 updateUserPreferences(newUserPreferences)
@@ -79,19 +83,17 @@ class StationListActivity : AppCompatActivity(), NavigationView.OnNavigationItem
 
     override fun onNavigationItemSelected(item: MenuItem) : Boolean {
         return when (item.itemId) {
-        //TODO Other side drawer menu items
-
             R.id.nav_track_nearby -> {
                 val trackNearIntent = TrackNearActivity.newLaunchIntent(this, StationController.stationList)
                         .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(trackNearIntent)
 
-                stationListDrawerLayout.closeDrawers()
+                this.stationListDrawerLayout.closeDrawers()
                 true
             }
 
             R.id.nav_station_list -> {
-                stationListDrawerLayout.closeDrawers()
+                this.stationListDrawerLayout.closeDrawers()
                 true
             }
 

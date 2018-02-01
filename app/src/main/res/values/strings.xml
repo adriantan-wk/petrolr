@@ -65,4 +65,6 @@
     <string name="previous_prices">Previous Prices</string>
     <string name="since_value">Since %1$s</string>
     <string name="changed_on">Changed on %1$s</string>
+    <string name="login_failed">Login details incorrect, please try again.</string>
+    <string name="fields_empty">Please make sure you have filled in\nyour username and password</string>
 </resources>

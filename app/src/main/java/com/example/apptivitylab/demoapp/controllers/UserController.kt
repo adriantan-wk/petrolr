@@ -1,8 +1,15 @@
 package com.example.apptivitylab.demoapp.controllers
 
+import android.content.Context
+import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.models.Brand
 import com.example.apptivitylab.demoapp.models.PetrolType
 import com.example.apptivitylab.demoapp.models.User
+import org.json.JSONArray
+import org.json.JSONObject
+import java.io.BufferedReader
+import java.io.InputStream
+import java.io.InputStreamReader
 
 /**
  * Created by ApptivityLab on 23/01/2018.
@@ -10,17 +17,26 @@ import com.example.apptivitylab.demoapp.models.User
 object UserController {
     lateinit var user: User
 
-    fun createMockUser() {
-        val brand1 = Brand("SHEL", "Shell")
-        val brand2 = Brand("PTNS", "Petronas")
+    fun setCurrentUser(user: User) {
+        this.user = user
+    }
 
-        val preferredBrands: ArrayList<Brand> = ArrayList()
-        preferredBrands.add(brand1)
-        preferredBrands.add(brand2)
+    fun loadMockUsers(context: Context): ArrayList<User> {
+        val userList: ArrayList<User> = ArrayList()
+        val inputStream: InputStream = context.resources.openRawResource(R.raw.users)
+        val reader = BufferedReader(InputStreamReader(inputStream))
+        var jsonObject: JSONObject
+        var user: User
 
-        val petrolType = PetrolType("P004", "EURO 5", 2.33)
+        val fileContent = reader.readText()
+        jsonObject = JSONObject(fileContent.substring(fileContent.indexOf("{"), fileContent.lastIndexOf("}") + 1))
+        val jsonArray: JSONArray = jsonObject.optJSONArray(("users"))
 
-        this.user = User("U001", "adrian", "123", petrolType, preferredBrands)
+        for (s in 0 until jsonArray.length()) {
+            user = User(jsonArray.getJSONObject(s))
+            userList.add(user)
+        }
+        return userList
     }
 
     fun logOutUser() {

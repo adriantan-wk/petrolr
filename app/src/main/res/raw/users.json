@@ -1,0 +1,57 @@
+{
+  "users": [
+    {
+      "user_id": "U001",
+      "user_name": "adriantan",
+      "password": "123",
+      "preferred_petrol_type": {
+        "petrol_id": "P004",
+        "petrol_name": "EURO 5",
+        "petrol_previous_prices": [ "2.2", "2.28", "2.35"],
+        "petrol_price_change_dates": [ "31/01/2018", "15/01/2018", "08/01/2018"]
+      },
+      "preferred_brands": [{
+        "brand_id": "SHEL",
+        "brand_name": "Shell"
+      },
+        {
+          "brand_id": "PTNS",
+          "brand_name": "Petronas"
+        }]
+    },
+    {
+      "user_id": "U002",
+      "user_name": "potatoes",
+      "password": "fries",
+      "preferred_petrol_type": null,
+      "preferred_brands": []
+    },
+    {
+      "user_id": "U003",
+      "user_name": "chicken",
+      "password": "fried",
+      "preferred_petrol_type": {
+        "petrol_id": "P001",
+        "petrol_name": "RON95",
+        "petrol_previous_prices": [ "2.3", "2.25", "2.35", "2.4", "2.33"],
+        "petrol_price_change_dates": [ "30/01/2018", "25/01/2018", "24/01/2018", "17/01/2018", "08/01/2018"]
+      },
+      "preferred_brands": [{
+        "brand_id": "SHEL",
+        "brand_name": "Shell"
+        },
+        {
+          "brand_id": "BRPE",
+          "brand_name": "BP"
+        },
+        {
+          "brand_id": "PTNS",
+          "brand_name": "Petronas"
+        },
+        {
+          "brand_id": "PTRN",
+          "brand_name": "Petron"
+        }]
+    }
+  ]
+}

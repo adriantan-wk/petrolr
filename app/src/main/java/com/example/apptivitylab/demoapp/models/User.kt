@@ -16,17 +16,30 @@ class User() : Parcelable {
     var preferredBrands: ArrayList<Brand> = ArrayList()
 
     constructor(parcel: Parcel) : this() {
-        userID = parcel.readString()
-        username = parcel.readString()
-        password = parcel.readString()
-        preferredPetrolType = parcel.readParcelable(PetrolType::class.java.classLoader)
-        preferredBrands = parcel.readArrayList(Brand::class.java.classLoader) as ArrayList<Brand>
+        this.userID = parcel.readString()
+        this.username = parcel.readString()
+        this.password = parcel.readString()
+        this.preferredPetrolType = parcel.readParcelable(PetrolType::class.java.classLoader)
+        this.preferredBrands = parcel.readArrayList(Brand::class.java.classLoader) as ArrayList<Brand>
     }
 
     constructor(jsonObject: JSONObject) : this() {
-        userID = jsonObject.optString("userID")
-        username = jsonObject.optString("Username")
-        password = jsonObject.optString("Password")
+        this.userID = jsonObject.optString("user_id")
+        this.username = jsonObject.optString("user_name")
+        this.password = jsonObject.optString("password")
+
+        val petrolType = jsonObject.optJSONObject("preferred_petrol_type")
+        if (petrolType != null) {
+            this.preferredPetrolType = PetrolType(petrolType)
+        }
+//        jsonObject.optJSONObject("preferred_petrol_type")?.let {
+//            this.preferredPetrolType = PetrolType(it)
+//        }
+
+        val preferredBrandsJSONArray = jsonObject.optJSONArray("preferred_brands")
+        for (brand in 0 until preferredBrandsJSONArray.length()) {
+            this.preferredBrands.add(Brand(preferredBrandsJSONArray.getJSONObject(brand)))
+        }
     }
 
     constructor(userID: String, username: String, password: String,
