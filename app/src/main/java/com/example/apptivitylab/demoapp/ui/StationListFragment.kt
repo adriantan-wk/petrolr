@@ -7,7 +7,6 @@ import android.location.Location
 import android.os.Bundle
 import android.os.Looper
 import android.support.v4.app.ActivityCompat
-import android.support.v4.app.ActivityCompat.requestPermissions
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
@@ -22,7 +21,6 @@ import com.example.apptivitylab.demoapp.models.Station
 import com.example.apptivitylab.demoapp.models.User
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
-import kotlinx.android.synthetic.main.activity_station_list.*
 import kotlinx.android.synthetic.main.fragment_station_list.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -183,9 +181,9 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
         this.fusedLocationClient.lastLocation.addOnSuccessListener { location ->
             if (location != null) {
                 this.userLatLng = LatLng(location.latitude, location.longitude)
-                Toast.makeText(this.context!!, R.string.location_updated, Toast.LENGTH_SHORT).show()
-                this.updateAdapterDataSet(this.stationsAdapter, this.stations, this.userLatLng)
             }
+
+            this.updateAdapterDataSet(this.stationsAdapter, this.stations, this.userLatLng)
         }
     }
 
@@ -199,9 +197,10 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
         if (userLatLng != null) {
             this.setDistanceFromUser(stationList, userLatLng)
             stationList = this.arrangeStationsByDistance(stationList)
-            stationsAndHeadersList = this.arrangeListByPreferences(stationList, currentUser)
+            Toast.makeText(this.context!!, R.string.location_updated, Toast.LENGTH_SHORT).show()
         }
 
+        stationsAndHeadersList = this.arrangeListByPreferences(stationList, currentUser)
         stationsAdapter.updateDataSet(stationsAndHeadersList)
     }
 

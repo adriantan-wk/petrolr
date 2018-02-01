@@ -39,11 +39,11 @@
             android:id="@+id/distanceTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/unavailable"
             android:textStyle="bold"
             android:textSize="24dp"/>
 
         <TextView
+            android:id="@+id/kmAwayTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/distance_km_away"/>

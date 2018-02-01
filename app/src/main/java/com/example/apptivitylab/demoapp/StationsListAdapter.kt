@@ -86,6 +86,7 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         private val stationName = itemView.nameTextView
         private val stationBrand = itemView.brandTextView
         private val stationDistance = itemView.distanceTextView
+        private val stationKMAway = itemView.kmAwayTextView
 
         private var station: Station? = null
 
@@ -101,10 +102,12 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             stationName.text = station.stationName
             stationBrand.text = station.stationBrand
 
-            stationDistance.text = if (station.distanceFromUser != null) {
-                    "%.2f".format(station.distanceFromUser)
+            if (station.distanceFromUser != null) {
+                stationDistance.text = "%.2f".format(station.distanceFromUser)
+                stationKMAway.text = itemView.context.getString(R.string.distance_km_away)
                 } else {
-                    itemView.context.getString(R.string.unavailable)
+                    stationDistance.text = ""
+                    stationKMAway.text = ""
                 }
             }
         }
