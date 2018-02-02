@@ -116,7 +116,10 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                         .setMessage(R.string.logout_confirm_msg)
                         .setPositiveButton(R.string.yes,
                                 { dialog, which ->
+                                    UserController.logOutUser()
+
                                     val logOutIntent = Intent(this, TitleActivity::class.java)
+                                            .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                     startActivity(logOutIntent)
                                 })
                         .setNegativeButton(R.string.no, null)

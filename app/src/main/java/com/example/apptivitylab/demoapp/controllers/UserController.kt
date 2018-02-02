@@ -22,4 +22,8 @@ object UserController {
 
         this.user = User("U001", "adrian", "123", petrolType, preferredBrands)
     }
+
+    fun logOutUser() {
+        this.user = User()
+    }
 }
