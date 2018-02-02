@@ -10,12 +10,14 @@ import com.example.apptivitylab.demoapp.R
 import android.content.Intent
 import android.support.v7.app.AlertDialog
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import com.example.apptivitylab.demoapp.controllers.PetrolTypeController
 import com.example.apptivitylab.demoapp.controllers.UserController
 import com.example.apptivitylab.demoapp.models.Station
 import com.example.apptivitylab.demoapp.models.User
 import kotlinx.android.synthetic.main.activity_track_nearby.*
+import kotlinx.android.synthetic.main.nav_view_header.view.*
 
 /**
  * Created by ApptivityLab on 12/01/2018.
@@ -43,16 +45,19 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_track_nearby)
 
-        setSupportActionBar(trackNearToolbar)
+        setSupportActionBar(this.trackNearToolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
-        val drawerToggle = ActionBarDrawerToggle(this, trackNearDrawerLayout,
-                trackNearToolbar, R.string.open_drawer, R.string.close_drawer)
-        trackNearDrawerLayout.addDrawerListener(drawerToggle)
+        val drawerToggle = ActionBarDrawerToggle(this, this.trackNearDrawerLayout,
+                this.trackNearToolbar, R.string.open_drawer, R.string.close_drawer)
+        this.trackNearDrawerLayout.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
 
-        trackNearNavView.inflateMenu(R.menu.navigation_drawer_home_menu)
-        trackNearNavView.setNavigationItemSelectedListener(this)
+        this.trackNearNavView.inflateMenu(R.menu.navigation_drawer_home_menu)
+        this.trackNearNavView.setNavigationItemSelectedListener(this)
+
+        val navigationViewHeader: View = this.trackNearNavView.getHeaderView(0)
+        navigationViewHeader.navHeaderUserTextView.text = UserController.user.username
 
         this.stations = intent.getParcelableArrayListExtra<Station>(STATION_LIST_EXTRA)
 
@@ -62,7 +67,6 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         .beginTransaction()
         .replace(R.id.containerFrameLayout, this.trackNearbyFragment)
         .commit()
-
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -70,7 +74,7 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             if (requestCode == CHANGE_PREFERENCES_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
                 val newUserPreferences = data?.getParcelableExtra<User>(getString(R.string.change_preferences_intent))
 
-                trackNearDrawerLayout.closeDrawers()
+                this.trackNearDrawerLayout.closeDrawers()
 
                 newUserPreferences?.let {
                     updateUserPreferences(newUserPreferences)
@@ -80,10 +84,8 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         return  when (item.itemId) {
-        //TODO Other side drawer menu items
-
             R.id.nav_track_nearby -> {
-                trackNearDrawerLayout.closeDrawers()
+                this.trackNearDrawerLayout.closeDrawers()
                 true
             }
 
@@ -91,7 +93,7 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 val stationListIntent = StationListActivity.newLaunchIntent(this, this.stations)
                 startActivity(stationListIntent)
 
-                trackNearDrawerLayout.closeDrawers()
+                this.trackNearDrawerLayout.closeDrawers()
                 true
             }
 
