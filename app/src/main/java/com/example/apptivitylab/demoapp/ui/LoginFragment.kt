@@ -1,5 +1,7 @@
 package com.example.apptivitylab.demoapp.ui
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TextInputEditText
 import android.support.v4.app.Fragment
@@ -18,6 +20,10 @@ import kotlinx.android.synthetic.main.fragment_login.*
  */
 
 class LoginFragment : Fragment() {
+
+    companion object {
+        const val SET_PREFERENCES_REQUEST_CODE = 201
+    }
 
     private lateinit var allUsersList: ArrayList<User>
 
@@ -43,9 +49,13 @@ class LoginFragment : Fragment() {
                 this.messageTextView.text = getString(R.string.username_or_password_empty_message)
             } else {
                 if (this.isUserLoginDetailsCorrect(this.usernameEditText, this.passwordEditText)) {
-                    //TODO Check for first time preferences setting
-                    val randomIntent = TrackNearActivity.newLaunchIntent(this.context!!, StationController.stationList)
-                    startActivity(randomIntent)
+                    if (UserController.user.preferredPetrolType == null || UserController.user.preferredBrands.isEmpty()) {
+                        val preferencesIntent = ChangePreferencesActivity.newLaunchIntent(this.context!!, UserController.user, true)
+                        startActivityForResult(preferencesIntent, SET_PREFERENCES_REQUEST_CODE)
+                    } else {
+                        val randomIntent = TrackNearActivity.newLaunchIntent(this.context!!, StationController.stationList)
+                        startActivity(randomIntent)
+                    }
                 } else {
                     this.messageTextView.text = getString(R.string.login_failed)
                 }
@@ -76,6 +86,21 @@ class LoginFragment : Fragment() {
             }
         }
         return false
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == SET_PREFERENCES_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            val newUserPreferences = data?.getParcelableExtra<User>(getString(R.string.change_preferences_intent))
+
+            newUserPreferences?.let {
+                UserController.user.preferredPetrolType = it.preferredPetrolType
+                UserController.user.preferredBrands = it.preferredBrands
+            }
+
+            val randomIntent = TrackNearActivity.newLaunchIntent(this.context!!, StationController.stationList)
+            startActivity(randomIntent)
+        }
     }
 
     fun TextInputEditText.isEmpty(): Boolean {

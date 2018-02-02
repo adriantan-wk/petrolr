@@ -105,7 +105,7 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             }
 
             R.id.nav_preferences -> {
-                val preferencesIntent = ChangePreferencesActivity.newLaunchIntent(this, UserController.user)
+                val preferencesIntent = ChangePreferencesActivity.newLaunchIntent(this, UserController.user, false)
                 startActivityForResult(preferencesIntent, CHANGE_PREFERENCES_REQUEST_CODE)
 
                 true
