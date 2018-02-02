@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.apptivitylab.demoapp.R
-import com.example.apptivitylab.demoapp.controllers.PetrolTypeController
 import com.example.apptivitylab.demoapp.controllers.StationController
 import com.example.apptivitylab.demoapp.controllers.UserController
 import com.example.apptivitylab.demoapp.models.User
@@ -23,24 +22,39 @@ class LoginFragment : Fragment() {
 
     companion object {
         const val SET_PREFERENCES_REQUEST_CODE = 201
+        const val USER_LIST_EXTRA = "user_list"
+
+        fun newInstance(userList: ArrayList<User>): LoginFragment {
+            val fragment = LoginFragment()
+
+            val args: Bundle = Bundle()
+            args.putParcelableArrayList(USER_LIST_EXTRA, userList)
+
+            fragment.arguments = args
+            return fragment
+        }
     }
 
     private lateinit var allUsersList: ArrayList<User>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_login, container,false)
+        return inflater.inflate(R.layout.fragment_login, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        this.arguments?.let {
+            this.allUsersList = it.getParcelableArrayList(USER_LIST_EXTRA)
+        }
+
         this.registerBtn.setOnClickListener {
-            activity?.let {
+            this.activity?.let {
                 it.supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.titleContainer, RegisterFragment())
-                    .addToBackStack(LoginFragment::class.java.simpleName)
-                    .commit()
+                        .beginTransaction()
+                        .replace(R.id.titleContainer, RegisterFragment.newInstance(this.allUsersList))
+                        .addToBackStack(RegisterFragment::class.java.simpleName)
+                        .commit()
             }
         }
 
@@ -61,14 +75,6 @@ class LoginFragment : Fragment() {
                 }
             }
         }
-
-        this.loadAllMockData()
-    }
-
-    private fun loadAllMockData() {
-        StationController.loadMockStations(this.context!!)
-        PetrolTypeController.loadMockPetrolTypes(this.context!!)
-        this.allUsersList = UserController.loadMockUsers(this.context!!)
     }
 
     private fun isUserLoginDetailsCorrect(usernameEditText: TextInputEditText, passwordEditText: TextInputEditText): Boolean {
@@ -105,5 +111,9 @@ class LoginFragment : Fragment() {
 
     fun TextInputEditText.isEmpty(): Boolean {
         return this.text.toString() == ""
+    }
+
+    fun refreshUserList(userList: ArrayList<User>) {
+        this.allUsersList = userList
     }
 }
