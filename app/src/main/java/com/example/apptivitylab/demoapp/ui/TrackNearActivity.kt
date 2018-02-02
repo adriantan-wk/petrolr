@@ -110,20 +110,7 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             }
 
             R.id.nav_logout -> {
-                AlertDialog.Builder(this)
-                        .setIcon(R.drawable.ic_logout)
-                        .setTitle(R.string.logout_dialog_title)
-                        .setMessage(R.string.logout_confirm_msg)
-                        .setPositiveButton(R.string.yes,
-                                { dialog, which ->
-                                    UserController.logOutUser()
-
-                                    val logOutIntent = Intent(this, TitleActivity::class.java)
-                                            .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                    startActivity(logOutIntent)
-                                })
-                        .setNegativeButton(R.string.no, null)
-                        .show()
+                this.displayLogOutDialog()
 
                 true
             }
@@ -137,11 +124,31 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         }
     }
 
+    override fun onBackPressed() {
+        this.displayLogOutDialog()
+    }
+
+    private fun displayLogOutDialog() {
+        AlertDialog.Builder(this)
+                .setIcon(R.drawable.ic_logout)
+                .setTitle(R.string.logout_dialog_title)
+                .setMessage(R.string.logout_confirm_msg)
+                .setPositiveButton(R.string.yes,
+                        { dialog, which ->
+                            UserController.logOutUser()
+
+                            val logOutIntent = Intent(this, TitleActivity::class.java)
+                                    .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                            startActivity(logOutIntent)
+                        })
+                .setNegativeButton(R.string.no, null)
+                .show()
+    }
+
     private fun updateUserPreferences(user: User) {
         UserController.user.preferredPetrolType = user.preferredPetrolType
         UserController.user.preferredBrands = user.preferredBrands
 
         this.trackNearbyFragment.onUserPreferencesChanged(user)
     }
-
 }
