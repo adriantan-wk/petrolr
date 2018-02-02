@@ -38,20 +38,22 @@ class ChangePreferencesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_blank_toolbar)
 
-        setSupportActionBar(this.toolbar)
-
         this.isNewUser = intent.getBooleanExtra(NEW_USER_BOOLEAN_EXTRA, false)
 
-        if (!this.isNewUser) {
-            supportActionBar?.title = getString(R.string.change_preferences_title)
+        val supportActionBarTitle: String
+        if (this.isNewUser) {
+            supportActionBarTitle = getString(R.string.set_preferences_title)
+            this.displayFirstTimePreferencesDialog()
+        } else {
+            supportActionBarTitle = getString(R.string.change_preferences_title)
             this.toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_material)
             this.toolbar.setNavigationOnClickListener(View.OnClickListener {
                 finish()
             })
-        } else {
-            supportActionBar?.title = getString(R.string.set_preferences_title)
-            this.displayFirstTimePreferencesDialog()
         }
+
+        setSupportActionBar(this.toolbar)
+        this.supportActionBar?.title = supportActionBarTitle
 
         val user = intent.getParcelableExtra<User>(USER_EXTRA)
 
@@ -75,9 +77,7 @@ class ChangePreferencesActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (!this.isNewUser) {
-            super.onBackPressed()
-        } else {
+        if (this.isNewUser) {
             AlertDialog.Builder(this)
                     .setMessage(R.string.preferences_not_set_warning)
                     .setPositiveButton(R.string.yes,
@@ -86,6 +86,8 @@ class ChangePreferencesActivity : AppCompatActivity() {
                             })
                     .setNegativeButton(R.string.no, null)
                     .show()
+        } else {
+            super.onBackPressed()
         }
     }
 }
