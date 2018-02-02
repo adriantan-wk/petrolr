@@ -6,11 +6,11 @@ import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.controllers.PetrolTypeController
 import com.example.apptivitylab.demoapp.controllers.StationController
 import com.example.apptivitylab.demoapp.controllers.UserController
+import com.example.apptivitylab.demoapp.controllers.UserListController
 import com.example.apptivitylab.demoapp.models.User
 
 class TitleActivity : AppCompatActivity() {
 
-    private var allUsersList: ArrayList<User> = ArrayList()
     private lateinit var loginFragment: LoginFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,7 +19,7 @@ class TitleActivity : AppCompatActivity() {
 
         this.loadAllMockData()
 
-        this.loginFragment = LoginFragment.newInstance(this.allUsersList)
+        this.loginFragment = LoginFragment.newInstance(UserListController.allUserList)
 
         this.supportFragmentManager
                 .beginTransaction()
@@ -30,11 +30,14 @@ class TitleActivity : AppCompatActivity() {
     private fun loadAllMockData() {
         StationController.loadMockStations(this)
         PetrolTypeController.loadMockPetrolTypes(this)
-        this.allUsersList = UserController.loadMockUsers(this)
+
+        if (UserListController.performMockDataLoad) {
+            UserListController.loadMockUsers(this)
+        }
     }
 
     fun registerNewUser(user: User) {
-        this.allUsersList.add(user)
-        this.loginFragment.refreshUserList(this.allUsersList)
+        UserListController.addNewUser(user)
+        this.loginFragment.refreshUserList(UserListController.allUserList)
     }
 }
