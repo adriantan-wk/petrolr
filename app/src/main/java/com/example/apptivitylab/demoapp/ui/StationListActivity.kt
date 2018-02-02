@@ -83,8 +83,8 @@ class StationListActivity : AppCompatActivity(), NavigationView.OnNavigationItem
 
             R.id.nav_track_nearby -> {
                 val trackNearIntent = TrackNearActivity.newLaunchIntent(this, StationController.stationList)
+                        .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(trackNearIntent)
-
 
                 stationListDrawerLayout.closeDrawers()
                 true
