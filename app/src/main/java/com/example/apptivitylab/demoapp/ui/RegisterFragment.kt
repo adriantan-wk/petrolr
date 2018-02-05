@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.apptivitylab.demoapp.R
+import com.example.apptivitylab.demoapp.controllers.UserController.user
 import com.example.apptivitylab.demoapp.models.User
 import kotlinx.android.synthetic.main.fragment_register.*
 
@@ -43,33 +44,36 @@ class RegisterFragment : Fragment() {
             this.userList = it.getParcelableArrayList(USER_LIST_EXTRA)
         }
 
-        //TODO True registration functionality
         registerBtn.setOnClickListener({
-            if (this.isEmptyFieldsFound()) {
-                this.messageTextView.text = getString(R.string.registration_failed_fields_empty)
+            this.validateRegistration()
+        })
+    }
+
+    private fun validateRegistration() {
+        if (this.isEmptyFieldsFound()) {
+            this.messageTextView.text = getString(R.string.registration_failed_fields_empty)
+        } else {
+            val username = this.usernameEditText.text.toString()
+            val password = this.passwordEditText.text.toString()
+            val confirmPassword = this.confirmPassEditText.text.toString()
+
+            if (this.usernameExists(username)) {
+                this.messageTextView.text = getString(R.string.username_exists)
             } else {
-                val username = this.usernameEditText.text.toString()
-                val password = this.passwordEditText.text.toString()
-                val confirmPassword = this.confirmPassEditText.text.toString()
+                if (password == confirmPassword) {
+                    val titleActivity = this.activity as TitleActivity
+                    titleActivity.registerNewUser(this.createNewUser(username, password))
 
-                if (this.usernameExists(username)) {
-                    this.messageTextView.text = getString(R.string.username_exists)
-                } else {
-                    if (password == confirmPassword) {
-                        val titleActivity = this.activity as TitleActivity
-                        titleActivity.registerNewUser(this.createNewUser(username, password))
-
-                        Toast.makeText(this.context!!, getString(R.string.registration_successful), Toast.LENGTH_SHORT).show()
-                        this.activity?.let {
-                            it.supportFragmentManager
-                                    .popBackStackImmediate()
-                        }
-                    } else {
-                        this.messageTextView.text = getString(R.string.confirm_password_does_not_match)
+                    Toast.makeText(this.context!!, getString(R.string.registration_successful), Toast.LENGTH_SHORT).show()
+                    this.activity?.let {
+                        it.supportFragmentManager
+                                .popBackStackImmediate()
                     }
+                } else {
+                    this.messageTextView.text = getString(R.string.confirm_password_does_not_match)
                 }
             }
-        })
+        }
     }
 
     private fun isEmptyFieldsFound(): Boolean {
@@ -81,12 +85,11 @@ class RegisterFragment : Fragment() {
     }
 
     private fun usernameExists(username: String): Boolean {
-        this.userList.forEach { user ->
-            if (user.username == username) {
-                return true
-            }
+        val user = this.userList.firstOrNull { user ->
+            user.username == username
         }
-        return false
+
+        return user != null
     }
 
     private fun createNewUser(username: String, password: String): User {
