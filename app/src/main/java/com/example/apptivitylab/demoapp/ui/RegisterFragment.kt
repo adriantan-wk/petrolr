@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.apptivitylab.demoapp.R
-import com.example.apptivitylab.demoapp.controllers.UserController.user
 import com.example.apptivitylab.demoapp.models.User
 import kotlinx.android.synthetic.main.fragment_register.*
 
@@ -54,23 +53,29 @@ class RegisterFragment : Fragment() {
             this.messageTextView.text = getString(R.string.registration_failed_fields_empty)
         } else {
             val username = this.usernameEditText.text.toString()
+            val email = this.emailEditText.text.toString()
             val password = this.passwordEditText.text.toString()
             val confirmPassword = this.confirmPassEditText.text.toString()
 
             if (this.usernameExists(username)) {
-                this.messageTextView.text = getString(R.string.username_exists)
+                this.usernameTextInputLayout.error = getString(R.string.username_exists)
             } else {
-                if (password == confirmPassword) {
-                    val titleActivity = this.activity as TitleActivity
-                    titleActivity.registerNewUser(this.createNewUser(username, password))
+                if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    if (password == confirmPassword) {
+                        val titleActivity = this.activity as TitleActivity
+                        titleActivity.registerNewUser(this.createNewUser(username, email, password))
 
-                    Toast.makeText(this.context!!, getString(R.string.registration_successful), Toast.LENGTH_SHORT).show()
-                    this.activity?.let {
-                        it.supportFragmentManager
-                                .popBackStackImmediate()
+                        Toast.makeText(this.context!!, getString(R.string.registration_successful), Toast.LENGTH_SHORT).show()
+                        this.activity?.let {
+                            it.supportFragmentManager
+                                    .popBackStackImmediate()
+                        }
+                    } else {
+                        this.passwordTextInputLayout.error = getString(R.string.password_and_confirm_must_match)
+                        this.confirmPasswordTextInputLayout.error = getString(R.string.password_and_confirm_must_match)
                     }
                 } else {
-                    this.messageTextView.text = getString(R.string.confirm_password_does_not_match)
+                    this.emailTextInputLayout.error = getString(R.string.invalid_email_address)
                 }
             }
         }
@@ -78,10 +83,12 @@ class RegisterFragment : Fragment() {
 
     private fun isEmptyFieldsFound(): Boolean {
         this.usernameTextInputLayout.error = null
+        this.emailTextInputLayout.error = null
         this.passwordTextInputLayout.error = null
         this.confirmPasswordTextInputLayout.error = null
 
-        return this.usernameTextInputLayout.isEmpty() || this.passwordTextInputLayout.isEmpty() || this.confirmPasswordTextInputLayout.isEmpty()
+        return this.usernameTextInputLayout.isEmpty() || this.emailTextInputLayout.isEmpty()
+                || this.passwordTextInputLayout.isEmpty() || this.confirmPasswordTextInputLayout.isEmpty()
     }
 
     private fun usernameExists(username: String): Boolean {
@@ -92,10 +99,11 @@ class RegisterFragment : Fragment() {
         return user != null
     }
 
-    private fun createNewUser(username: String, password: String): User {
+    private fun createNewUser(username: String, email: String, password: String): User {
         val user = User()
         user.username = username
         user.password = password
+        user.email = email
         user.preferredPetrolType = null
         user.preferredBrands = ArrayList()
 

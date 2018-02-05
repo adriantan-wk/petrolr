@@ -35,7 +35,14 @@
         <item name="android:maxLines">5</item>
     </style>
 
-    <style name="TextInputLayoutErrorMessage" parent="@android:style/TextAppearance">
+    <style name="TextInputLayoutErrorMessage" parent="TextAppearance.Design.Error">
         <item name="android:textColor">@android:color/holo_red_light</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="TextInputLayoutHintMessage" parent="TextAppearance.Design.Hint">
+        <item name="android:textSize">18sp</item>
+        <item name="android:maxLines">1</item>
     </style>
 </resources>

@@ -12,6 +12,7 @@ class User() : Parcelable {
     var userID: String? = null
     var username: String? = null
     var password: String? = null
+    var email: String? = null
     var preferredPetrolType: PetrolType? = null
     var preferredBrands: ArrayList<Brand> = ArrayList()
 
@@ -19,6 +20,7 @@ class User() : Parcelable {
         this.userID = parcel.readString()
         this.username = parcel.readString()
         this.password = parcel.readString()
+        this.email = parcel.readString()
         this.preferredPetrolType = parcel.readParcelable(PetrolType::class.java.classLoader)
         this.preferredBrands = parcel.readArrayList(Brand::class.java.classLoader) as ArrayList<Brand>
     }
@@ -27,6 +29,7 @@ class User() : Parcelable {
         this.userID = jsonObject.optString("user_id")
         this.username = jsonObject.optString("user_name")
         this.password = jsonObject.optString("password")
+        this.email = jsonObject.optString("email")
 
         val petrolType = jsonObject.optJSONObject("preferred_petrol_type")
         if (petrolType != null) {
@@ -39,11 +42,12 @@ class User() : Parcelable {
         }
     }
 
-    constructor(userID: String, username: String, password: String,
+    constructor(userID: String, username: String, password: String, email: String,
                 petrolType: PetrolType, prefBrands : ArrayList<Brand>) : this(){
         this.userID = userID
         this.username = username
         this.password = password
+        this.email = email
         this.preferredPetrolType = petrolType
         this.preferredBrands = prefBrands
     }
@@ -52,6 +56,7 @@ class User() : Parcelable {
         parcel.writeString(userID)
         parcel.writeString(username)
         parcel.writeString(password)
+        parcel.writeString(email)
         parcel.writeParcelable(preferredPetrolType, flags)
         parcel.writeList(preferredBrands)
     }
