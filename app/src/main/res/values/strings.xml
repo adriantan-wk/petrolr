@@ -73,4 +73,9 @@
     <string name="welcome">Welcome!</string>
     <string name="preferences_not_set_warning">Your preferences have not been set!\n\nAre you sure you wish to return to the login screen?</string>
     <string name="lets_get_started">Let\'s Get Started</string>
+    <string name="field_must_not_be_empty">%1$s field must not be empty</string>
+    <string name="registration_failed_fields_empty">One or more fields have not been filled. Please ensure all details have been entered and then try again.</string>
+    <string name="username_exists">That username already exists.\nPlease try a different username.</string>
+    <string name="confirm_password_does_not_match">Password and confirm password do not match.\nPlease try again.</string>
+    <string name="registration_successful">Registration Successful</string>
 </resources>

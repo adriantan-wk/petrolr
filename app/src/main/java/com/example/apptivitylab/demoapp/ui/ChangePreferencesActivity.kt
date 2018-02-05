@@ -40,6 +40,8 @@ class ChangePreferencesActivity : AppCompatActivity() {
 
         this.isNewUser = intent.getBooleanExtra(NEW_USER_BOOLEAN_EXTRA, false)
 
+        setSupportActionBar(this.toolbar)
+
         val supportActionBarTitle: String
         if (this.isNewUser) {
             supportActionBarTitle = getString(R.string.set_preferences_title)
@@ -48,11 +50,10 @@ class ChangePreferencesActivity : AppCompatActivity() {
             supportActionBarTitle = getString(R.string.change_preferences_title)
             this.toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_material)
             this.toolbar.setNavigationOnClickListener(View.OnClickListener {
-                finish()
+                this.finish()
             })
         }
 
-        setSupportActionBar(this.toolbar)
         this.supportActionBar?.title = supportActionBarTitle
 
         val user = intent.getParcelableExtra<User>(USER_EXTRA)
