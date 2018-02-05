@@ -272,7 +272,9 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
                 bounds.include(this.userLatLng)
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 100))
 
-                this.generateMapCircle(nearestStations.last())
+                if (nearestStations.size != 0) {
+                    this.generateMapCircle(nearestStations.last())
+                }
             }
         }
     }
