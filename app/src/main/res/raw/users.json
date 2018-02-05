@@ -4,6 +4,7 @@
       "user_id": "U001",
       "user_name": "adriantan",
       "password": "123",
+      "email": "adrian@apptivitylab.com",
       "preferred_petrol_type": {
         "petrol_id": "P004",
         "petrol_name": "EURO 5",
@@ -23,6 +24,7 @@
       "user_id": "U002",
       "user_name": "potatoes",
       "password": "fries",
+      "email": "potatoandfries@gmail.com",
       "preferred_petrol_type": null,
       "preferred_brands": []
     },
@@ -30,6 +32,7 @@
       "user_id": "U003",
       "user_name": "chicken",
       "password": "fried",
+      "email": "kfc@gmail.com",
       "preferred_petrol_type": {
         "petrol_id": "P001",
         "petrol_name": "RON95",

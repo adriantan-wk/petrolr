@@ -75,6 +75,16 @@ class LoginFragment : Fragment() {
                 }
             }
         }
+
+        this.forgotPassTextView.setOnClickListener {
+            this.activity?.let {
+                it.supportFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.titleContainer, ForgotPasswordFragment.newInstance(this.allUsersList))
+                        .addToBackStack(ForgotPasswordFragment::class.java.simpleName)
+                        .commit()
+            }
+        }
     }
 
     private fun isUserLoginDetailsCorrect(usernameEditText: TextInputEditText, passwordEditText: TextInputEditText): Boolean {

@@ -75,7 +75,15 @@
     <string name="lets_get_started">Let\'s Get Started</string>
     <string name="field_must_not_be_empty">%1$s field must not be empty</string>
     <string name="registration_failed_fields_empty">One or more fields have not been filled. Please ensure all details have been entered and then try again.</string>
-    <string name="username_exists">That username already exists.\nPlease try a different username.</string>
-    <string name="confirm_password_does_not_match">Password and confirm password do not match.\nPlease try again.</string>
+    <string name="username_exists">That username already exists</string>
     <string name="registration_successful">Registration Successful</string>
+    <string name="email">Email Address</string>
+    <string name="password_and_confirm_must_match">Password and Confirm Password must match</string>
+    <string name="invalid_email_address">Invalid email address</string>
+    <string name="forgot_password">Forgot your password?</string>
+    <string name="retrieve_password_message">To retrieve your password, please enter your account username:</string>
+    <string name="enter_username">Please enter a username</string>
+    <string name="no_such_username">No such username</string>
+    <string name="email_does_not_match_recorded">Email address does not match registered email</string>
+    <string name="your_password_is">Your password is:</string>
 </resources>
