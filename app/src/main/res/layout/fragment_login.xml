@@ -86,7 +86,7 @@
         android:layout_marginTop="8dp"
         android:clickable="true"
         android:text="@string/forgot_password"
-        android:textColor="#0000EE"
+        android:textColor="@color/colorLink"
         android:textSize="10sp" />
 
 </LinearLayout>

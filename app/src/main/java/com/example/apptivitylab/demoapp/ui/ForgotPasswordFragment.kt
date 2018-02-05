@@ -50,10 +50,8 @@ class ForgotPasswordFragment : Fragment() {
             this.usernameTextInputLayout.error = ""
             this.emailTextInputLayout.error = ""
 
-            if (validateUsername(this.usernameEditText)) {
-                if (validateEmail(this.emailEditText)) {
+            if (validateUsername(this.usernameEditText) && validateEmail(this.emailEditText)) {
                     this.displayPasswordDialog()
-                }
             }
         }
     }

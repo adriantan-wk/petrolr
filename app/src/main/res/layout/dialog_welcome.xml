@@ -34,6 +34,6 @@
         android:layout_height="wrap_content"
         android:background="@android:color/white"
         android:text="@string/lets_get_started"
-        android:textColor="#0000EE" />
+        android:textColor="@color/colorLink" />
 
 </LinearLayout>
