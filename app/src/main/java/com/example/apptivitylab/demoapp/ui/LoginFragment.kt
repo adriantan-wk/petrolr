@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.apptivitylab.demoapp.R
+import com.example.apptivitylab.demoapp.controllers.BrandController
 import com.example.apptivitylab.demoapp.controllers.StationController
 import com.example.apptivitylab.demoapp.controllers.UserController
 import com.example.apptivitylab.demoapp.models.User
@@ -67,7 +68,7 @@ class LoginFragment : Fragment() {
                         val preferencesIntent = ChangePreferencesActivity.newLaunchIntent(this.context!!, UserController.user, true)
                         startActivityForResult(preferencesIntent, SET_PREFERENCES_REQUEST_CODE)
                     } else {
-                        val randomIntent = TrackNearActivity.newLaunchIntent(this.context!!, StationController.stationList)
+                        val randomIntent = TrackNearActivity.newLaunchIntent(this.context!!, StationController.stationList, BrandController.brandList)
                         startActivity(randomIntent)
                     }
                 } else {
@@ -114,7 +115,7 @@ class LoginFragment : Fragment() {
                 UserController.user.preferredBrands = it.preferredBrands
             }
 
-            val randomIntent = TrackNearActivity.newLaunchIntent(this.context!!, StationController.stationList)
+            val randomIntent = TrackNearActivity.newLaunchIntent(this.context!!, StationController.stationList, BrandController.brandList)
             startActivity(randomIntent)
         }
     }

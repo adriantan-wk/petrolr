@@ -2,8 +2,6 @@ package com.example.apptivitylab.demoapp.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -12,16 +10,19 @@ import android.location.Location
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
+import android.support.v4.content.res.ResourcesCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.apptivitylab.demoapp.R
-import com.example.apptivitylab.demoapp.R.id.*
+import com.example.apptivitylab.demoapp.controllers.BrandController
+import com.example.apptivitylab.demoapp.models.Brand
 import com.example.apptivitylab.demoapp.models.PetrolType
 import com.example.apptivitylab.demoapp.models.Station
 import com.example.apptivitylab.demoapp.models.User
-import com.google.android.gms.location.*
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
@@ -41,13 +42,15 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
         val ACCESS_FINE_LOCATION_PERMISSIONS = 100
         const val USER_EXTRA = "user_object"
         const val STATION_LIST_EXTRA = "station_list"
+        const val BRAND_LIST_EXTRA = "brand_list"
 
-        fun newInstance(currentUser: User, stations: ArrayList<Station>): TrackNearbyFragment {
+        fun newInstance(currentUser: User, stations: ArrayList<Station>, brands: ArrayList<Brand>): TrackNearbyFragment {
             val fragment = TrackNearbyFragment()
 
             val args = Bundle()
             args.putParcelable(USER_EXTRA, currentUser)
             args.putParcelableArrayList(STATION_LIST_EXTRA, stations)
+            args.putParcelableArrayList(BRAND_LIST_EXTRA, brands)
 
             fragment.arguments = args
             return fragment
@@ -64,6 +67,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
     private var userLatLng: LatLng? = null
     private var mapCircle: Circle? = null
 
+    private var brandList: ArrayList<Brand> = ArrayList()
     private var stationList: ArrayList<Station> = ArrayList()
     private var filteredStationList: ArrayList<Station> = ArrayList()
     private var preferredStationList: ArrayList<Station> = ArrayList()
@@ -88,6 +92,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
         arguments?.let {
             this.currentUser = it.getParcelable(USER_EXTRA)
             this.stationList = it.getParcelableArrayList(STATION_LIST_EXTRA)
+            this.brandList = it.getParcelableArrayList(BRAND_LIST_EXTRA)
         }
 
         nearestStationLinearLayout.setOnClickListener {
@@ -103,8 +108,8 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
         }
 
         this.currentUser.preferredPetrolType?.let {
-            priceTextView.text = getString(R.string.petrol_price, it.petrolName)
-            priceValueTextView.text = getString(R.string.price_value, it.currentPrice)
+            this.priceTextView.text = getString(R.string.petrol_price, it.petrolName)
+            this.priceValueTextView.text = getString(R.string.price_value, it.currentPrice)
         }
 
         this.fusedLocationClient = LocationServices.getFusedLocationProviderClient(context!!)
@@ -168,7 +173,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
                     this.recenterMapCamera()
                 }
 
-                with(googleMap){
+                with(googleMap) {
                     uiSettings?.isCompassEnabled = false
                     uiSettings?.isZoomControlsEnabled = true
                     isMyLocationEnabled = true
@@ -200,7 +205,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
         this.googleMap?.let {
             it.setInfoWindowAdapter(adapter)
             it.setOnInfoWindowClickListener { marker ->
-                val stationDetailsIntent = StationDetailsActivity.newLaunchIntent(context!!, marker.tag as Station)
+                val stationDetailsIntent = StationDetailsActivity.newLaunchIntent(context!!, marker.tag as Station, BrandController.brandList)
                 startActivity(stationDetailsIntent)
             }
         }
@@ -236,15 +241,21 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
     private fun updateNearestStationViews(nearestStation: Station?) {
         if (nearestStation != null) {
             if (isAdded) {
-                nameTextView.text = nearestStation.stationName
-                addressTextView.text = nearestStation.stationAddress
-                distanceTextView.text = "%.2f".format(nearestStation.distanceFromUser) +
+                this.brandList.forEach { brand ->
+                    if (brand.brandName == nearestStation.stationBrand) {
+                        this.stationImageView.setImageDrawable(ResourcesCompat.getDrawable(resources, brand.brandLogo, null))
+                    }
+                }
+
+                this.nameTextView.text = nearestStation.stationName
+                this.addressTextView.text = nearestStation.stationAddress
+                this.distanceTextView.text = "%.2f".format(nearestStation.distanceFromUser) +
                         " " + getString(R.string.distance_km_away)
             }
         } else {
-            nameTextView.text = getString(R.string.searching)
-            addressTextView.text = ""
-            distanceTextView.text = ""
+            this.nameTextView.text = getString(R.string.searching)
+            this.addressTextView.text = ""
+            this.distanceTextView.text = ""
         }
     }
 
@@ -289,7 +300,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
                     .center(this.userLatLng)
                     .radius(it.toDouble() * 1000)
                     .strokeColor(Color.argb(100, 0, 0, 255))
-                    .fillColor(Color.argb(100, 0, 191 , 255)))
+                    .fillColor(Color.argb(100, 0, 191, 255)))
         }
     }
 

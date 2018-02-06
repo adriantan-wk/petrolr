@@ -2,18 +2,19 @@ package com.example.apptivitylab.demoapp.ui
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.app.AppCompatActivity
-import com.example.apptivitylab.demoapp.R
-import android.content.Intent
 import android.support.v7.app.AlertDialog
+import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.controllers.PetrolTypeController
 import com.example.apptivitylab.demoapp.controllers.UserController
+import com.example.apptivitylab.demoapp.models.Brand
 import com.example.apptivitylab.demoapp.models.Station
 import com.example.apptivitylab.demoapp.models.User
 import kotlinx.android.synthetic.main.activity_track_nearby.*
@@ -28,17 +29,20 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     companion object {
         const val CHANGE_PREFERENCES_REQUEST_CODE = 200
         const val STATION_LIST_EXTRA = "station_list"
+        const val BRAND_LIST_EXTRA = "brand_list"
 
-        fun newLaunchIntent(context: Context, stations: ArrayList<Station>): Intent {
+        fun newLaunchIntent(context: Context, stations: ArrayList<Station>, brands: ArrayList<Brand>): Intent {
             val intent = Intent(context, TrackNearActivity::class.java)
 
             intent.putExtra(STATION_LIST_EXTRA, stations)
+            intent.putExtra(BRAND_LIST_EXTRA, brands)
 
             return intent
         }
     }
 
     private lateinit var stations: ArrayList<Station>
+    private lateinit var brands: ArrayList<Brand>
     private lateinit var trackNearbyFragment: TrackNearbyFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,30 +64,31 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         navigationViewHeader.navHeaderUserTextView.text = UserController.user.username
 
         this.stations = intent.getParcelableArrayListExtra<Station>(STATION_LIST_EXTRA)
+        this.brands = intent.getParcelableArrayListExtra(BRAND_LIST_EXTRA)
 
-        this.trackNearbyFragment = TrackNearbyFragment.newInstance(UserController.user, this.stations)
+        this.trackNearbyFragment = TrackNearbyFragment.newInstance(UserController.user, this.stations, this.brands)
 
         supportFragmentManager
-        .beginTransaction()
-        .replace(R.id.containerFrameLayout, this.trackNearbyFragment)
-        .commit()
+                .beginTransaction()
+                .replace(R.id.containerFrameLayout, this.trackNearbyFragment)
+                .commit()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-            if (requestCode == CHANGE_PREFERENCES_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-                val newUserPreferences = data?.getParcelableExtra<User>(getString(R.string.change_preferences_intent))
+        if (requestCode == CHANGE_PREFERENCES_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            val newUserPreferences = data?.getParcelableExtra<User>(getString(R.string.change_preferences_intent))
 
-                this.trackNearDrawerLayout.closeDrawers()
+            this.trackNearDrawerLayout.closeDrawers()
 
-                newUserPreferences?.let {
-                    updateUserPreferences(newUserPreferences)
-                }
+            newUserPreferences?.let {
+                updateUserPreferences(newUserPreferences)
             }
+        }
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        return  when (item.itemId) {
+        return when (item.itemId) {
             R.id.nav_track_nearby -> {
                 this.trackNearDrawerLayout.closeDrawers()
                 true
