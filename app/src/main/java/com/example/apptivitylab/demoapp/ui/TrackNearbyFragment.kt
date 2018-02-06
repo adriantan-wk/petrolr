@@ -282,25 +282,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter {
 
                 bounds.include(this.userLatLng)
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 100))
-
-                if (nearestStations.size != 0) {
-                    this.generateMapCircle(nearestStations.last())
-                }
             }
-        }
-    }
-
-    private fun generateMapCircle(furthestStation: Station) {
-        if (this.mapCircle != null) {
-            this.mapCircle?.remove()
-        }
-
-        furthestStation.distanceFromUser?.let {
-            this.mapCircle = this.googleMap?.addCircle(CircleOptions()
-                    .center(this.userLatLng)
-                    .radius(it.toDouble() * 1000)
-                    .strokeColor(Color.argb(100, 0, 0, 255))
-                    .fillColor(Color.argb(100, 0, 191, 255)))
         }
     }
 
