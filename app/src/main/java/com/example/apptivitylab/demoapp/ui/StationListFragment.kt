@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.StationsListAdapter
+import com.example.apptivitylab.demoapp.controllers.BrandController
 import com.example.apptivitylab.demoapp.models.Brand
 import com.example.apptivitylab.demoapp.models.Station
 import com.example.apptivitylab.demoapp.models.User
@@ -117,7 +118,7 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
 
     override fun onStationSelected(station: Station) {
 
-        val stationDetailsIntent = StationDetailsActivity.newLaunchIntent(this.context!!, station)
+        val stationDetailsIntent = StationDetailsActivity.newLaunchIntent(this.context!!, station, BrandController.brandList)
         startActivity(stationDetailsIntent)
     }
 

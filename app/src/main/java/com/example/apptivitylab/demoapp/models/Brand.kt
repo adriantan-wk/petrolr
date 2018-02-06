@@ -2,6 +2,7 @@ package com.example.apptivitylab.demoapp.models
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.example.apptivitylab.demoapp.R
 import org.json.JSONObject
 
 /**
@@ -11,26 +12,37 @@ import org.json.JSONObject
 class Brand() : Parcelable {
     var brandID: String? = null
     var brandName: String? = null
-    var stations: ArrayList<Station> = ArrayList()
+    var brandLogo: Int = 0
 
     constructor(parcel: Parcel) : this() {
-        brandID = parcel.readString()
-        brandName = parcel.readString()
+        this.brandID = parcel.readString()
+        this.brandName = parcel.readString()
+        this.brandLogo = parcel.readInt()
     }
 
     constructor(jsonObject: JSONObject) : this() {
-        brandID = jsonObject.optString("brand_id")
-        brandName = jsonObject.optString("brand_name")
+        this.brandID = jsonObject.optString("brand_id")
+        this.brandName = jsonObject.optString("brand_name")
+
+        this.brandLogo = when (this.brandID) {
+            "SHEL" -> R.drawable.ic_shell
+            "BRPE" -> R.drawable.ic_bp
+            "PTNS" -> R.drawable.ic_petronas
+            "PTRN" -> R.drawable.ic_petron
+            else -> 0
+        }
     }
 
-    constructor(brandID: String, brandName: String) : this() {
+    constructor(brandID: String, brandName: String, brandLogo: Int) : this() {
         this.brandID = brandID
         this.brandName = brandName
+        this.brandLogo = brandLogo
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(brandID)
-        parcel.writeString(brandName)
+        parcel.writeString(this.brandID)
+        parcel.writeString(this.brandName)
+        parcel.writeInt(this.brandLogo)
     }
 
     override fun describeContents(): Int {

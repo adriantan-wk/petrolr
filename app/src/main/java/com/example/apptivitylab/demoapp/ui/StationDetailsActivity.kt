@@ -4,10 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.view.View
-import android.widget.FrameLayout
 import com.example.apptivitylab.demoapp.R
+import com.example.apptivitylab.demoapp.models.Brand
 import com.example.apptivitylab.demoapp.models.Station
 import kotlinx.android.synthetic.main.activity_station_details.*
 
@@ -19,10 +18,12 @@ class StationDetailsActivity : AppCompatActivity() {
 
     companion object {
         const val STATION_EXTRA = "station_object"
+        const val BRAND_LIST_EXTRA = "brand_list"
 
-        fun newLaunchIntent(context: Context, station: Station): Intent {
+        fun newLaunchIntent(context: Context, station: Station, brands: ArrayList<Brand>): Intent {
             val intent = Intent(context, StationDetailsActivity::class.java)
             intent.putExtra(STATION_EXTRA, station)
+            intent.putParcelableArrayListExtra(BRAND_LIST_EXTRA, brands)
 
             return intent
         }
@@ -42,9 +43,11 @@ class StationDetailsActivity : AppCompatActivity() {
         val item = intent.getParcelableExtra<Station>(STATION_EXTRA)
         supportActionBar?.title = item.stationName
 
+        val brands = intent.getParcelableArrayListExtra<Brand>(BRAND_LIST_EXTRA)
+
         supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.stationDetailsContainerFrameLayout, StationDetailsFragment.newInstance(item))
+                .replace(R.id.stationDetailsContainerFrameLayout, StationDetailsFragment.newInstance(item, brands))
                 .commit()
     }
 }
