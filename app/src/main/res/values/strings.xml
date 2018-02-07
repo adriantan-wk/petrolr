@@ -76,19 +76,19 @@
     <string name="field_must_not_be_empty">%1$s field must not be empty</string>
     <string name="username_exists">That username already exists</string>
     <string name="registration_successful">Registration Successful</string>
-    <string name="emailText">Email Address</string>
+    <string name="email">Email Address</string>
     <string name="password_and_confirm_must_match">Password and Confirm Password must match</string>
-    <string name="invalid_email_address">Invalid emailText address</string>
+    <string name="invalid_email_address">Invalid email address</string>
     <string name="forgot_password">Forgot your password?</string>
     <string name="retrieve_password_message">To retrieve your password, please enter your account username:</string>
     <string name="enter_username">Please enter a username</string>
     <string name="no_such_username">No such username</string>
-    <string name="email_does_not_match_recorded">Email address does not match registered emailText</string>
+    <string name="email_does_not_match_recorded">Email address does not match registered email</string>
     <string name="your_password_is">Your password is:</string>
     <string name="no_account">Don\'t have an account yet?</string>
     <string name="register_here">Register here</string>
     <string name="have_account">Already have an account?</string>
     <string name="please_enter_field">Please enter your %1$s</string>
     <string name="recover_password">Recover Password</string>
-    <string name="enter_email">Please enter an emailText address</string>
+    <string name="enter_email">Please enter an email address</string>
 </resources>
