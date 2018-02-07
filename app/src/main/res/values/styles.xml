@@ -8,13 +8,35 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="TitleText">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
     <style name="HeaderText">
         <item name="android:textSize">24sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="DescriptionText">
+    <style name="WhiteHeaderText">
         <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="DescriptionText">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="RaisedButton">
+        <item name="android:background">@drawable/button_rounded</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="LinkText">
+        <item name="android:clickable">true</item>
+        <item name="android:textColor">@color/colorLink</item>
     </style>
 
     <style name="StationDetailsHeaderBlock">
@@ -42,7 +64,7 @@
     </style>
 
     <style name="TextInputLayoutHintMessage" parent="TextAppearance.Design.Hint">
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">12sp</item>
         <item name="android:maxLines">1</item>
     </style>
 </resources>

@@ -58,6 +58,7 @@ class StationListActivity : AppCompatActivity(), NavigationView.OnNavigationItem
 
         val navigationViewHeader: View = this.stationListNavView.getHeaderView(0)
         navigationViewHeader.navHeaderUserTextView.text = UserController.user.username
+        navigationViewHeader.navHeaderEmailTextView.text = UserController.user.email
 
         val stations = intent.getParcelableArrayListExtra<Station>(STATION_LIST_EXTRA)
 

@@ -3,12 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/img_background"
     tools:context="com.example.apptivitylab.demoapp.ui.TitleActivity">
 
     <FrameLayout
         android:id="@+id/titleContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_margin="16dp"
+        android:background="#faffffff">
 
     </FrameLayout>
 

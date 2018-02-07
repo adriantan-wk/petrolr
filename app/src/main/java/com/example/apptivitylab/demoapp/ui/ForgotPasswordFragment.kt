@@ -80,19 +80,16 @@ class ForgotPasswordFragment : Fragment() {
     private fun validateEmail(email: TextInputEditText): Boolean {
         val email = email.text.toString()
 
-        return if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            this.user?.let {
-                return if (it.email == email) {
-                    true
-                } else {
-                    this.emailTextInputLayout.error = getString(R.string.email_does_not_match_recorded)
-                    false
-                }
-            }
+        return if (email == "") {
+            this.emailTextInputLayout.error = getString(R.string.enter_email)
             false
         } else {
-            this.emailTextInputLayout.error = getString(R.string.invalid_email_address)
-            false
+            if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() && this.user?.email == email) {
+                true
+            } else {
+                this.emailTextInputLayout.error = getString(R.string.email_does_not_match_recorded)
+                false
+            }
         }
     }
 

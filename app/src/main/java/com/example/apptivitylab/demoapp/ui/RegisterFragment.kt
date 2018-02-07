@@ -43,15 +43,20 @@ class RegisterFragment : Fragment() {
             this.userList = it.getParcelableArrayList(USER_LIST_EXTRA)
         }
 
-        registerBtn.setOnClickListener({
+        this.registerBtn.setOnClickListener({
             this.validateRegistration()
         })
+
+        this.loginLink.setOnClickListener {
+            this.activity?.let {
+                it.supportFragmentManager
+                        .popBackStackImmediate()
+            }
+        }
     }
 
     private fun validateRegistration() {
-        if (this.isEmptyFieldsFound()) {
-            this.messageTextView.text = getString(R.string.registration_failed_fields_empty)
-        } else {
+        if (!this.isEmptyFieldsFound()) {
             val username = this.usernameEditText.text.toString()
             val email = this.emailEditText.text.toString()
             val password = this.passwordEditText.text.toString()

@@ -1,24 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/colorAccent"
+    android:gravity="center_vertical"
     android:orientation="vertical"
-    android:gravity="center_horizontal"
-    android:padding="16dp"
-    android:background="@color/colorAccent">
+    android:padding="16dp">
 
     <ImageView
-        android:id="@+id/navHeaderImageView"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@drawable/ic_fuellogo"/>
+        android:src="@drawable/ic_user" />
 
     <TextView
         android:id="@+id/navHeaderUserTextView"
-        android:layout_width="wrap_content"
+        style="@style/WhiteHeaderText"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Username"
-        style="@style/HeaderText"/>
+        android:layout_marginTop="8dp"
+        android:gravity="bottom"
+        tools:text="Username" />
+
+    <TextView
+        android:id="@+id/navHeaderEmailTextView"
+        style="@style/DescriptionText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        tools:text="EMAIL" />
 
 </LinearLayout>

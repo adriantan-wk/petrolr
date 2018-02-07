@@ -62,6 +62,7 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
         val navigationViewHeader: View = this.trackNearNavView.getHeaderView(0)
         navigationViewHeader.navHeaderUserTextView.text = UserController.user.username
+        navigationViewHeader.navHeaderEmailTextView.text = UserController.user.email
 
         this.stations = intent.getParcelableArrayListExtra<Station>(STATION_LIST_EXTRA)
         this.brands = intent.getParcelableArrayListExtra(BRAND_LIST_EXTRA)
