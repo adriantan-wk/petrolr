@@ -126,8 +126,8 @@ class LoginFragment : Fragment() {
         }
     }
 
-    fun TextInputEditText.isEmpty(): Boolean {
-        return this.text.toString() == ""
+    private fun TextInputEditText.isEmpty(): Boolean {
+        return this.text.toString().isBlank()
     }
 
     fun refreshUserList(userList: ArrayList<User>) {

@@ -59,7 +59,7 @@ class ForgotPasswordFragment : Fragment() {
     private fun validateUsername(username: TextInputEditText): Boolean {
         val username = username.text.toString()
 
-        return if (username == "") {
+        return if (username.isBlank()) {
             this.usernameTextInputLayout.error = getString(R.string.enter_username)
             false
         } else {
@@ -78,13 +78,13 @@ class ForgotPasswordFragment : Fragment() {
     }
 
     private fun validateEmail(email: TextInputEditText): Boolean {
-        val email = email.text.toString()
+        val emailText = email.text.toString()
 
-        return if (email == "") {
+        return if (emailText.isBlank()) {
             this.emailTextInputLayout.error = getString(R.string.enter_email)
             false
         } else {
-            if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() && this.user?.email == email) {
+            if (android.util.Patterns.EMAIL_ADDRESS.matcher(emailText).matches() && this.user?.email == emailText) {
                 true
             } else {
                 this.emailTextInputLayout.error = getString(R.string.email_does_not_match_recorded)

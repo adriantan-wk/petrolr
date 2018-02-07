@@ -115,8 +115,8 @@ class RegisterFragment : Fragment() {
         return user
     }
 
-    fun TextInputLayout.isEmpty(): Boolean {
-        return if (this.editText?.text.toString() == "") {
+    private fun TextInputLayout.isEmpty(): Boolean {
+        return if (this.editText?.text.toString().isBlank()) {
             this.error = this.context.getString(R.string.field_must_not_be_empty, this.hint)
             true
         } else {
