@@ -3,26 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="48dp"
-    android:gravity="center_horizontal"
+    android:padding="16dp"
+    android:gravity="center"
     android:orientation="vertical">
 
     <ImageView
         android:id="@+id/appLogoImageView"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:src="@drawable/ic_fuellogo" />
-
-    <TextView
-        style="@style/HeaderText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/app_name" />
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/ic_petrolr_logo" />
 
     <android.support.design.widget.TextInputLayout
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp">
+        app:errorTextAppearance="@style/TextInputLayoutErrorMessage"
+        app:hintTextAppearance="@style/TextInputLayoutHintMessage">
 
         <android.support.design.widget.TextInputEditText
             android:id="@+id/usernameEditText"
@@ -35,10 +30,11 @@
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:passwordToggleEnabled="true">
+        app:passwordToggleEnabled="true"
+        app:errorTextAppearance="@style/TextInputLayoutErrorMessage"
+        app:hintTextAppearance="@style/TextInputLayoutHintMessage">
 
         <android.support.design.widget.TextInputEditText
             android:id="@+id/passwordEditText"
@@ -54,30 +50,18 @@
         android:id="@+id/messageTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:lines="2"
         android:textAlignment="center"
         android:textColor="@android:color/holo_red_light" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/loginBtn"
+        style="@style/RaisedButton"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp">
-
-        <Button
-            android:id="@+id/loginBtn"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="8dp"
-            android:text="@string/login" />
-
-        <Button
-            android:id="@+id/registerBtn"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:text="@string/register" />
-
-    </LinearLayout>
+        android:layout_marginTop="16dp"
+        android:padding="16dp"
+        android:text="@string/login" />
 
     <TextView
         android:id="@+id/forgotPassTextView"
@@ -87,6 +71,28 @@
         android:clickable="true"
         android:text="@string/forgot_password"
         android:textColor="@color/colorLink"
-        android:textSize="10sp" />
+        android:textSize="12sp" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_account"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/registerLink"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:clickable="true"
+            android:text="@string/register_here"
+            android:textColor="@color/colorLink" />
+
+    </LinearLayout>
 </LinearLayout>

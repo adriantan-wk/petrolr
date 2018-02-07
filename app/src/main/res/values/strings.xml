@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PetrolR</string>
+    <string name="app_name">Petrolr</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="login">Log In</string>
@@ -74,7 +74,6 @@
     <string name="preferences_not_set_warning">Your preferences have not been set!\n\nAre you sure you wish to return to the login screen?</string>
     <string name="lets_get_started">Let\'s Get Started</string>
     <string name="field_must_not_be_empty">%1$s field must not be empty</string>
-    <string name="registration_failed_fields_empty">One or more fields have not been filled. Please ensure all details have been entered and then try again.</string>
     <string name="username_exists">That username already exists</string>
     <string name="registration_successful">Registration Successful</string>
     <string name="email">Email Address</string>
@@ -86,4 +85,10 @@
     <string name="no_such_username">No such username</string>
     <string name="email_does_not_match_recorded">Email address does not match registered email</string>
     <string name="your_password_is">Your password is:</string>
+    <string name="no_account">Don\'t have an account yet?</string>
+    <string name="register_here">Register here</string>
+    <string name="have_account">Already have an account?</string>
+    <string name="please_enter_field">Please enter your %1$s</string>
+    <string name="recover_password">Recover Password</string>
+    <string name="enter_email">Please enter an email address</string>
 </resources>

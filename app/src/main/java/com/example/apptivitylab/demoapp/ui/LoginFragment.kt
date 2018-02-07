@@ -4,7 +4,11 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TextInputEditText
+import android.support.design.widget.TextInputLayout
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat.startActivity
+import android.support.v4.content.res.ResourcesCompat
+import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +17,8 @@ import com.example.apptivitylab.demoapp.controllers.BrandController
 import com.example.apptivitylab.demoapp.controllers.StationController
 import com.example.apptivitylab.demoapp.controllers.UserController
 import com.example.apptivitylab.demoapp.models.User
+import com.example.apptivitylab.demoapp.ui.LoginFragment.Companion.SET_PREFERENCES_REQUEST_CODE
+import kotlinx.android.synthetic.main.dialog_password.view.*
 import kotlinx.android.synthetic.main.fragment_login.*
 
 /**
@@ -49,7 +55,7 @@ class LoginFragment : Fragment() {
             this.allUsersList = it.getParcelableArrayList(USER_LIST_EXTRA)
         }
 
-        this.registerBtn.setOnClickListener {
+        this.registerLink.setOnClickListener {
             this.activity?.let {
                 it.supportFragmentManager
                         .beginTransaction()
@@ -120,8 +126,8 @@ class LoginFragment : Fragment() {
         }
     }
 
-    fun TextInputEditText.isEmpty(): Boolean {
-        return this.text.toString() == ""
+    private fun TextInputEditText.isEmpty(): Boolean {
+        return this.text.toString().isBlank()
     }
 
     fun refreshUserList(userList: ArrayList<User>) {
