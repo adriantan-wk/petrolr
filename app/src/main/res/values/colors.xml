@@ -4,5 +4,5 @@
     <color name="colorPrimaryDark">#4527A0</color>
     <color name="colorAccent">#651FFF</color>
     <color name="colorLink">#0000EE</color>
-    <color name="colorWhiteTransparentBox">#FAFFFFFF</color>
+    <color name="colorWhiteFoggy">#FAFFFFFF</color>
 </resources>

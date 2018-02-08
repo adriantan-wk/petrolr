@@ -1,13 +1,15 @@
 package com.example.apptivitylab.demoapp
 
+import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.apptivitylab.demoapp.R.string.brand
+import com.example.apptivitylab.demoapp.models.Brand
 import com.example.apptivitylab.demoapp.models.Station
 import kotlinx.android.synthetic.main.cell_header.view.*
 import kotlinx.android.synthetic.main.cell_station.view.*
-import java.util.*
 
 /**
  * Created by ApptivityLab on 15/01/2018.
@@ -18,6 +20,7 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val HEADER: Int = 1
 
     private var stationsAndHeadersList: ArrayList<Any> = ArrayList()
+    private var brandList: ArrayList<Brand> = ArrayList()
     private lateinit var stationListener: StationViewHolder.onSelectStationListener
 
     fun setStationListener(stationListener: StationViewHolder.onSelectStationListener) {
@@ -25,20 +28,18 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (stationsAndHeadersList[position] is Station) {
-            return STATION
+        return if (this.stationsAndHeadersList[position] is Station) {
+            STATION
         } else {
-            return HEADER
+            HEADER
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
-        val inflater: LayoutInflater = LayoutInflater.from(parent!!.context)
-
         var viewHolder: RecyclerView.ViewHolder = when (viewType) {
             STATION -> {
                 StationViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.cell_station,
-                        parent, false), stationListener)
+                        parent, false), this.stationListener)
             }
             else -> {
                 HeaderViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.cell_header,
@@ -53,13 +54,19 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         when (holder.itemViewType) {
             STATION -> {
                 val stationViewHolder: StationViewHolder = holder as StationViewHolder
-                val station: Station = stationsAndHeadersList[position] as Station
+                val station: Station = this.stationsAndHeadersList[position] as Station
 
-                stationViewHolder.updateStationViewHolder(station)
+                val stationLogo = this.brandList.firstOrNull { brand ->
+                    brand.brandName == station.stationBrand
+                }?.brandLogo
+
+                stationLogo?.let {
+                    stationViewHolder.updateStationViewHolder(station, stationLogo)
+                }
             }
             else -> {
                 val headerViewHolder: HeaderViewHolder = holder as HeaderViewHolder
-                val header: String = stationsAndHeadersList[position] as String
+                val header: String = this.stationsAndHeadersList[position] as String
 
                 headerViewHolder.updateHeaderViewHolder(header)
             }
@@ -67,12 +74,14 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return stationsAndHeadersList.size
+        return this.stationsAndHeadersList.size
     }
 
-    fun updateDataSet(stationsAndHeadersList: ArrayList<Any>) {
+    fun updateDataSet(stationsAndHeadersList: ArrayList<Any>, brandList: ArrayList<Brand>) {
         this.stationsAndHeadersList.clear()
         this.stationsAndHeadersList.addAll(stationsAndHeadersList)
+        this.brandList = brandList
+
         this.notifyDataSetChanged()
     }
 
@@ -83,11 +92,6 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             fun onStationSelected(station: Station)
         }
 
-        private val stationName = itemView.nameTextView
-        private val stationBrand = itemView.brandTextView
-        private val stationDistance = itemView.distanceTextView
-        private val stationDistanceUnit = itemView.distanceUnitTextView
-
         private var station: Station? = null
 
         init {
@@ -96,27 +100,26 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             })
         }
 
-        fun updateStationViewHolder(station: Station) {
+        fun updateStationViewHolder(station: Station, stationLogoID: Int) {
             this.station = station
 
-            stationName.text = station.stationName
-            stationBrand.text = station.stationBrand
+            this.itemView.logoImageView.setImageDrawable(ResourcesCompat.getDrawable(itemView.resources, stationLogoID, null))
+            this.itemView.nameTextView.text = station.stationName
 
             if (station.distanceFromUser != null) {
-                stationDistance.text = "%.2f".format(station.distanceFromUser)
-                stationDistanceUnit.text = itemView.context.getString(R.string.distance_km_away)
-                } else {
-                    stationDistance.text = ""
-                    stationDistanceUnit.text = ""
-                }
+                this.itemView.distanceTextView.text = "%.2f".format(station.distanceFromUser)
+                this.itemView.distanceUnitTextView.text = itemView.context.getString(R.string.distance_km_away)
+            } else {
+                this.itemView.distanceTextView.text = ""
+                this.itemView.distanceUnitTextView.text = ""
             }
         }
+    }
 
-    class HeaderViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        private val headerTitle = itemView.headerTextView
+    class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun updateHeaderViewHolder(header: String) {
-            this.headerTitle.text = header
+            this.itemView.headerTextView.text = header
         }
     }
 }
