@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
-        android:text="Name"
+        tools:text="Name"
         android:textSize="28sp"
         android:textStyle="bold" />
 
