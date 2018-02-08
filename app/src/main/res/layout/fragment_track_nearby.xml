@@ -8,7 +8,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1">
 
         <FrameLayout
@@ -36,9 +36,10 @@
         android:id="@+id/nearestStationLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorAccent"
+        android:background="@color/colorWhiteFoggy"
         android:padding="16dp"
-        android:clickable="true">
+        android:clickable="true"
+        android:gravity="center_vertical">
 
         <ImageView
             android:id="@+id/stationImageView"

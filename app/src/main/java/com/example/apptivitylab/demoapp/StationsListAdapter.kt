@@ -1,13 +1,14 @@
 package com.example.apptivitylab.demoapp
 
+import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.apptivitylab.demoapp.models.Brand
 import com.example.apptivitylab.demoapp.models.Station
 import kotlinx.android.synthetic.main.cell_header.view.*
 import kotlinx.android.synthetic.main.cell_station.view.*
-import java.util.*
 
 /**
  * Created by ApptivityLab on 15/01/2018.
@@ -18,6 +19,7 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val HEADER: Int = 1
 
     private var stationsAndHeadersList: ArrayList<Any> = ArrayList()
+    private var brandList: ArrayList<Brand> = ArrayList()
     private lateinit var stationListener: StationViewHolder.onSelectStationListener
 
     fun setStationListener(stationListener: StationViewHolder.onSelectStationListener) {
@@ -54,8 +56,15 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             STATION -> {
                 val stationViewHolder: StationViewHolder = holder as StationViewHolder
                 val station: Station = stationsAndHeadersList[position] as Station
+                var stationLogo: Int = 0
 
-                stationViewHolder.updateStationViewHolder(station)
+                this.brandList.forEach { brand ->
+                    if (brand.brandName == station.stationBrand) {
+                        stationLogo = brand.brandLogo
+                    }
+                }
+
+                stationViewHolder.updateStationViewHolder(station, stationLogo)
             }
             else -> {
                 val headerViewHolder: HeaderViewHolder = holder as HeaderViewHolder
@@ -70,9 +79,11 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         return stationsAndHeadersList.size
     }
 
-    fun updateDataSet(stationsAndHeadersList: ArrayList<Any>) {
+    fun updateDataSet(stationsAndHeadersList: ArrayList<Any>, brandList: ArrayList<Brand>) {
         this.stationsAndHeadersList.clear()
         this.stationsAndHeadersList.addAll(stationsAndHeadersList)
+        this.brandList = brandList
+
         this.notifyDataSetChanged()
     }
 
@@ -83,8 +94,8 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             fun onStationSelected(station: Station)
         }
 
+        private val stationLogo = itemView.logoImageView
         private val stationName = itemView.nameTextView
-        private val stationBrand = itemView.brandTextView
         private val stationDistance = itemView.distanceTextView
         private val stationDistanceUnit = itemView.distanceUnitTextView
 
@@ -96,23 +107,23 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             })
         }
 
-        fun updateStationViewHolder(station: Station) {
+        fun updateStationViewHolder(station: Station, stationLogoID: Int) {
             this.station = station
 
+            stationLogo.setImageDrawable(ResourcesCompat.getDrawable(itemView.resources, stationLogoID, null))
             stationName.text = station.stationName
-            stationBrand.text = station.stationBrand
 
             if (station.distanceFromUser != null) {
                 stationDistance.text = "%.2f".format(station.distanceFromUser)
                 stationDistanceUnit.text = itemView.context.getString(R.string.distance_km_away)
-                } else {
-                    stationDistance.text = ""
-                    stationDistanceUnit.text = ""
-                }
+            } else {
+                stationDistance.text = ""
+                stationDistanceUnit.text = ""
             }
         }
+    }
 
-    class HeaderViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val headerTitle = itemView.headerTextView
 
         fun updateHeaderViewHolder(header: String) {

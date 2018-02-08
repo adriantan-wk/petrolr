@@ -202,7 +202,7 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
         }
 
         stationsAndHeadersList = this.arrangeListByPreferences(stationList, currentUser)
-        stationsAdapter.updateDataSet(stationsAndHeadersList)
+        stationsAdapter.updateDataSet(stationsAndHeadersList, BrandController.brandList)
     }
 
     private fun setDistanceFromUser(stations: ArrayList<Station>, userLatLng: LatLng?) {

@@ -66,6 +66,8 @@ class LoginFragment : Fragment() {
         }
 
         this.loginBtn.setOnClickListener {
+            this.messageTextView.text = ""
+
             if (this.usernameEditText.isEmpty() || this.passwordEditText.isEmpty()) {
                 this.messageTextView.text = getString(R.string.username_or_password_empty_message)
             } else {
