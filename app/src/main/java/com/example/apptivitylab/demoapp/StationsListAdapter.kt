@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.apptivitylab.demoapp.R.string.brand
 import com.example.apptivitylab.demoapp.models.Brand
 import com.example.apptivitylab.demoapp.models.Station
 import kotlinx.android.synthetic.main.cell_header.view.*
@@ -54,15 +55,14 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             STATION -> {
                 val stationViewHolder: StationViewHolder = holder as StationViewHolder
                 val station: Station = this.stationsAndHeadersList[position] as Station
-                var stationLogo = 0
 
-                this.brandList.forEach { brand ->
-                    if (brand.brandName == station.stationBrand) {
-                        stationLogo = brand.brandLogo
-                    }
+                val stationLogo = this.brandList.firstOrNull { brand ->
+                    brand.brandName == station.stationBrand
+                }?.brandLogo
+
+                stationLogo?.let {
+                    stationViewHolder.updateStationViewHolder(station, stationLogo)
                 }
-
-                stationViewHolder.updateStationViewHolder(station, stationLogo)
             }
             else -> {
                 val headerViewHolder: HeaderViewHolder = holder as HeaderViewHolder
@@ -92,11 +92,6 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             fun onStationSelected(station: Station)
         }
 
-        private val stationLogo = itemView.logoImageView
-        private val stationName = itemView.nameTextView
-        private val stationDistance = itemView.distanceTextView
-        private val stationDistanceUnit = itemView.distanceUnitTextView
-
         private var station: Station? = null
 
         init {
@@ -108,24 +103,23 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         fun updateStationViewHolder(station: Station, stationLogoID: Int) {
             this.station = station
 
-            stationLogo.setImageDrawable(ResourcesCompat.getDrawable(itemView.resources, stationLogoID, null))
-            stationName.text = station.stationName
+            this.itemView.logoImageView.setImageDrawable(ResourcesCompat.getDrawable(itemView.resources, stationLogoID, null))
+            this.itemView.nameTextView.text = station.stationName
 
             if (station.distanceFromUser != null) {
-                stationDistance.text = "%.2f".format(station.distanceFromUser)
-                stationDistanceUnit.text = itemView.context.getString(R.string.distance_km_away)
+                this.itemView.distanceTextView.text = "%.2f".format(station.distanceFromUser)
+                this.itemView.distanceUnitTextView.text = itemView.context.getString(R.string.distance_km_away)
             } else {
-                stationDistance.text = ""
-                stationDistanceUnit.text = ""
+                this.itemView.distanceTextView.text = ""
+                this.itemView.distanceUnitTextView.text = ""
             }
         }
     }
 
     class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val headerTitle = itemView.headerTextView
 
         fun updateHeaderViewHolder(header: String) {
-            this.headerTitle.text = header
+            this.itemView.headerTextView.text = header
         }
     }
 }

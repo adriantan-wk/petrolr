@@ -28,7 +28,6 @@
     <string name="change_preferences_intent">User Preferences</string>
     <string name="longitude">Longitude: %1$s</string>
     <string name="accuracy">Accuracy: %1$s</string>
-    <string name="location_updated">Location Updated</string>
     <string name="distance_km_away">KM AWAY</string>
     <string name="current_location">Current Location</string>
     <string name="destination">Destination</string>

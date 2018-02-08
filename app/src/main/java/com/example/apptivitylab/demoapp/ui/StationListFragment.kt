@@ -198,7 +198,6 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
         if (userLatLng != null) {
             this.setDistanceFromUser(stationList, userLatLng)
             stationList = this.arrangeStationsByDistance(stationList)
-            Toast.makeText(this.context!!, R.string.location_updated, Toast.LENGTH_SHORT).show()
         }
 
         stationsAndHeadersList = this.arrangeListByPreferences(stationList, currentUser)
