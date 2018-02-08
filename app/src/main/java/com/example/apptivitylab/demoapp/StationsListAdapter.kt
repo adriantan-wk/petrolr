@@ -27,20 +27,18 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (stationsAndHeadersList[position] is Station) {
-            return STATION
+        return if (this.stationsAndHeadersList[position] is Station) {
+            STATION
         } else {
-            return HEADER
+            HEADER
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
-        val inflater: LayoutInflater = LayoutInflater.from(parent!!.context)
-
         var viewHolder: RecyclerView.ViewHolder = when (viewType) {
             STATION -> {
                 StationViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.cell_station,
-                        parent, false), stationListener)
+                        parent, false), this.stationListener)
             }
             else -> {
                 HeaderViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.cell_header,
@@ -55,8 +53,8 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         when (holder.itemViewType) {
             STATION -> {
                 val stationViewHolder: StationViewHolder = holder as StationViewHolder
-                val station: Station = stationsAndHeadersList[position] as Station
-                var stationLogo: Int = 0
+                val station: Station = this.stationsAndHeadersList[position] as Station
+                var stationLogo = 0
 
                 this.brandList.forEach { brand ->
                     if (brand.brandName == station.stationBrand) {
@@ -68,7 +66,7 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             }
             else -> {
                 val headerViewHolder: HeaderViewHolder = holder as HeaderViewHolder
-                val header: String = stationsAndHeadersList[position] as String
+                val header: String = this.stationsAndHeadersList[position] as String
 
                 headerViewHolder.updateHeaderViewHolder(header)
             }
@@ -76,7 +74,7 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return stationsAndHeadersList.size
+        return this.stationsAndHeadersList.size
     }
 
     fun updateDataSet(stationsAndHeadersList: ArrayList<Any>, brandList: ArrayList<Brand>) {
