@@ -106,9 +106,7 @@ class ChangePreferencesActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        val id = item?.itemId
-
-        if (id == R.id.save) {
+        if (item?.itemId == R.id.save) {
             this.changePreferencesFragment.updateUserPreferences(this.currentUser)
         }
 
