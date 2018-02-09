@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.models.User
@@ -33,6 +35,10 @@ class ChangePreferencesActivity : AppCompatActivity() {
     }
 
     private var isNewUser: Boolean = false
+    private lateinit var changePreferencesFragment: ChangePreferencesFragment
+
+    private lateinit var currentUser: User
+    var unsavedChangesMade = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,20 +53,26 @@ class ChangePreferencesActivity : AppCompatActivity() {
             supportActionBarTitle = getString(R.string.set_preferences_title)
             this.displayFirstTimePreferencesDialog()
         } else {
-            supportActionBarTitle = getString(R.string.change_preferences_title)
+            supportActionBarTitle = getString(R.string.preferences_title)
             this.toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_material)
             this.toolbar.setNavigationOnClickListener(View.OnClickListener {
-                this.finish()
+                if (unsavedChangesMade) {
+                    this.displayChangesNotSavedDialog()
+                } else {
+                    this.finish()
+                }
             })
         }
 
         this.supportActionBar?.title = supportActionBarTitle
 
-        val user = intent.getParcelableExtra<User>(USER_EXTRA)
+        this.currentUser = intent.getParcelableExtra<User>(USER_EXTRA)
+
+        this.changePreferencesFragment = ChangePreferencesFragment.newInstance(this.currentUser)
 
         supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.container, ChangePreferencesFragment.newInstance(user))
+                .replace(R.id.container, this.changePreferencesFragment)
                 .commit()
     }
 
@@ -77,10 +89,36 @@ class ChangePreferencesActivity : AppCompatActivity() {
         }
     }
 
+    private fun displayChangesNotSavedDialog() {
+        AlertDialog.Builder(this)
+                .setTitle(R.string.warning)
+                .setMessage(R.string.preferences_not_saved_warning)
+                .setPositiveButton(R.string.yes, { dialog, which ->
+                    this.finish()
+                })
+                .setNegativeButton(R.string.no, null)
+                .show()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.change_preferences_save_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        val id = item?.itemId
+
+        if (id == R.id.save) {
+            this.changePreferencesFragment.updateUserPreferences(this.currentUser)
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
     override fun onBackPressed() {
         if (this.isNewUser) {
             AlertDialog.Builder(this)
-                    .setMessage(R.string.preferences_not_set_warning)
+                    .setMessage(R.string.preferences_not_saved_warning)
                     .setPositiveButton(R.string.yes,
                             { dialog, which ->
                                 this.finish()
@@ -88,7 +126,11 @@ class ChangePreferencesActivity : AppCompatActivity() {
                     .setNegativeButton(R.string.no, null)
                     .show()
         } else {
-            super.onBackPressed()
+            if (unsavedChangesMade) {
+                this.displayChangesNotSavedDialog()
+            } else {
+                super.onBackPressed()
+            }
         }
     }
 }

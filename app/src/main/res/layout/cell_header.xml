@@ -14,6 +14,9 @@
         android:layout_marginTop="16dp"
         tools:text="Test" />
 
-    <View style="@style/ListSeparator" />
+    <View
+        style="@style/ListSeparator"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp" />
 
 </LinearLayout>

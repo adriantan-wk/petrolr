@@ -32,17 +32,17 @@
     <string name="current_location">Current Location</string>
     <string name="destination">Destination</string>
     <string name="generating_markers">Generating Markers…</string>
-    <string name="petrol_type">Petrol Type</string>
     <string name="stations">Stations</string>
-    <string name="preferred_petrol">Preferred Petrol: %1$s</string>
+    <string name="preferred_petrol">Preferred Petrol Type</string>
     <string name="save">SAVE</string>
-    <string name="change_preferences_title">Change Preferences</string>
+    <string name="preferences_title">Your Preferences</string>
     <string name="nearest_station">Nearest Preferred Station:</string>
     <string name="address">Address</string>
     <string name="searching">Searching…</string>
-    <string name="station_brands">Station Brands</string>
     <string name="confirm_change_preferences">\n%1$s\n\nPreferred Station Brands:\n%2$s\n\nAre these settings ok?</string>
-    <string name="invalid_preferences">Preferences invalid.\nPlease select a preferred petrol type and\nat least one preferred brand</string>
+    <string name="invalid_preferences_petrol">Please select a preferred petrol type.</string>
+    <string name="invalid_preferences_brand">Please select at least one preferred brand.</string>
+    <string name="invalid_preferences_message">Please make sure you have\nselected one preferred petrol type\nand at least one preferred brand.</string>
     <string name="select_all">Select All</string>
     <string name="view_station_details">View Station Details</string>
     <string name="preferred_stations">Preferred Stations</string>
@@ -70,7 +70,7 @@
     <string name="first_time_set_preferences_message">Welcome and thank you for using PetrolR!\n\nAs this is your first time logging in,\nplease set your petrol and brand preferences so that we can serve you better.</string>
     <string name="ok">OK</string>
     <string name="welcome">Welcome!</string>
-    <string name="preferences_not_set_warning">Your preferences have not been set!\n\nAre you sure you wish to return to the login screen?</string>
+    <string name="preferences_not_saved_warning">Your changes have not been saved!\n\nAre you sure you wish to leave this screen?</string>
     <string name="lets_get_started">Let\'s Get Started</string>
     <string name="field_must_not_be_empty">%1$s field must not be empty</string>
     <string name="username_exists">That username already exists</string>
@@ -90,4 +90,13 @@
     <string name="please_enter_field">Please enter your %1$s</string>
     <string name="recover_password">Recover Password</string>
     <string name="enter_email">Please enter an email address</string>
+    <string name="change">Change</string>
+    <string name="preferred_station_brands">Preferred Station Brands</string>
+    <string name="change_preferences_title">Change Preferences</string>
+    <string name="change_preferred_petrol_type">Change Preferred Petrol Type</string>
+    <string name="change_preferred_brands">Change Preferred Brands</string>
+    <string name="none">None</string>
+    <string name="cancel">Cancel</string>
+    <string name="change_preference_failed">Your changes were not saved.\n%1$s</string>
+    <string name="warning">Warning</string>
 </resources>
