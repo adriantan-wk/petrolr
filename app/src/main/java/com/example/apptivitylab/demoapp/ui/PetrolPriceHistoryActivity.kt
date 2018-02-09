@@ -9,6 +9,7 @@ import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.models.PetrolType
 import com.example.apptivitylab.demoapp.models.User
 import kotlinx.android.synthetic.main.activity_blank_toolbar.*
+import kotlinx.android.synthetic.main.activity_petrol_price_history.*
 
 /**
  * Created by ApptivityLab on 31/01/2018.
@@ -32,13 +33,13 @@ class PetrolPriceHistoryActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_blank_toolbar)
+        setContentView(R.layout.activity_petrol_price_history)
 
-        setSupportActionBar(this.toolbar)
+        setSupportActionBar(this.priceHistoryToolbar)
         supportActionBar?.title = getString(R.string.price_history)
 
-        this.toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_material)
-        this.toolbar.setNavigationOnClickListener (View.OnClickListener {
+        this.priceHistoryToolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_material)
+        this.priceHistoryToolbar.setNavigationOnClickListener (View.OnClickListener {
             finish()
         })
 
