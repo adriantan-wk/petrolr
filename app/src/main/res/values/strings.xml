@@ -67,7 +67,7 @@
     <string name="login_failed">Login details incorrect, please try again.</string>
     <string name="username_or_password_empty_message">Please make sure you have filled in\nyour username and password</string>
     <string name="set_preferences_title">Set Your Preferences</string>
-    <string name="first_time_set_preferences_message">Welcome and thank you for using PetrolR!\n\nAs this is your first time logging in,\nplease set your petrol and brand preferences so that we can serve you better.</string>
+    <string name="first_time_set_preferences_message">Welcome and thank you for using Petrolr!\n\nAs this is your first time logging in,\nplease set your petrol and brand preferences so that we can serve you better.</string>
     <string name="ok">OK</string>
     <string name="welcome">Welcome!</string>
     <string name="preferences_not_saved_warning">Your changes have not been saved!\n\nAre you sure you wish to leave this screen?</string>
