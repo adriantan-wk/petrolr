@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <LinearLayout
@@ -29,23 +29,23 @@
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/white"
                     android:textSize="24sp"
-                    tools:text="EURO 5"/>
+                    tools:text="EURO 5" />
 
                 <TextView
                     android:id="@+id/currentPriceTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/white"
-                    android:textStyle="bold"
                     android:textSize="36sp"
-                    tools:text="RM2.50"/>
+                    android:textStyle="bold"
+                    tools:text="RM2.50" />
 
                 <TextView
                     android:id="@+id/currentPriceDifferenceTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
-                    tools:text="+ RM 0.02"/>
+                    tools:text="+ RM 0.02" />
 
             </LinearLayout>
 
@@ -53,11 +53,11 @@
                 android:id="@+id/currentPriceSinceTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
                 android:layout_gravity="start|bottom"
                 android:layout_margin="8dp"
+                android:textColor="@android:color/white"
                 android:textSize="12sp"
-                tools:text="Since 24/12/2017"/>
+                tools:text="Since 24/12/2017" />
 
         </FrameLayout>
 

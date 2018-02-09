@@ -8,7 +8,6 @@ import android.view.View
 import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.models.PetrolType
 import com.example.apptivitylab.demoapp.models.User
-import kotlinx.android.synthetic.main.activity_blank_toolbar.*
 import kotlinx.android.synthetic.main.activity_petrol_price_history.*
 
 /**
@@ -36,10 +35,10 @@ class PetrolPriceHistoryActivity : AppCompatActivity() {
         setContentView(R.layout.activity_petrol_price_history)
 
         setSupportActionBar(this.priceHistoryToolbar)
-        supportActionBar?.title = getString(R.string.price_history)
+        this.supportActionBar?.title = getString(R.string.price_history)
 
         this.priceHistoryToolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_material)
-        this.priceHistoryToolbar.setNavigationOnClickListener (View.OnClickListener {
+        this.priceHistoryToolbar.setNavigationOnClickListener(View.OnClickListener {
             finish()
         })
 

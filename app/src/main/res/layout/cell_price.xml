@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginTop="4dp"
     android:background="@drawable/window_white_foggy"
-    android:orientation="horizontal"
     android:gravity="center_vertical"
+    android:orientation="horizontal"
     android:padding="8dp">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="right"
         android:layout_marginLeft="24dp"
-        android:paddingTop="8sp"
-        android:paddingBottom="8dp">
+        android:gravity="right"
+        android:orientation="vertical"
+        android:paddingBottom="8dp"
+        android:paddingTop="8sp">
 
         <TextView
             android:id="@+id/dayMonthTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textSize="14sp"
             android:textColor="@color/colorAccent"
-            tools:text="24 JAN"/>
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:text="24 JAN" />
 
         <TextView
             android:id="@+id/yearTextView"
@@ -34,20 +33,19 @@
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"
             android:textSize="12sp"
-            tools:text="2018"/>
+            tools:text="2018" />
 
     </LinearLayout>
 
-    <View
-        style="@style/SectionSeparator"/>
+    <View style="@style/SectionSeparator" />
 
     <TextView
         android:id="@+id/priceTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:textColor="@android:color/black"
         android:textSize="20sp"
-        android:layout_weight="1"
         tools:text="RM2.67" />
 
     <TextView
@@ -58,6 +56,6 @@
         android:textSize="14sp"
         android:textStyle="bold"
         tools:text="+ RM0.02"
-        tools:textColor="@color/colorAccent"/>
+        tools:textColor="@color/colorAccent" />
 
 </LinearLayout>
