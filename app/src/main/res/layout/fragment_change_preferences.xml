@@ -1,22 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/petrol_type"
-        style="@style/HeaderText"/>
+        android:gravity="center_vertical">
+
+        <TextView
+            style="@style/ListHeaderText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/preferred_petrol" />
+
+        <Button
+            android:id="@+id/changePreferredPetrolButton"
+            style="@style/RaisedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="@string/change"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+    <View style="@style/ListSeparator" />
 
     <LinearLayout
         android:id="@+id/petrolTypesLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
 
         <RadioGroup
             android:id="@+id/petrolTypesRadioGroup"
@@ -27,62 +46,62 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/selectedPetrolTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/preferred_petrol"
-        android:layout_marginTop="8dp"
-        style="@style/DescriptionText"/>
-
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginTop="16dp">
+        android:layout_marginLeft="16dp"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginRight="8dp"
+            android:src="@drawable/ic_fuellogo" />
 
         <TextView
+            android:id="@+id/preferredPetrolTextView"
+            style="@style/DescriptionText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/station_brands"
-            style="@style/HeaderText"
-            android:layout_centerVertical="true"/>
+            android:textColor="@android:color/black"
+            android:textSize="15sp"
+            tools:text="RON95" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/ListHeaderText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/preferred_station_brands" />
 
         <Button
-            android:id="@+id/selectAllButton"
+            android:id="@+id/changePreferredBrandsButton"
+            style="@style/RaisedButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/select_all"
-            android:textSize="12sp"
-            android:layout_alignParentRight="true"/>
+            android:layout_height="30dp"
+            android:text="@string/change"
+            android:textSize="12sp" />
 
-    </RelativeLayout>
+    </LinearLayout>
+
+    <View style="@style/ListSeparator" />
 
     <LinearLayout
         android:id="@+id/brandsLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="4dp"
+        android:orientation="vertical">
 
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/messageTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center"
-        android:layout_marginTop="16dp"
-        android:textColor="@android:color/holo_red_light"/>
-
-    <Button
-        android:id="@+id/saveBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/save"
-        android:layout_marginTop="8dp"/>
 
 </LinearLayout>

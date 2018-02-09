@@ -9,66 +9,80 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/stationImageView"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginBottom="16dp"
-        tools:src="@drawable/ic_launcher_background" />
+        <ImageView
+            android:id="@+id/stationImageView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginBottom="16dp"
+            tools:src="@drawable/ic_launcher_background" />
 
-    <TextView
-        android:id="@+id/nameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        tools:text="Name"
-        android:textSize="28sp"
-        android:textStyle="bold" />
+        <TextView
+            android:id="@+id/nameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            tools:text="Name" />
 
-    <TextView
-        style="@style/ListHeaderText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/brand"
-        android:textAlignment="center" />
+        <TextView
+            style="@style/ListHeaderText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/brand"
+            android:textAlignment="center" />
 
-    <View style="@style/ListSeparator" />
+        <View
+            style="@style/ListSeparator"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp" />
 
-    <TextView
-        android:id="@+id/brandTextView"
-        style="@style/StationDetailsBodyBlock"
-        android:textAlignment="center" />
+        <TextView
+            android:id="@+id/brandTextView"
+            style="@style/StationDetailsBodyBlock"
+            android:textAlignment="center" />
 
-    <TextView
-        style="@style/ListHeaderText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/address"
-        android:textAlignment="center" />
+        <TextView
+            style="@style/ListHeaderText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/address"
+            android:textAlignment="center" />
 
-    <View style="@style/ListSeparator" />
+        <View
+            style="@style/ListSeparator"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp" />
 
-    <TextView
-        android:id="@+id/addressTextView"
-        style="@style/StationDetailsBodyBlock"
-        android:textAlignment="center" />
+        <TextView
+            android:id="@+id/addressTextView"
+            style="@style/StationDetailsBodyBlock"
+            android:textAlignment="center" />
 
-    <TextView
-        style="@style/ListHeaderText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/petrol_types_available"
-        android:textAlignment="center" />
+        <TextView
+            style="@style/ListHeaderText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/petrol_types_available"
+            android:textAlignment="center" />
 
-    <View style="@style/ListSeparator" />
+        <View
+            style="@style/ListSeparator"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp" />
 
-    <TextView
-        android:id="@+id/petrolTypesTextView"
-        style="@style/StationDetailsBodyBlock"
-        android:textAlignment="center" />
+        <TextView
+            android:id="@+id/petrolTypesTextView"
+            style="@style/StationDetailsBodyBlock"
+            android:textAlignment="center" />
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
