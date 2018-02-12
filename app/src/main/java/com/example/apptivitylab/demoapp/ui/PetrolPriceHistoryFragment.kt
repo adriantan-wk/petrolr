@@ -2,9 +2,11 @@ package com.example.apptivitylab.demoapp.ui
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.content.res.ResourcesCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.models.PetrolType
 import kotlinx.android.synthetic.main.cell_price.view.*
@@ -52,21 +54,49 @@ class PetrolPriceHistoryFragment : Fragment() {
         this.petrolTypeTextView.text = this.petrolType.petrolName
         this.currentPriceTextView.text = getString(R.string.price_value, this.petrolType.currentPrice)
 
+        if (this.petrolType.previousPrices.size > 1) {
+            this.generatePriceDifferenceTextView(this.currentPriceDifferenceTextView, 0)
+        }
+
         val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy")
         this.currentPriceSinceTextView.text = getString(R.string.since_value, simpleDateFormat.format(this.petrolType.priceChangeDates[0]))
     }
 
     private fun generatePreviousPriceViews() {
-        for (count in 1 until this.petrolType.previousPrices.size) {
+        (1 until this.petrolType.previousPrices.size).forEach { count ->
             val layoutInflater: LayoutInflater = LayoutInflater.from(this.context)
             val previousPriceCell = layoutInflater.inflate(R.layout.cell_price, this.priceHistoryLinearLayout, false)
 
-            val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy")
+            if (count < this.petrolType.previousPrices.size - 1) {
+                this.generatePriceDifferenceTextView(previousPriceCell.priceDifferenceTextView, count)
+            }
 
+            val dayMonthFormat = SimpleDateFormat("dd MMM")
+            val yearFormat = SimpleDateFormat("yyyy")
+
+            previousPriceCell.dayMonthTextView.text = dayMonthFormat.format(this.petrolType.priceChangeDates[count])
+            previousPriceCell.yearTextView.text = yearFormat.format(this.petrolType.priceChangeDates[count])
             previousPriceCell.priceTextView.text = getString(R.string.price_value, petrolType.previousPrices[count])
-            previousPriceCell.dateTextView.text = getString(R.string.changed_on, simpleDateFormat.format(this.petrolType.priceChangeDates[count]))
 
             this.priceHistoryLinearLayout.addView(previousPriceCell)
         }
+    }
+
+    private fun generatePriceDifferenceTextView(priceDifferenceTextView: TextView, currentCount: Int) {
+        var priceDifference = this.petrolType.previousPrices[currentCount] - this.petrolType.previousPrices[currentCount + 1]
+        val priceDifferenceText: String
+        val priceDifferenceTextColor: Int
+
+        if (priceDifference > 0) {
+            priceDifferenceText = getString(R.string.positive_price_value, priceDifference)
+            priceDifferenceTextColor = ResourcesCompat.getColor(resources, android.R.color.holo_red_light, null)
+        } else {
+            priceDifference = Math.abs(priceDifference)
+            priceDifferenceText = getString(R.string.negative_price_value, priceDifference)
+            priceDifferenceTextColor = ResourcesCompat.getColor(resources, R.color.colorGreen, null)
+        }
+
+        priceDifferenceTextView.text = priceDifferenceText
+        priceDifferenceTextView.setTextColor(priceDifferenceTextColor)
     }
 }

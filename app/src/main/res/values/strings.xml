@@ -42,13 +42,15 @@
     <string name="confirm_change_preferences">\n%1$s\n\nPreferred Station Brands:\n%2$s\n\nAre these settings ok?</string>
     <string name="invalid_preferences_petrol">Please select a preferred petrol type.</string>
     <string name="invalid_preferences_brand">Please select at least one preferred brand.</string>
-    <string name="invalid_preferences_message">Please make sure you have\nselected one preferred petrol type\nand at least one preferred brand.</string>
+    <string name="invalid_preferences_message">Please make sure you have\nselected one preferred petrol type and at least one preferred brand.</string>
     <string name="select_all">Select All</string>
     <string name="view_station_details">View Station Details</string>
     <string name="preferred_stations">Preferred Stations</string>
     <string name="non_preferred_stations">Non-Preferred Stations</string>
     <string name="preferences_updated">Your preferences have been updated</string>
     <string name="price_value">RM %1$.2f</string>
+    <string name="positive_price_value">+ RM %1.2f</string>
+    <string name="negative_price_value">- RM %1.2f</string>
     <string name="show_5_nearest_stations">Show 5 Nearest Stations</string>
     <string name="petrol_types_available">Petrol Types Available</string>
     <string name="brand">Station Brand</string>
@@ -63,7 +65,6 @@
     <string name="current_price">Current Price:</string>
     <string name="previous_prices">Previous Prices</string>
     <string name="since_value">Since %1$s</string>
-    <string name="changed_on">Changed on %1$s</string>
     <string name="login_failed">Login details incorrect, please try again.</string>
     <string name="username_or_password_empty_message">Please make sure you have filled in\nyour username and password</string>
     <string name="set_preferences_title">Set Your Preferences</string>

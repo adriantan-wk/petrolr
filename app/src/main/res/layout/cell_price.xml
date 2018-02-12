@@ -1,24 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="8dp"
-    android:background="@color/colorAccent"
-    android:orientation="vertical"
+    android:layout_marginTop="4dp"
+    android:background="@drawable/window_white_foggy"
     android:gravity="center_vertical"
-    android:padding="16dp">
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:gravity="right"
+        android:orientation="vertical"
+        android:paddingBottom="8dp"
+        android:paddingTop="8sp">
+
+        <TextView
+            android:id="@+id/dayMonthTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:text="24 JAN" />
+
+        <TextView
+            android:id="@+id/yearTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textSize="12sp"
+            tools:text="2018" />
+
+    </LinearLayout>
+
+    <View style="@style/SectionSeparator" />
 
     <TextView
         android:id="@+id/priceTextView"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+        android:layout_weight="1"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        tools:text="RM2.67" />
 
     <TextView
-        android:id="@+id/dateTextView"
-        android:layout_width="match_parent"
+        android:id="@+id/priceDifferenceTextView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp" />
+        android:layout_marginRight="20dp"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:text="+ RM0.02"
+        tools:textColor="@color/colorAccent" />
 
 </LinearLayout>
