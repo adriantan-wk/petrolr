@@ -30,10 +30,12 @@ class StationListActivity : AppCompatActivity(), NavigationView.OnNavigationItem
     companion object {
         const val CHANGE_PREFERENCES_REQUEST_CODE = 200
         const val STATION_LIST_EXTRA = "station_list"
+        const val FROM_SEE_MORE_EXTRA = "see_more"
 
-        fun newLaunchIntent(context: Context, stations: ArrayList<Station>): Intent {
+        fun newLaunchIntent(context: Context, stations: ArrayList<Station>, isFromSeeMore: Boolean): Intent {
             val intent = Intent(context, StationListActivity::class.java)
             intent.putExtra(STATION_LIST_EXTRA, stations)
+            intent.putExtra(FROM_SEE_MORE_EXTRA, isFromSeeMore)
 
             return intent
         }
@@ -48,13 +50,22 @@ class StationListActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         setSupportActionBar(this.stationListToolbar)
         supportActionBar?.title = getString(R.string.station_list_title)
 
-        val drawerToggle = ActionBarDrawerToggle(this, stationListDrawerLayout, stationListToolbar,
-                R.string.open_drawer, R.string.close_drawer)
-        this.stationListDrawerLayout.addDrawerListener(drawerToggle)
-        drawerToggle.syncState()
+        val isFromSeeMore = intent.getBooleanExtra(FROM_SEE_MORE_EXTRA, false)
 
-        this.stationListNavView.inflateMenu(R.menu.navigation_drawer_home_menu)
-        this.stationListNavView.setNavigationItemSelectedListener(this)
+        if (isFromSeeMore) {
+            this.stationListToolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_material)
+            this.stationListToolbar.setNavigationOnClickListener(View.OnClickListener {
+                finish()
+            })
+        } else {
+            val drawerToggle = ActionBarDrawerToggle(this, stationListDrawerLayout, stationListToolbar,
+                    R.string.open_drawer, R.string.close_drawer)
+            this.stationListDrawerLayout.addDrawerListener(drawerToggle)
+            drawerToggle.syncState()
+
+            this.stationListNavView.inflateMenu(R.menu.navigation_drawer_home_menu)
+            this.stationListNavView.setNavigationItemSelectedListener(this)
+        }
 
         val navigationViewHeader: View = this.stationListNavView.getHeaderView(0)
         navigationViewHeader.navHeaderUserTextView.text = UserController.user.username

@@ -36,9 +36,8 @@
     <string name="preferred_petrol">Preferred Petrol Type</string>
     <string name="save">SAVE</string>
     <string name="preferences_title">Your Preferences</string>
-    <string name="nearest_station">Nearest Preferred Station:</string>
+    <string name="nearest_station">Nearest Station</string>
     <string name="address">Address</string>
-    <string name="searching">Searching…</string>
     <string name="confirm_change_preferences">\n%1$s\n\nPreferred Station Brands:\n%2$s\n\nAre these settings ok?</string>
     <string name="invalid_preferences_petrol">Please select a preferred petrol type.</string>
     <string name="invalid_preferences_brand">Please select at least one preferred brand.</string>
@@ -51,7 +50,6 @@
     <string name="price_value">RM %1$.2f</string>
     <string name="positive_price_value">+ RM %1.2f</string>
     <string name="negative_price_value">- RM %1.2f</string>
-    <string name="show_5_nearest_stations">Show 5 Nearest Stations</string>
     <string name="petrol_types_available">Petrol Types Available</string>
     <string name="brand">Station Brand</string>
     <string name="go">Go</string>
@@ -100,4 +98,8 @@
     <string name="cancel">Cancel</string>
     <string name="change_preference_failed">Your changes were not saved.\n%1$s</string>
     <string name="warning">Warning</string>
+    <string name="refresh_nearest_stations">Refresh Nearest Stations</string>
+    <string name="see_more">See More</string>
+    <string name="recenter_camera">Recenter Camera</string>
+    <string name="user_location_refreshed">User Location Refreshed</string>
 </resources>
