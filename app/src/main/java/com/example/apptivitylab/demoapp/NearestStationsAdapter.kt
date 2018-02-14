@@ -42,7 +42,6 @@ class NearestStationsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
-        if (this.nearestStations.isNotEmpty()) {
             if (holder?.itemViewType == NEAREST_STATION || holder?.itemViewType == STATION) {
                 val stationViewHolder: StationViewHolder = holder as StationViewHolder
                 val station: Station = this.nearestStations[holder.adapterPosition]
@@ -55,7 +54,6 @@ class NearestStationsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     stationViewHolder.updateNearestStationsViewHolder(station, stationLogoID)
                 }
             }
-        }
     }
 
     override fun getItemViewType(position: Int): Int {

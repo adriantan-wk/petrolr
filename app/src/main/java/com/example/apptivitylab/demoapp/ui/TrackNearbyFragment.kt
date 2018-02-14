@@ -74,6 +74,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
 
     private var nearestStations: ArrayList<Station> = ArrayList()
     private lateinit var nearestStationsAdapter: NearestStationsAdapter
+    private var isAdapterInitialized = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -98,11 +99,6 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
 
         val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         this.nearestStationsRecyclerView.layoutManager = layoutManager
-
-        this.nearestStationsAdapter = NearestStationsAdapter()
-        this.nearestStationsAdapter.setNearestStationListener(this)
-        this.nearestStationsAdapter.setSeeMoreListener(this)
-        this.nearestStationsRecyclerView.adapter = this.nearestStationsAdapter
 
         this.recenterCameraButton.setOnClickListener {
             this.recenterMapCamera()
@@ -226,6 +222,15 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
         }
     }
 
+    private fun initializeNearestStationsAdapter() {
+        this.nearestStationsAdapter = NearestStationsAdapter()
+        this.nearestStationsAdapter.setNearestStationListener(this)
+        this.nearestStationsAdapter.setSeeMoreListener(this)
+        this.nearestStationsRecyclerView.adapter = this.nearestStationsAdapter
+
+        this.isAdapterInitialized = true
+    }
+
     @SuppressLint("MissingPermission")
     private fun updateUserLocation() {
         this.fusedLocationClient.lastLocation.addOnSuccessListener { location ->
@@ -233,6 +238,11 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
                 this.userLatLng = LatLng(location.latitude, location.longitude)
 
                 this.assignNearestStations(this.nearestStations)
+
+                if (!this.isAdapterInitialized) {
+                    this.initializeNearestStationsAdapter()
+                }
+
                 this.nearestStationsAdapter.updateDataSet(this.nearestStations, this.brandList)
 
                 this.recenterMapCamera()
