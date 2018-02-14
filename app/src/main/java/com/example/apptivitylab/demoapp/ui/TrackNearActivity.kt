@@ -96,7 +96,7 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             }
 
             R.id.nav_station_list -> {
-                val stationListIntent = StationListActivity.newLaunchIntent(this, this.stations)
+                val stationListIntent = StationListActivity.newLaunchIntent(this, this.stations, false)
                 startActivity(stationListIntent)
 
                 this.trackNearDrawerLayout.closeDrawers()
