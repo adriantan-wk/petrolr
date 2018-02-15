@@ -240,10 +240,14 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
                 this.assignNearestStations(this.nearestStations)
 
                 if (!this.isAdapterInitialized) {
-                    this.initializeNearestStationsAdapter()
+                    if (this.nearestStations.isNotEmpty()) {
+                        this.initializeNearestStationsAdapter()
+                    }
                 }
 
-                this.nearestStationsAdapter.updateDataSet(this.nearestStations, this.brandList)
+                if(this.isAdapterInitialized) {
+                    this.nearestStationsAdapter.updateDataSet(this.nearestStations, this.brandList)
+                }
 
                 this.recenterMapCamera()
             }

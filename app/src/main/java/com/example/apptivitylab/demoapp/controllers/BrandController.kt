@@ -1,7 +1,11 @@
 package com.example.apptivitylab.demoapp.controllers
 
 import android.content.Context
+import android.util.Log
+import android.widget.Toast
+import com.android.volley.VolleyError
 import com.example.apptivitylab.demoapp.R
+import com.example.apptivitylab.demoapp.api.RestAPIClient
 import com.example.apptivitylab.demoapp.models.Brand
 import org.json.JSONArray
 import org.json.JSONObject
@@ -14,7 +18,7 @@ import java.io.InputStreamReader
  */
 
 object BrandController {
-    lateinit var brandList: ArrayList<Brand>
+    var brandList: ArrayList<Brand> = ArrayList()
 
     fun loadMockBrands(context: Context) {
         val brandList: ArrayList<Brand> = ArrayList()
@@ -43,4 +47,41 @@ object BrandController {
 
         this.brandList = brandList
     }
+
+    fun loadBrands(context: Context) {
+        val path = "data/companies"
+
+        RestAPIClient.shared(context).getResources(path,
+                object : RestAPIClient.OnGetResourceCompletedListener {
+                    override fun onComplete(jsonObject: JSONObject?, error: VolleyError?) {
+                        if (jsonObject != null) {
+                            var brandList: ArrayList<Brand> = ArrayList()
+                            var brand: Brand
+
+                            val jsonArray: JSONArray = jsonObject.optJSONArray("resource")
+
+                            for (item in 0 until jsonArray.length()) {
+                                brand = Brand(jsonArray.getJSONObject(item))
+
+                                brandList.add(brand)
+                            }
+                            this@BrandController.brandList = brandList
+
+//                            this@BrandController.brandList.forEach {
+//                                Log.i("OKIE", "${it.brandID}")
+//                                Log.i("OKIE", "${it.brandName}")
+//                                Log.i("OKIE", "${it.brandWebsite}")
+//                                Log.i("OKIE", "${it.brandCreatedAt}")
+//                                Log.i("OKIE", "${it.brandUpdatedAt}")
+//                                Log.i("OKIE", "${it.brandLogo}")
+//                            }
+                            Toast.makeText(context, "Done", Toast.LENGTH_LONG).show()
+
+                        } else {
+                            Toast.makeText(context, "$error", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                })
+    }
+
 }
