@@ -53,8 +53,15 @@ class PetrolType() : Parcelable {
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(this.petrolID)
         parcel.writeString(this.petrolName)
-        parcel.writeLong(this.petrolCreatedAt!!.time)
-        parcel.writeLong(this.petrolUpdatedAt!!.time)
+
+        this.petrolCreatedAt?.let {
+            parcel.writeLong(this.petrolCreatedAt!!.time)
+        }
+
+        this.petrolUpdatedAt?.let {
+            parcel.writeLong(this.petrolUpdatedAt!!.time)
+        }
+
         parcel.writeDouble(this.currentPrice)
         parcel.writeList(this.previousPrices)
         parcel.writeList(this.priceChangeDates)

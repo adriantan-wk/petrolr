@@ -50,8 +50,15 @@ class Brand() : Parcelable {
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(this.brandID)
         parcel.writeString(this.brandName)
-        parcel.writeLong(this.brandUpdatedAt!!.time)
-        parcel.writeLong(this.brandCreatedAt!!.time)
+
+        this.brandUpdatedAt?.let {
+            parcel.writeLong(this.brandUpdatedAt!!.time)
+        }
+
+        this.brandCreatedAt?.let {
+            parcel.writeLong(this.brandCreatedAt!!.time)
+        }
+
         parcel.writeInt(this.brandLogo)
         parcel.writeString(this.brandWebsite)
     }

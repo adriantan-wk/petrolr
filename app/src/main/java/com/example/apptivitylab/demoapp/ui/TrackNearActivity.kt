@@ -39,7 +39,6 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         }
     }
 
-    private lateinit var stations: ArrayList<Station>
     private lateinit var brands: ArrayList<Brand>
     private lateinit var trackNearbyFragment: TrackNearbyFragment
 
@@ -62,7 +61,6 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         navigationViewHeader.navHeaderUserTextView.text = UserController.user.username
         navigationViewHeader.navHeaderEmailTextView.text = UserController.user.email
 
-//        this.stations = intent.getParcelableArrayListExtra<Station>(STATION_LIST_EXTRA)
         this.brands = intent.getParcelableArrayListExtra(BRAND_LIST_EXTRA)
 
         this.trackNearbyFragment = TrackNearbyFragment.newInstance(UserController.user, this.brands)
