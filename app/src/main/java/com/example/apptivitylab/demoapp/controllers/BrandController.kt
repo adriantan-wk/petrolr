@@ -20,33 +20,33 @@ import java.io.InputStreamReader
 object BrandController {
     var brandList: ArrayList<Brand> = ArrayList()
 
-//    fun loadMockBrands(context: Context) {
-//        val brandList: ArrayList<Brand> = ArrayList()
-//        val inputStream: InputStream = context.resources.openRawResource(R.raw.brands)
-//        val reader = BufferedReader(InputStreamReader(inputStream))
-//        var jsonObject: JSONObject
-//        var brand: Brand
-//
-//        val fileContent = reader.readText()
-//        jsonObject = JSONObject(fileContent.substring(fileContent.indexOf("{"), fileContent.lastIndexOf("}") + 1))
-//        val jsonArray: JSONArray = jsonObject.optJSONArray("brands")
-//
-//        for (pt in 0 until jsonArray.length()) {
-//            brand = Brand(jsonArray.getJSONObject(pt))
-//
-//            brand.brandLogo = when (brand.brandID) {
-//                "SHEL" -> R.drawable.ic_shell
-//                "BRPE" -> R.drawable.ic_bp
-//                "PTNS" -> R.drawable.ic_petronas
-//                "PTRN" -> R.drawable.ic_petron
-//                else -> 0
-//            }
-//
-//            brandList.add(brand)
-//        }
-//
-//        this.brandList = brandList
-//    }
+    fun loadMockBrands(context: Context) {
+        val brandList: ArrayList<Brand> = ArrayList()
+        val inputStream: InputStream = context.resources.openRawResource(R.raw.brands)
+        val reader = BufferedReader(InputStreamReader(inputStream))
+        var jsonObject: JSONObject
+        var brand: Brand
+
+        val fileContent = reader.readText()
+        jsonObject = JSONObject(fileContent.substring(fileContent.indexOf("{"), fileContent.lastIndexOf("}") + 1))
+        val jsonArray: JSONArray = jsonObject.optJSONArray("brands")
+
+        for (pt in 0 until jsonArray.length()) {
+            brand = Brand(jsonArray.getJSONObject(pt))
+
+            brand.brandLogo = when (brand.brandID) {
+                "SHEL" -> R.drawable.ic_shell
+                "BRPE" -> R.drawable.ic_bp
+                "PTNS" -> R.drawable.ic_petronas
+                "PTRN" -> R.drawable.ic_petron
+                else -> 0
+            }
+
+            brandList.add(brand)
+        }
+
+        this.brandList = brandList
+    }
 
     fun loadBrands(context: Context) {
         val path = "/data/companies"
@@ -66,15 +66,6 @@ object BrandController {
                                 brandList.add(brand)
                             }
                             this@BrandController.brandList = brandList
-
-                            this@BrandController.brandList.forEach {
-                                Log.i("OKIE", "${it.brandID}")
-                                Log.i("OKIE", "${it.brandName}")
-                                Log.i("OKIE", "${it.brandWebsite}")
-                                Log.i("OKIE", "${it.brandCreatedAt}")
-                                Log.i("OKIE", "${it.brandUpdatedAt}")
-                                Log.i("OKIE", "${it.brandLogo}")
-                            }
 
                         } else {
                             Toast.makeText(context, "$error", Toast.LENGTH_SHORT).show()

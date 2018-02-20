@@ -40,10 +40,6 @@ class TitleActivity : AppCompatActivity() {
     }
 
     private fun loadAllMockData() {
-//        StationController.loadMockStations(this)
-//        PetrolTypeController.loadMockPetrolTypes(this)
-//        BrandController.loadMockBrands(this)
-
         if (UserListController.performMockDataLoad) {
             UserListController.loadMockUsers(this)
         }

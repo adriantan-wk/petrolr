@@ -58,14 +58,6 @@ object PetrolTypeController {
                             }
                             this@PetrolTypeController.petrolTypeList = petrolTypeList
 
-                            this@PetrolTypeController.petrolTypeList.forEach {
-                                Log.i("DOKIE", "${it.petrolID}")
-                                Log.i("DOKIE", "${it.petrolName}")
-                                Log.i("DOKIE", "${it.petrolUpdatedAt}")
-                                Log.i("DOKIE", "${it.petrolCreatedAt}")
-                                Log.i("DOKIE", "${it.previousPrices}")
-                                Log.i("DOKIE", "${it.currentPrice}")
-                            }
                         } else {
                             Toast.makeText(context, "$error", Toast.LENGTH_SHORT).show()
                         }

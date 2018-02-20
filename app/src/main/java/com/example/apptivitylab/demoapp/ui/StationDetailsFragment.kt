@@ -54,13 +54,13 @@ class StationDetailsFragment : Fragment() {
 
     private fun updateView() {
         this.brands.forEach { brand ->
-            if (brand.brandName == this.station.stationBrand) {
+            if (brand.brandID == this.station.stationBrand) {
                 this.stationImageView.setImageDrawable(ResourcesCompat.getDrawable(resources, brand.brandLogo, null))
+                this.brandTextView.text = brand.brandName
             }
         }
 
         this.nameTextView.text = this.station.stationName
-        this.brandTextView.text = this.station.stationBrand
         this.addressTextView.text = this.station.stationAddress
 
         this.petrolTypesTextView.text = PetrolTypeController.petrolTypeList

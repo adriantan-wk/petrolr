@@ -29,12 +29,10 @@ class StationListActivity : AppCompatActivity(), NavigationView.OnNavigationItem
 
     companion object {
         const val CHANGE_PREFERENCES_REQUEST_CODE = 200
-        const val STATION_LIST_EXTRA = "station_list"
         const val FROM_SEE_MORE_EXTRA = "see_more"
 
-        fun newLaunchIntent(context: Context, stations: ArrayList<Station>, isFromSeeMore: Boolean): Intent {
+        fun newLaunchIntent(context: Context, isFromSeeMore: Boolean): Intent {
             val intent = Intent(context, StationListActivity::class.java)
-            intent.putExtra(STATION_LIST_EXTRA, stations)
             intent.putExtra(FROM_SEE_MORE_EXTRA, isFromSeeMore)
 
             return intent
@@ -42,6 +40,7 @@ class StationListActivity : AppCompatActivity(), NavigationView.OnNavigationItem
     }
 
     private lateinit var stationListFragment: StationListFragment
+    private lateinit var stationList: ArrayList<Station>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,9 +70,9 @@ class StationListActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         navigationViewHeader.navHeaderUserTextView.text = UserController.user.username
         navigationViewHeader.navHeaderEmailTextView.text = UserController.user.email
 
-        val stations = intent.getParcelableArrayListExtra<Station>(STATION_LIST_EXTRA)
+        this.stationList = StationController.stationList
 
-        this.stationListFragment = StationListFragment.newInstance(UserController.user, stations)
+        this.stationListFragment = StationListFragment.newInstance(UserController.user)
 
         supportFragmentManager
                 .beginTransaction()
@@ -97,7 +96,7 @@ class StationListActivity : AppCompatActivity(), NavigationView.OnNavigationItem
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.nav_track_nearby -> {
-                val trackNearIntent = TrackNearActivity.newLaunchIntent(this, StationController.stationList, BrandController.brandList)
+                val trackNearIntent = TrackNearActivity.newLaunchIntent(this, BrandController.brandList)
                         .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(trackNearIntent)
 
@@ -156,6 +155,6 @@ class StationListActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         UserController.user.preferredPetrolType = user.preferredPetrolType
         UserController.user.preferredBrands = user.preferredBrands
 
-        stationListFragment.onUserPreferencesChanged(user)
+        this.stationListFragment.onUserPreferencesChanged(user)
     }
 }

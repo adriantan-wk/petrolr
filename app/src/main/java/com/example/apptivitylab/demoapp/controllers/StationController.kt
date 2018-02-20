@@ -42,7 +42,7 @@ object StationController {
     fun loadStations(context: Context) {
         val path = "data/stations?related=petrols_by_station_petrols"
 
-        RestAPIClient.shared(context).getResources(path, 200,
+        RestAPIClient.shared(context).getResources(path, 100,
                 object : RestAPIClient.OnGetResourceCompletedListener {
                     override fun onComplete(jsonObject: JSONObject?, error: VolleyError?) {
                         if (jsonObject != null) {
@@ -58,17 +58,6 @@ object StationController {
                             }
                             this@StationController.stationList = stationList
 
-                            this@StationController.stationList.forEach {
-                                Log.i("HOO", "${it.stationName}")
-                                Log.i("HOO", "${it.stationID}")
-                                Log.i("HOO", "${it.stationUpdatedAt}")
-                                Log.i("HOO", "${it.stationCreatedAt}")
-                                Log.i("HOO", "${it.stationLatLng}")
-                                Log.i("HOO", "${it.stationBrand}")
-                                Log.i("HOO", "${it.stationPetrolTypeIDs}")
-                            }
-
-                            Log.i("SIZE", "${stationList.size}")
                         } else {
                             Toast.makeText(context, "$error", Toast.LENGTH_SHORT).show()
                         }
