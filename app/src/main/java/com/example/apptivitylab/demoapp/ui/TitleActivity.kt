@@ -15,7 +15,6 @@ import com.example.apptivitylab.demoapp.models.User
 class TitleActivity : AppCompatActivity(), RestAPIClient.OnFullDataReceivedListener {
 
     private lateinit var loginFragment: LoginFragment
-    private var dataRetrievalFailedMessageShown = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,17 +50,15 @@ class TitleActivity : AppCompatActivity(), RestAPIClient.OnFullDataReceivedListe
 
     override fun onFullDataReceived(dataReceived: Boolean, error: VolleyError?) {
         if (!dataReceived || error != null) {
-            if (!this.dataRetrievalFailedMessageShown) {
-                AlertDialog.Builder(this)
-                        .setTitle(getString(R.string.warning))
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setMessage(getString(R.string.failed_retrieve_data))
-                        .setPositiveButton(getString(R.string.ok),
-                                { dialog, which ->
-                                    this.finish()
-                                })
-                        .show()
-            }
+            AlertDialog.Builder(this)
+                    .setTitle(getString(R.string.warning))
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setMessage(getString(R.string.failed_retrieve_data))
+                    .setPositiveButton(getString(R.string.ok),
+                            { dialog, which ->
+                                this.finish()
+                            })
+                    .show()
         }
     }
 }
