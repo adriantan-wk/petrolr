@@ -38,6 +38,10 @@ class RestAPIClient(val context: Context) {
         fun onDataSetReceived(jsonObject: JSONObject?, error: VolleyError?)
     }
 
+    interface OnFullDataReceivedListener {
+        fun onFullDataReceived(dataReceived: Boolean, error: VolleyError?)
+    }
+
     fun getResources(path: String, limit: Int?, completionListener: OnGetResourceCompletedListener) {
         if (limit == null) {
             val request = Euro5JsonObjectRequest(Request.Method.GET,

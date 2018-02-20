@@ -1,12 +1,10 @@
 package com.example.apptivitylab.demoapp.models
 
-import android.annotation.SuppressLint
 import android.os.Parcel
 import android.os.Parcelable
 import com.example.apptivitylab.demoapp.R
 import org.json.JSONObject
 import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 /**
@@ -48,12 +46,6 @@ class Brand() : Parcelable {
 
         this.brandWebsite = jsonObject.optString("website")
     }
-//
-//    constructor(brandID: String, brandName: String, brandLogo: Int) : this() {
-//        this.brandID = brandID
-//        this.brandName = brandName
-//        this.brandLogo = brandLogo
-//    }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(this.brandID)

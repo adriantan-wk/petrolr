@@ -43,26 +43,12 @@ class PetrolType() : Parcelable {
             this.priceChangeDates.add(SimpleDateFormat("yyyy-MM-dd kk:mm:ss").parse(petrolPriceJSONArray.getJSONObject(priceObject).optString("updated_at")))
         }
 
-//        val petrolPriceChangeDatesJsonArray = jsonObject.optJSONArray("petrol_price_change_dates")
-//        for (changeDate in 0 until petrolPriceChangeDatesJsonArray.length()) {
-//            val dateString = petrolPriceChangeDatesJsonArray.getString(changeDate)
-//            val dateFormatter = SimpleDateFormat("dd/MM/yyyy")
-//
-//            this.priceChangeDates.add(dateFormatter.parse(dateString))
-//        }
-
         if (this.previousPrices.isEmpty()) {
             this.currentPrice = 0.0
         } else {
             this.currentPrice = this.previousPrices[0]
         }
     }
-
-//    constructor(petrolID: String, petrolName: String, currentPrice: Double) : this() {
-//        this.petrolID = petrolID
-//        this.petrolName = petrolName
-//        this.currentPrice = currentPrice
-//    }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(this.petrolID)

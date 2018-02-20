@@ -1,8 +1,6 @@
 package com.example.apptivitylab.demoapp.controllers
 
 import android.content.Context
-import android.util.Log
-import android.widget.Toast
 import com.android.volley.VolleyError
 import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.api.RestAPIClient
@@ -39,7 +37,7 @@ object StationController {
         this.stationList = stationList
     }
 
-    fun loadStations(context: Context) {
+    fun loadStations(context: Context, onFullDataReceivedListener: RestAPIClient.OnFullDataReceivedListener) {
         val path = "data/stations?related=petrols_by_station_petrols"
 
         RestAPIClient.shared(context).getResources(path, 100,
@@ -58,8 +56,9 @@ object StationController {
                             }
                             this@StationController.stationList = stationList
 
+                            onFullDataReceivedListener.onFullDataReceived(true, null)
                         } else {
-                            Toast.makeText(context, "$error", Toast.LENGTH_SHORT).show()
+                            onFullDataReceivedListener.onFullDataReceived(false, error)
                         }
                     }
                 })

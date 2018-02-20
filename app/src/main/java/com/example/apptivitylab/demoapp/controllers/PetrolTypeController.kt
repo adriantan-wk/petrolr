@@ -1,8 +1,6 @@
 package com.example.apptivitylab.demoapp.controllers
 
 import android.content.Context
-import android.util.Log
-import android.widget.Toast
 import com.android.volley.VolleyError
 import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.api.RestAPIClient
@@ -39,7 +37,7 @@ object PetrolTypeController {
         this.petrolTypeList = petrolTypeList
     }
 
-    fun loadPetrolTypes(context: Context) {
+    fun loadPetrolTypes(context: Context, onFullDataReceivedListener: RestAPIClient.OnFullDataReceivedListener) {
         val path = "data/petrols?related=price_histories_by_petrol_uuid"
 
         RestAPIClient.shared(context).getResources(path, null,
@@ -58,8 +56,9 @@ object PetrolTypeController {
                             }
                             this@PetrolTypeController.petrolTypeList = petrolTypeList
 
+                            onFullDataReceivedListener.onFullDataReceived(true, null)
                         } else {
-                            Toast.makeText(context, "$error", Toast.LENGTH_SHORT).show()
+                            onFullDataReceivedListener.onFullDataReceived(false, error)
                         }
                     }
                 })
