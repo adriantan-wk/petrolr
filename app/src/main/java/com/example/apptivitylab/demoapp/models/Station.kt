@@ -4,58 +4,60 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.android.gms.maps.model.LatLng
 import org.json.JSONObject
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * Created by ApptivityLab on 12/01/2018.
  */
 
-class Station() : Parcelable{
-    var stationID: String? = null
+class Station() : Parcelable {
+    var stationCreatedAt: Date? = null
+    var stationUpdatedAt: Date? = null
     var stationName: String? = null
+    var stationID: String? = null
+    var stationLatLng: LatLng? = null
     var stationBrand: String? = null
     var stationAddress: String? = null
-    var stationLatLng: LatLng? = null
     var stationPetrolTypeIDs: ArrayList<String> = ArrayList()
     var distanceFromUser: Float? = null
 
     constructor(parcel: Parcel) : this() {
-        stationID = parcel.readString()
-        stationName = parcel.readString()
-        stationBrand = parcel.readString()
-        stationAddress = parcel.readString()
-        stationLatLng = parcel.readParcelable(LatLng::class.java.classLoader)
-        stationPetrolTypeIDs = parcel.readArrayList(String::class.java.classLoader) as ArrayList<String>
+        this.stationCreatedAt = Date(parcel.readLong())
+        this.stationUpdatedAt = Date(parcel.readLong())
+        this.stationName = parcel.readString()
+        this.stationID = parcel.readString()
+        this.stationLatLng = parcel.readParcelable(LatLng::class.java.classLoader)
+        this.stationBrand = parcel.readString()
+        this.stationAddress = parcel.readString()
+        this.stationPetrolTypeIDs = parcel.readArrayList(String::class.java.classLoader) as ArrayList<String>
     }
 
-    constructor(stationID : String, stationName : String, stationBrand : String, stationAddress : String, stationLatLng : LatLng) : this() {
-        this.stationID = stationID
-        this.stationName = stationName
-        this.stationBrand = stationBrand
-        this.stationAddress = stationAddress
-        this.stationLatLng = stationLatLng
-    }
+    constructor(jsonObject: JSONObject) : this() {
+        this.stationCreatedAt = (SimpleDateFormat("yyyy-MM-dd kk:mm:ss").parse(jsonObject.optString("created_at")))
+        this.stationUpdatedAt = (SimpleDateFormat("yyyy-MM-dd kk:mm:ss").parse(jsonObject.optString("updated_at")))
 
-    constructor(jsonObject: JSONObject) : this()
-    {
-        stationID = jsonObject.optString("station_id")
-        stationName = jsonObject.optString("station_name")
-        stationBrand = jsonObject.optString("station_brand")
-        stationAddress = jsonObject.optString("station_address")
-        stationLatLng = LatLng(jsonObject.optDouble("station_latitude"), jsonObject.optDouble("station_longitude"))
+        this.stationName = jsonObject.optString("name")
+        this.stationID = jsonObject.optString("uuid")
+        this.stationLatLng = LatLng(jsonObject.optDouble("latitude"), jsonObject.optDouble("longitude"))
+        this.stationBrand = jsonObject.optString("company_uuid")
+        this.stationAddress = " "
 
-        val petrolIDJsonArray = jsonObject.optJSONArray("station_petrol_types")
+        val petrolIDJsonArray = jsonObject.optJSONArray("petrols_by_station_petrols")
         for (petrolID in 0 until petrolIDJsonArray.length()) {
-            stationPetrolTypeIDs.add(petrolIDJsonArray.getString(petrolID))
+            this.stationPetrolTypeIDs.add(petrolIDJsonArray.getJSONObject(petrolID).optString("uuid"))
         }
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(stationID)
-        parcel.writeString(stationName)
-        parcel.writeString(stationBrand)
-        parcel.writeString(stationAddress)
-        parcel.writeParcelable(stationLatLng, flags)
-        parcel.writeList(stationPetrolTypeIDs)
+        parcel.writeLong(this.stationCreatedAt!!.time)
+        parcel.writeLong(this.stationUpdatedAt!!.time)
+        parcel.writeString(this.stationName)
+        parcel.writeString(this.stationID)
+        parcel.writeParcelable(this.stationLatLng, flags)
+        parcel.writeString(this.stationBrand)
+        parcel.writeString(this.stationAddress)
+        parcel.writeList(this.stationPetrolTypeIDs)
     }
 
     override fun describeContents(): Int {

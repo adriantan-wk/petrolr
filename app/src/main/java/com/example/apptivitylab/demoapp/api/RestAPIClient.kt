@@ -34,20 +34,40 @@ class RestAPIClient(val context: Context) {
         fun onComplete(jsonObject: JSONObject?, error: VolleyError?)
     }
 
-    fun getResources(path: String, completionListener: OnGetResourceCompletedListener) {
-        val request = Euro5JsonObjectRequest(Request.Method.GET, BASE_URL + path, null,
-                object : Response.Listener<JSONObject> {
-                    override fun onResponse(response: JSONObject?) {
-                        Log.i("CHECK", "$response")
+    fun getResources(path: String, limit: Int?, completionListener: OnGetResourceCompletedListener) {
+        var retrievedAllRecords = false
+        var limitParameter = ""
+        var offset = 0
+        var offsetParameter = ""
 
-                        completionListener.onComplete(response, null)
-                    }
-                }, object : Response.ErrorListener {
-                    override fun onErrorResponse(error: VolleyError?) {
-                        completionListener.onComplete(null, error)
-                    }
-                })
+        if (limit != null) {
+            limitParameter = "&limit=" + limit
+        }
 
-        this.requestQueue.add(request)
+//        while (!retrievedAllRecords) {
+            val request = Euro5JsonObjectRequest(Request.Method.GET,
+                    BASE_URL + path + limitParameter, null,
+                    object : Response.Listener<JSONObject> {
+                        override fun onResponse(response: JSONObject?) {
+//                                    response?.let {
+//                                        val jsonArray = it.optJSONArray("resource")
+//
+//                                        if (limit != null && jsonArray.length() < limit) {
+//                                            retrievedAllRecords = true
+//                                            offset += limit
+//                                            offsetParameter = "&offset=" + offset
+//                                        }
+//                                    }
+
+                            completionListener.onComplete(response, null)
+                        }
+                    }, object : Response.ErrorListener {
+                override fun onErrorResponse(error: VolleyError?) {
+                    completionListener.onComplete(null, error)
+                }
+            })
+
+            this.requestQueue.add(request)
+//        }
     }
 }

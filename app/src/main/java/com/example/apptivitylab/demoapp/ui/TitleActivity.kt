@@ -26,6 +26,8 @@ class TitleActivity : AppCompatActivity() {
         setContentView(R.layout.activity_title)
 
         BrandController.loadBrands(this)
+        PetrolTypeController.loadPetrolTypes(this)
+        StationController.loadStations(this)
 
         this.loadAllMockData()
 
@@ -38,8 +40,8 @@ class TitleActivity : AppCompatActivity() {
     }
 
     private fun loadAllMockData() {
-        StationController.loadMockStations(this)
-        PetrolTypeController.loadMockPetrolTypes(this)
+//        StationController.loadMockStations(this)
+//        PetrolTypeController.loadMockPetrolTypes(this)
 //        BrandController.loadMockBrands(this)
 
         if (UserListController.performMockDataLoad) {

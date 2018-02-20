@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -345,6 +346,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
             }
         }
 
+        Log.i("HIYA", "$stationsWithCorrectPetrolType")
         return stationsWithCorrectPetrolType
     }
 
@@ -359,7 +361,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
                 val resizedBitmapImg: Bitmap
 
                 if (currentUser.preferredBrands.any { brand ->
-                    brand.brandName == station.stationBrand
+                    brand.brandID == station.stationBrand
                 }) {
                     bitmapImg = BitmapFactory.decodeResource(resources, R.drawable.ic_gasstation_marker)
                     resizedBitmapImg = Bitmap.createScaledBitmap(bitmapImg, 100, 100, false)

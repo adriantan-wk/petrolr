@@ -6,22 +6,30 @@
       "password": "123",
       "email": "adrian@apptivitylab.com",
       "preferred_petrol_type": {
-        "petrol_id": "P004",
-        "petrol_name": "EURO 5",
-        "petrol_previous_prices": [ "2.2", "2.28", "2.35"],
-        "petrol_price_change_dates": [ "31/01/2018", "15/01/2018", "08/01/2018"]
+        "uuid": "3266b114-0cb4-11e8-8947-02f08a5fc407",
+        "name": "EURO5",
+        "created_at": "2018-02-08 17:41:11",
+        "updated_at": "2018-02-08 17:41:11",
+        "price_histories_by_petrol_uuid": [
+          {
+            "updated_at": "2018-02-08 17:47:01",
+            "price_cents": 150
+          }
+        ]
       },
       "preferred_brands": [{
-        "brand_id": "SHEL",
-        "brand_name": "Shell",
-        "updated_at": "2017-08-22 22:43:13",
-        "created_at": "2017-08-22 22:43:09"
+        "uuid": "287ffd63-0bf0-11e8-8947-02f08a5fc407",
+        "name": "Shell",
+        "updated_at": "2018-02-09 01:31:00",
+        "created_at": "2018-02-07 18:17:53",
+        "website": "https://www.shell.com.my"
       },
         {
-          "brand_id": "PTNS",
-          "brand_name": "Petronas",
-          "updated_at": "2017-08-22 22:43:13",
-          "created_at": "2017-08-22 22:43:09"
+          "uuid": "21bbe7e1-0bf0-11e8-8947-02f08a5fc407",
+          "name": "Petronas",
+          "updated_at": "2018-02-09 01:31:00",
+          "created_at": "2018-02-07 18:17:42",
+          "website": "http://www.petronas.com.my"
         }]
     },
     {
@@ -31,42 +39,6 @@
       "email": "potatoandfries@gmail.com",
       "preferred_petrol_type": null,
       "preferred_brands": []
-    },
-    {
-      "user_id": "U003",
-      "user_name": "chicken",
-      "password": "fried",
-      "email": "kfc@gmail.com",
-      "preferred_petrol_type": {
-        "petrol_id": "P001",
-        "petrol_name": "RON95",
-        "petrol_previous_prices": [ "2.3", "2.25", "2.35", "2.4", "2.33"],
-        "petrol_price_change_dates": [ "30/01/2018", "25/01/2018", "24/01/2018", "17/01/2018", "08/01/2018"]
-      },
-      "preferred_brands": [{
-        "brand_id": "SHEL",
-        "brand_name": "Shell",
-        "updated_at": "2017-08-22 22:43:13",
-        "created_at": "2017-08-22 22:43:09"
-        },
-        {
-          "brand_id": "BRPE",
-          "brand_name": "BP",
-          "updated_at": "2017-08-22 22:43:13",
-          "created_at": "2017-08-22 22:43:09"
-        },
-        {
-          "brand_id": "PTNS",
-          "brand_name": "Petronas",
-          "updated_at": "2017-08-22 22:43:13",
-          "created_at": "2017-08-22 22:43:09"
-        },
-        {
-          "brand_id": "PTRN",
-          "brand_name": "Petron",
-          "updated_at": "2017-08-22 22:43:13",
-          "created_at": "2017-08-22 22:43:09"
-        }]
     }
   ]
 }

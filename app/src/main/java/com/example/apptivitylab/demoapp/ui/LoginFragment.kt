@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TextInputEditText
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat.startActivity
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +15,7 @@ import com.example.apptivitylab.demoapp.controllers.BrandController
 import com.example.apptivitylab.demoapp.controllers.StationController
 import com.example.apptivitylab.demoapp.controllers.UserController
 import com.example.apptivitylab.demoapp.models.User
+import com.example.apptivitylab.demoapp.ui.LoginFragment.Companion.SET_PREFERENCES_REQUEST_CODE
 import kotlinx.android.synthetic.main.fragment_login.*
 
 /**

@@ -1,7 +1,11 @@
 package com.example.apptivitylab.demoapp.controllers
 
 import android.content.Context
+import android.util.Log
+import android.widget.Toast
+import com.android.volley.VolleyError
 import com.example.apptivitylab.demoapp.R
+import com.example.apptivitylab.demoapp.api.RestAPIClient
 import com.example.apptivitylab.demoapp.models.Station
 import org.json.JSONArray
 import org.json.JSONObject
@@ -33,5 +37,42 @@ object StationController {
         }
 
         this.stationList = stationList
+    }
+
+    fun loadStations(context: Context) {
+        val path = "data/stations?related=petrols_by_station_petrols"
+
+        RestAPIClient.shared(context).getResources(path, 200,
+                object : RestAPIClient.OnGetResourceCompletedListener {
+                    override fun onComplete(jsonObject: JSONObject?, error: VolleyError?) {
+                        if (jsonObject != null) {
+                            var stationList: ArrayList<Station> = ArrayList()
+                            var station: Station
+
+                            val jsonArray: JSONArray = jsonObject.optJSONArray("resource")
+
+                            for (item in 0 until jsonArray.length()) {
+                                station = Station(jsonArray.getJSONObject(item))
+
+                                stationList.add(station)
+                            }
+                            this@StationController.stationList = stationList
+
+                            this@StationController.stationList.forEach {
+                                Log.i("HOO", "${it.stationName}")
+                                Log.i("HOO", "${it.stationID}")
+                                Log.i("HOO", "${it.stationUpdatedAt}")
+                                Log.i("HOO", "${it.stationCreatedAt}")
+                                Log.i("HOO", "${it.stationLatLng}")
+                                Log.i("HOO", "${it.stationBrand}")
+                                Log.i("HOO", "${it.stationPetrolTypeIDs}")
+                            }
+
+                            Log.i("SIZE", "${stationList.size}")
+                        } else {
+                            Toast.makeText(context, "$error", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                })
     }
 }
