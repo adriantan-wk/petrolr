@@ -55,11 +55,11 @@ class PetrolType() : Parcelable {
         parcel.writeString(this.petrolName)
 
         this.petrolCreatedAt?.let {
-            parcel.writeLong(this.petrolCreatedAt!!.time)
+            parcel.writeLong(it.time)
         }
 
         this.petrolUpdatedAt?.let {
-            parcel.writeLong(this.petrolUpdatedAt!!.time)
+            parcel.writeLong(it.time)
         }
 
         parcel.writeDouble(this.currentPrice)

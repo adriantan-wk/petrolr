@@ -51,11 +51,11 @@ class Station() : Parcelable {
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         this.stationCreatedAt?.let {
-            parcel.writeLong(this.stationCreatedAt!!.time)
+            parcel.writeLong(it.time)
         }
 
         this.stationUpdatedAt?.let {
-            parcel.writeLong(this.stationUpdatedAt!!.time)
+            parcel.writeLong(it.time)
         }
 
         parcel.writeString(this.stationName)

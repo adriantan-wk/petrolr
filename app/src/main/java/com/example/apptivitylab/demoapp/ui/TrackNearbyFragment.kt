@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -81,8 +80,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
         if (savedInstanceState == null) {
             this.setupGoogleMapFragment()
         } else {
-            this.mapFragment = activity!!.supportFragmentManager.
-                    findFragmentById(R.id.mapContainerFrameLayout) as SupportMapFragment
+            this.mapFragment = activity!!.supportFragmentManager.findFragmentById(R.id.mapContainerFrameLayout) as SupportMapFragment
         }
 
         return inflater.inflate(R.layout.fragment_track_nearby, container, false)
@@ -120,7 +118,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
     }
 
     override fun onSeeMoreSelected() {
-        val stationListIntent = StationListActivity.newLaunchIntent(this.context!!,  true)
+        val stationListIntent = StationListActivity.newLaunchIntent(this.context!!, true)
         startActivity(stationListIntent)
     }
 
@@ -246,7 +244,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
                     }
                 }
 
-                if(this.isAdapterInitialized) {
+                if (this.isAdapterInitialized) {
                     this.nearestStationsAdapter.updateDataSet(this.nearestStations, this.brandList)
                 }
 
@@ -360,8 +358,8 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
                 val resizedBitmapImg: Bitmap
 
                 if (currentUser.preferredBrands.any { brand ->
-                    brand.brandID == station.stationBrand
-                }) {
+                            brand.brandID == station.stationBrand
+                        }) {
                     bitmapImg = BitmapFactory.decodeResource(resources, R.drawable.ic_gasstation_marker)
                     resizedBitmapImg = Bitmap.createScaledBitmap(bitmapImg, 100, 100, false)
                     preferredStationList.add(station)

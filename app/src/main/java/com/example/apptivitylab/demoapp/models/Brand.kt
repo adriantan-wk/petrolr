@@ -52,11 +52,11 @@ class Brand() : Parcelable {
         parcel.writeString(this.brandName)
 
         this.brandUpdatedAt?.let {
-            parcel.writeLong(this.brandUpdatedAt!!.time)
+            parcel.writeLong(it.time)
         }
 
         this.brandCreatedAt?.let {
-            parcel.writeLong(this.brandCreatedAt!!.time)
+            parcel.writeLong(it.time)
         }
 
         parcel.writeInt(this.brandLogo)
