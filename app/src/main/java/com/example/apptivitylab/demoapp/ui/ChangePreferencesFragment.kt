@@ -3,6 +3,7 @@ package com.example.apptivitylab.demoapp.ui
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AlertDialog
@@ -13,7 +14,9 @@ import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import com.android.volley.VolleyError
 import com.example.apptivitylab.demoapp.R
+import com.example.apptivitylab.demoapp.api.RestAPIClient
 import com.example.apptivitylab.demoapp.controllers.BrandController
 import com.example.apptivitylab.demoapp.controllers.PetrolTypeController
 import com.example.apptivitylab.demoapp.models.Brand
@@ -28,21 +31,27 @@ import kotlinx.android.synthetic.main.fragment_change_preferences.*
  * Created by ApptivityLab on 19/01/2018.
  */
 
-class ChangePreferencesFragment : Fragment() {
+class ChangePreferencesFragment : Fragment(), RestAPIClient.OnFullDataReceivedListener {
 
     companion object {
-        const val USER_EXTRA = "user_object"
+        const val NO_OF_RESOURCE_SETS = 2
 
-        fun newInstance(currentUser: User): ChangePreferencesFragment {
+        const val USER_EXTRA = "user_object"
+        const val NEW_USER_BOOLEAN_EXTRA = "new_user_boolean"
+
+        fun newInstance(currentUser: User, isNewUser: Boolean): ChangePreferencesFragment {
             val fragment = ChangePreferencesFragment()
 
             val args: Bundle = Bundle()
             args.putParcelable(USER_EXTRA, currentUser)
+            args.putBoolean(NEW_USER_BOOLEAN_EXTRA, isNewUser)
 
             fragment.arguments = args
             return fragment
         }
     }
+
+    private var dataResourcesReceived = 0
 
     private lateinit var changePreferencesActivity: ChangePreferencesActivity
 
@@ -61,14 +70,57 @@ class ChangePreferencesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        var isNewUser = false
         changePreferencesActivity = this.activity as ChangePreferencesActivity
 
         arguments?.let {
             this.currentUser = it.getParcelable(USER_EXTRA)
+            isNewUser = it.getBoolean(NEW_USER_BOOLEAN_EXTRA)
         }
 
+        if (isNewUser) {
+            this.loadAppData()
+        } else {
+            this.performFragmentStartup()
+        }
+    }
+
+    private fun loadAppData() {
+        this.progressBar.visibility = View.VISIBLE
+        this.progressBarTextView.visibility = View.VISIBLE
+
+        BrandController.loadBrands(this.context!!, this)
+        PetrolTypeController.loadPetrolTypes(this.context!!, this)
+    }
+
+    override fun onFullDataReceived(dataReceived: Boolean, error: VolleyError?) {
+        if (!dataReceived || error != null) {
+            view?.let {
+                this.dataResourcesReceived = 0
+                this.progressBar.visibility = View.GONE
+                this.progressBarTextView.visibility = View.GONE
+
+                Snackbar.make(it, getString(R.string.failed_retrieve_data), Snackbar.LENGTH_INDEFINITE)
+                        .setAction(getString(R.string.retry), View.OnClickListener {
+                            this.loadAppData()
+                        })
+                        .show()
+            }
+        } else {
+            this.dataResourcesReceived++
+
+            if (dataResourcesReceived == NO_OF_RESOURCE_SETS) {
+                this.performFragmentStartup()
+            }
+        }
+    }
+
+    private fun performFragmentStartup() {
         this.petrolTypes = PetrolTypeController.petrolTypeList
         this.brands = BrandController.brandList
+
+        this.progressBar.visibility = View.GONE
+        this.progressBarTextView.visibility = View.GONE
 
         this.changePreferredPetrolButton.setOnClickListener {
             this.displayChangePreferredPetrolDialog()

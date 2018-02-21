@@ -102,6 +102,10 @@
     <string name="see_more">See More</string>
     <string name="recenter_camera">Recenter Camera</string>
     <string name="user_location_refreshed">User Location Refreshed</string>
-    <string name="failed_retrieve_data">Failed to retrieve app data. Please check your Internet connection and then restart Petrolr.</string>
+    <string name="failed_retrieve_data">Failed to retrieve app data</string>
     <string name="map_loading">Loading Map…</string>
+    <string name="data_loading">Loading Data…</string>
+    <string name="stations_loading">Loading Stations…</string>
+    <string name="retry">Retry</string>
+    <string name="location_update_failed">Location Update Failed. Please make sure your GPS is enabled.</string>
 </resources>

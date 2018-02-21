@@ -68,7 +68,7 @@ class ChangePreferencesActivity : AppCompatActivity() {
 
         this.currentUser = intent.getParcelableExtra<User>(USER_EXTRA)
 
-        this.changePreferencesFragment = ChangePreferencesFragment.newInstance(this.currentUser)
+        this.changePreferencesFragment = ChangePreferencesFragment.newInstance(this.currentUser, this.isNewUser)
 
         supportFragmentManager
                 .beginTransaction()

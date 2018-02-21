@@ -16,7 +16,7 @@ import java.io.InputStreamReader
  */
 
 object StationController {
-    lateinit var stationList: ArrayList<Station>
+    var stationList: ArrayList<Station> = ArrayList()
 
     fun loadMockStations(context: Context) {
         val stationList: ArrayList<Station> = ArrayList()
@@ -39,6 +39,7 @@ object StationController {
 
     fun loadStations(context: Context, onFullDataReceivedListener: RestAPIClient.OnFullDataReceivedListener) {
         val path = "data/stations?related=petrols_by_station_petrols"
+        this.stationList.clear()
 
         RestAPIClient.shared(context).getResources(path, 100,
                 object : RestAPIClient.OnGetResourceCompletedListener {

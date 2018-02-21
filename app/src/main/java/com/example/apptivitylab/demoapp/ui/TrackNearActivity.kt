@@ -14,7 +14,6 @@ import android.widget.Toast
 import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.controllers.PetrolTypeController
 import com.example.apptivitylab.demoapp.controllers.UserController
-import com.example.apptivitylab.demoapp.models.Brand
 import com.example.apptivitylab.demoapp.models.User
 import kotlinx.android.synthetic.main.activity_track_nearby.*
 import kotlinx.android.synthetic.main.nav_view_header.view.*
@@ -27,18 +26,17 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
     companion object {
         const val CHANGE_PREFERENCES_REQUEST_CODE = 200
-        const val BRAND_LIST_EXTRA = "brand_list"
+        const val FROM_LOGIN_EXTRA = "from_login"
 
-        fun newLaunchIntent(context: Context, brands: ArrayList<Brand>): Intent {
+        fun newLaunchIntent(context: Context, isFromLogin: Boolean): Intent {
             val intent = Intent(context, TrackNearActivity::class.java)
 
-            intent.putExtra(BRAND_LIST_EXTRA, brands)
+            intent.putExtra(FROM_LOGIN_EXTRA, isFromLogin)
 
             return intent
         }
     }
 
-    private lateinit var brands: ArrayList<Brand>
     private lateinit var trackNearbyFragment: TrackNearbyFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,9 +58,9 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         navigationViewHeader.navHeaderUserTextView.text = UserController.user.username
         navigationViewHeader.navHeaderEmailTextView.text = UserController.user.email
 
-        this.brands = intent.getParcelableArrayListExtra(BRAND_LIST_EXTRA)
+        val isFromLogin = intent.getBooleanExtra(FROM_LOGIN_EXTRA, false)
 
-        this.trackNearbyFragment = TrackNearbyFragment.newInstance(UserController.user, this.brands)
+        this.trackNearbyFragment = TrackNearbyFragment.newInstance(UserController.user, isFromLogin)
 
         supportFragmentManager
                 .beginTransaction()

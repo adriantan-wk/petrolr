@@ -34,7 +34,8 @@
                 android:background="@android:color/white"
                 android:padding="12dp"
                 android:text="@string/recenter_camera"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                android:visibility="gone" />
 
         </FrameLayout>
 
@@ -48,6 +49,21 @@
         android:gravity="bottom"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/progressBarTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="8dp"
+            android:text="@string/stations_loading"
+            android:textColor="@color/colorAccent" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
         <Button
             android:id="@+id/refreshNearestStationsButton"
             style="@style/RaisedButton"
@@ -57,7 +73,8 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="8dp"
-            android:text="@string/refresh_nearest_stations" />
+            android:text="@string/refresh_nearest_stations"
+            android:visibility="invisible" />
 
     </LinearLayout>
 
