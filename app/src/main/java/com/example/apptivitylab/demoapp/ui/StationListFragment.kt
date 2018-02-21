@@ -273,4 +273,13 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
 
         return arrangedStationsAndHeadersList
     }
+
+    override fun onStop() {
+        super.onStop()
+
+        if (this.swipeRefreshLayout.isRefreshing) {
+            this.fusedLocationClient.removeLocationUpdates(this.locationCallBack)
+            this.swipeRefreshLayout.isRefreshing = false
+        }
+    }
 }

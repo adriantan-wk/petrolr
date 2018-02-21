@@ -61,7 +61,6 @@ class StationDetailsFragment : Fragment() {
         }
 
         this.nameTextView.text = this.station.stationName
-        this.addressTextView.text = this.station.stationAddress
 
         this.petrolTypesTextView.text = PetrolTypeController.petrolTypeList
                 .filter { petrol -> this.station.stationPetrolTypeIDs.contains(petrol.petrolID) }

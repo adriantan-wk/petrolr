@@ -206,7 +206,6 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
         val station: Station = marker?.tag as Station
 
         view.stationNameTextView.text = station.stationName
-        view.stationAddressTextView.text = station.stationAddress
 
         return view
     }
@@ -256,18 +255,23 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
     private fun assignNearestStations(nearestStations: ArrayList<Station>) {
         nearestStations.clear()
 
-        if (this.preferredStationList.isNotEmpty()) {
-            val distanceArrangedStationList = sortStationListByDistance(preferredStationList)
-            val noOfStations = distanceArrangedStationList.size
+        var distanceArrangedStationList: ArrayList<Station>
 
-            if (noOfStations >= 5) {
-                (0 until 5).forEach { counter ->
-                    nearestStations.add(distanceArrangedStationList[counter])
-                }
-            } else {
-                (0 until noOfStations).forEach { counter ->
-                    nearestStations.add(distanceArrangedStationList[counter])
-                }
+        distanceArrangedStationList = if (this.preferredStationList.isNotEmpty()) {
+            this.sortStationListByDistance(this.preferredStationList)
+        } else {
+            this.sortStationListByDistance(this.filteredStationList)
+        }
+
+        val noOfStations = distanceArrangedStationList.size
+
+        if (noOfStations >= 5) {
+            (0 until 5).forEach { counter ->
+                nearestStations.add(distanceArrangedStationList[counter])
+            }
+        } else {
+            (0 until noOfStations).forEach { counter ->
+                nearestStations.add(distanceArrangedStationList[counter])
             }
         }
     }

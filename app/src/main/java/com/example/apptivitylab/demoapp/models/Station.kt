@@ -18,7 +18,6 @@ class Station() : Parcelable {
     var stationID: String? = null
     var stationLatLng: LatLng? = null
     var stationBrand: String? = null
-    var stationAddress: String? = null
     var stationPetrolTypeIDs: ArrayList<String> = ArrayList()
     var distanceFromUser: Float? = null
 
@@ -29,7 +28,6 @@ class Station() : Parcelable {
         this.stationID = parcel.readString()
         this.stationLatLng = parcel.readParcelable(LatLng::class.java.classLoader)
         this.stationBrand = parcel.readString()
-        this.stationAddress = parcel.readString()
         this.stationPetrolTypeIDs = parcel.readArrayList(String::class.java.classLoader) as ArrayList<String>
     }
 
@@ -41,7 +39,6 @@ class Station() : Parcelable {
         this.stationID = jsonObject.optString("uuid")
         this.stationLatLng = LatLng(jsonObject.optDouble("latitude"), jsonObject.optDouble("longitude"))
         this.stationBrand = jsonObject.optString("company_uuid")
-        this.stationAddress = " "
 
         val petrolIDJsonArray = jsonObject.optJSONArray("petrols_by_station_petrols")
         for (petrolID in 0 until petrolIDJsonArray.length()) {
@@ -62,7 +59,6 @@ class Station() : Parcelable {
         parcel.writeString(this.stationID)
         parcel.writeParcelable(this.stationLatLng, flags)
         parcel.writeString(this.stationBrand)
-        parcel.writeString(this.stationAddress)
         parcel.writeList(this.stationPetrolTypeIDs)
     }
 
