@@ -15,7 +15,6 @@ import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.controllers.PetrolTypeController
 import com.example.apptivitylab.demoapp.controllers.UserController
 import com.example.apptivitylab.demoapp.models.Brand
-import com.example.apptivitylab.demoapp.models.Station
 import com.example.apptivitylab.demoapp.models.User
 import kotlinx.android.synthetic.main.activity_track_nearby.*
 import kotlinx.android.synthetic.main.nav_view_header.view.*
@@ -28,20 +27,17 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
     companion object {
         const val CHANGE_PREFERENCES_REQUEST_CODE = 200
-        const val STATION_LIST_EXTRA = "station_list"
         const val BRAND_LIST_EXTRA = "brand_list"
 
-        fun newLaunchIntent(context: Context, stations: ArrayList<Station>, brands: ArrayList<Brand>): Intent {
+        fun newLaunchIntent(context: Context, brands: ArrayList<Brand>): Intent {
             val intent = Intent(context, TrackNearActivity::class.java)
 
-            intent.putExtra(STATION_LIST_EXTRA, stations)
             intent.putExtra(BRAND_LIST_EXTRA, brands)
 
             return intent
         }
     }
 
-    private lateinit var stations: ArrayList<Station>
     private lateinit var brands: ArrayList<Brand>
     private lateinit var trackNearbyFragment: TrackNearbyFragment
 
@@ -64,10 +60,9 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         navigationViewHeader.navHeaderUserTextView.text = UserController.user.username
         navigationViewHeader.navHeaderEmailTextView.text = UserController.user.email
 
-        this.stations = intent.getParcelableArrayListExtra<Station>(STATION_LIST_EXTRA)
         this.brands = intent.getParcelableArrayListExtra(BRAND_LIST_EXTRA)
 
-        this.trackNearbyFragment = TrackNearbyFragment.newInstance(UserController.user, this.stations, this.brands)
+        this.trackNearbyFragment = TrackNearbyFragment.newInstance(UserController.user, this.brands)
 
         supportFragmentManager
                 .beginTransaction()
@@ -96,7 +91,7 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             }
 
             R.id.nav_station_list -> {
-                val stationListIntent = StationListActivity.newLaunchIntent(this, this.stations, false)
+                val stationListIntent = StationListActivity.newLaunchIntent(this, false)
                 startActivity(stationListIntent)
 
                 this.trackNearDrawerLayout.closeDrawers()

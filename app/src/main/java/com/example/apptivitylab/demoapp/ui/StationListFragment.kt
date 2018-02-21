@@ -17,6 +17,7 @@ import android.widget.Toast
 import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.StationsListAdapter
 import com.example.apptivitylab.demoapp.controllers.BrandController
+import com.example.apptivitylab.demoapp.controllers.StationController
 import com.example.apptivitylab.demoapp.models.Brand
 import com.example.apptivitylab.demoapp.models.Station
 import com.example.apptivitylab.demoapp.models.User
@@ -35,14 +36,12 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
 
     companion object {
         const val USER_EXTRA = "user_object"
-        const val STATION_LIST_EXTRA = "station_list"
 
-        fun newInstance(currentUser: User, stations: ArrayList<Station>): StationListFragment {
+        fun newInstance(currentUser: User): StationListFragment {
             val fragment = StationListFragment()
 
             val args = Bundle()
             args.putParcelable(USER_EXTRA, currentUser)
-            args.putParcelableArrayList(STATION_LIST_EXTRA, stations)
 
             fragment.arguments = args
             return fragment
@@ -70,8 +69,9 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
 
         arguments?.let {
             this.currentUser = it.getParcelable(USER_EXTRA)
-            this.stations = it.getParcelableArrayList(STATION_LIST_EXTRA)
         }
+
+        this.stations = StationController.stationList
 
         this.swipeRefreshLayout.setOnRefreshListener(this)
 
@@ -258,8 +258,8 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
 
         stationsWithCorrectPetrolType.forEach { station ->
             if (userPreferredBrands.any { brand ->
-                brand.brandName == station.stationBrand
-            }) {
+                        brand.brandID == station.stationBrand
+                    }) {
                 preferredStationList.add(station)
             }
         }

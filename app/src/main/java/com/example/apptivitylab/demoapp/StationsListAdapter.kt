@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.apptivitylab.demoapp.R.string.brand
 import com.example.apptivitylab.demoapp.models.Brand
 import com.example.apptivitylab.demoapp.models.Station
 import kotlinx.android.synthetic.main.cell_header.view.*
@@ -57,7 +56,7 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 val station: Station = this.stationsAndHeadersList[position] as Station
 
                 val stationLogo = this.brandList.firstOrNull { brand ->
-                    brand.brandName == station.stationBrand
+                    brand.brandID == station.stationBrand
                 }?.brandLogo
 
                 stationLogo?.let {

@@ -14,6 +14,8 @@ import kotlin.collections.ArrayList
 class PetrolType() : Parcelable {
     var petrolID: String? = null
     var petrolName: String? = null
+    var petrolCreatedAt: Date? = null
+    var petrolUpdatedAt: Date? = null
     var currentPrice: Double = 0.0
     var previousPrices: ArrayList<Double> = ArrayList()
     var priceChangeDates: ArrayList<Date> = ArrayList()
@@ -21,40 +23,45 @@ class PetrolType() : Parcelable {
     constructor(parcel: Parcel) : this() {
         this.petrolID = parcel.readString()
         this.petrolName = parcel.readString()
+        this.petrolCreatedAt = Date(parcel.readLong())
+        this.petrolUpdatedAt = Date(parcel.readLong())
         this.currentPrice = parcel.readDouble()
         this.previousPrices = parcel.readArrayList(Double::class.java.classLoader) as ArrayList<Double>
         this.priceChangeDates = parcel.readArrayList(Date::class.java.classLoader) as ArrayList<Date>
     }
 
     constructor(jsonObject: JSONObject) : this() {
-        this.petrolID = jsonObject.optString("petrol_id")
-        this.petrolName = jsonObject.optString("petrol_name")
+        this.petrolID = jsonObject.optString("uuid")
+        this.petrolName = jsonObject.optString("name")
 
-        val petrolPricesJsonArray = jsonObject.optJSONArray("petrol_previous_prices")
-        for (previousPrice in 0 until petrolPricesJsonArray.length()) {
-            this.previousPrices.add(petrolPricesJsonArray.getDouble(previousPrice))
+        this.petrolCreatedAt = (SimpleDateFormat("yyyy-MM-dd kk:mm:ss").parse(jsonObject.optString("created_at")))
+        this.petrolUpdatedAt = (SimpleDateFormat("yyyy-MM-dd kk:mm:ss").parse(jsonObject.optString("updated_at")))
+
+        val petrolPriceJSONArray = jsonObject.optJSONArray("price_histories_by_petrol_uuid")
+        for (priceObject in 0 until petrolPriceJSONArray.length()) {
+            this.previousPrices.add(petrolPriceJSONArray.getJSONObject(priceObject).optDouble("price_cents") / 100)
+            this.priceChangeDates.add(SimpleDateFormat("yyyy-MM-dd kk:mm:ss").parse(petrolPriceJSONArray.getJSONObject(priceObject).optString("updated_at")))
         }
 
-        val petrolPriceChangeDatesJsonArray = jsonObject.optJSONArray("petrol_price_change_dates")
-        for (changeDate in 0 until petrolPriceChangeDatesJsonArray.length()) {
-            val dateString = petrolPriceChangeDatesJsonArray.getString(changeDate)
-            val dateFormatter = SimpleDateFormat("dd/MM/yyyy")
-
-            this.priceChangeDates.add(dateFormatter.parse(dateString))
+        if (this.previousPrices.isEmpty()) {
+            this.currentPrice = 0.0
+        } else {
+            this.currentPrice = this.previousPrices[0]
         }
-
-        this.currentPrice = this.previousPrices[0]
-    }
-
-    constructor(petrolID: String, petrolName: String, currentPrice: Double) : this() {
-        this.petrolID = petrolID
-        this.petrolName = petrolName
-        this.currentPrice = currentPrice
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(this.petrolID)
         parcel.writeString(this.petrolName)
+
+        this.petrolCreatedAt?.let {
+            parcel.writeLong(it.time)
+        }
+
+        this.petrolUpdatedAt?.let {
+            parcel.writeLong(it.time)
+        }
+
         parcel.writeDouble(this.currentPrice)
         parcel.writeList(this.previousPrices)
         parcel.writeList(this.priceChangeDates)

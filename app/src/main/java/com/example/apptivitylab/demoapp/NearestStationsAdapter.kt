@@ -47,7 +47,7 @@ class NearestStationsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 val station: Station = this.nearestStations[holder.adapterPosition]
 
                 val stationLogoID = this.brandList.firstOrNull { brand ->
-                    brand.brandName == station.stationBrand
+                    brand.brandID == station.stationBrand
                 }?.brandLogo
 
                 stationLogoID?.let {

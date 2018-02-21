@@ -17,6 +17,7 @@ import android.widget.Toast
 import com.example.apptivitylab.demoapp.NearestStationsAdapter
 import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.controllers.BrandController
+import com.example.apptivitylab.demoapp.controllers.StationController
 import com.example.apptivitylab.demoapp.models.Brand
 import com.example.apptivitylab.demoapp.models.PetrolType
 import com.example.apptivitylab.demoapp.models.Station
@@ -41,15 +42,13 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
     companion object {
         val ACCESS_FINE_LOCATION_PERMISSIONS = 100
         const val USER_EXTRA = "user_object"
-        const val STATION_LIST_EXTRA = "station_list"
         const val BRAND_LIST_EXTRA = "brand_list"
 
-        fun newInstance(currentUser: User, stations: ArrayList<Station>, brands: ArrayList<Brand>): TrackNearbyFragment {
+        fun newInstance(currentUser: User, brands: ArrayList<Brand>): TrackNearbyFragment {
             val fragment = TrackNearbyFragment()
 
             val args = Bundle()
             args.putParcelable(USER_EXTRA, currentUser)
-            args.putParcelableArrayList(STATION_LIST_EXTRA, stations)
             args.putParcelableArrayList(BRAND_LIST_EXTRA, brands)
 
             fragment.arguments = args
@@ -81,8 +80,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
         if (savedInstanceState == null) {
             this.setupGoogleMapFragment()
         } else {
-            this.mapFragment = activity!!.supportFragmentManager.
-                    findFragmentById(R.id.mapContainerFrameLayout) as SupportMapFragment
+            this.mapFragment = activity!!.supportFragmentManager.findFragmentById(R.id.mapContainerFrameLayout) as SupportMapFragment
         }
 
         return inflater.inflate(R.layout.fragment_track_nearby, container, false)
@@ -93,9 +91,10 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
 
         arguments?.let {
             this.currentUser = it.getParcelable(USER_EXTRA)
-            this.stationList = it.getParcelableArrayList(STATION_LIST_EXTRA)
             this.brandList = it.getParcelableArrayList(BRAND_LIST_EXTRA)
         }
+
+        this.stationList = StationController.stationList
 
         val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         this.nearestStationsRecyclerView.layoutManager = layoutManager
@@ -119,7 +118,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
     }
 
     override fun onSeeMoreSelected() {
-        val stationListIntent = StationListActivity.newLaunchIntent(this.context!!, this.stationList, true)
+        val stationListIntent = StationListActivity.newLaunchIntent(this.context!!, true)
         startActivity(stationListIntent)
     }
 
@@ -240,10 +239,14 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
                 this.assignNearestStations(this.nearestStations)
 
                 if (!this.isAdapterInitialized) {
-                    this.initializeNearestStationsAdapter()
+                    if (this.nearestStations.isNotEmpty()) {
+                        this.initializeNearestStationsAdapter()
+                    }
                 }
 
-                this.nearestStationsAdapter.updateDataSet(this.nearestStations, this.brandList)
+                if (this.isAdapterInitialized) {
+                    this.nearestStationsAdapter.updateDataSet(this.nearestStations, this.brandList)
+                }
 
                 this.recenterMapCamera()
             }
@@ -355,8 +358,8 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
                 val resizedBitmapImg: Bitmap
 
                 if (currentUser.preferredBrands.any { brand ->
-                    brand.brandName == station.stationBrand
-                }) {
+                            brand.brandID == station.stationBrand
+                        }) {
                     bitmapImg = BitmapFactory.decodeResource(resources, R.drawable.ic_gasstation_marker)
                     resizedBitmapImg = Bitmap.createScaledBitmap(bitmapImg, 100, 100, false)
                     preferredStationList.add(station)
