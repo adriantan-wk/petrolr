@@ -40,7 +40,9 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
         NearestStationsAdapter.SeeMoreViewHolder.onSelectSeeMoreListener {
 
     companion object {
-        val ACCESS_FINE_LOCATION_PERMISSIONS = 100
+        const val MAX_NO_OF_STATIONS_DISPLAYED = 35
+
+        const val ACCESS_FINE_LOCATION_PERMISSIONS = 100
         const val USER_EXTRA = "user_object"
         const val BRAND_LIST_EXTRA = "brand_list"
 
@@ -68,6 +70,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
     private var brandList: ArrayList<Brand> = ArrayList()
     private var stationList: ArrayList<Station> = ArrayList()
     private var filteredStationList: ArrayList<Station> = ArrayList()
+    private var displayedStationList: ArrayList<Station> = ArrayList()
     private var preferredStationList: ArrayList<Station> = ArrayList()
     private var mapOfStationMarkers: HashMap<String, Marker> = HashMap()
 
@@ -104,6 +107,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
         }
 
         this.refreshNearestStationsButton.setOnClickListener {
+            this.clearMapMarkers()
             this.updateUserLocation()
             Toast.makeText(context, getString(R.string.user_location_refreshed), Toast.LENGTH_SHORT).show()
         }
@@ -190,10 +194,22 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
                 }
 
                 this.assignInfoWindowAdapterAndListener(this)
-                this.filteredStationList = filterStationsByPreferredPetrol(this.stationList, this.currentUser)
-                this.generateStationMarkers(filteredStationList)
+                this.filteredStationList = this.filterStationsByPreferredPetrol(this.stationList, this.currentUser)
             }
         }
+    }
+
+    private fun filterStationsByPreferredPetrol(stationList: ArrayList<Station>, currentUser: User): ArrayList<Station> {
+        val stationsWithPreferredPetrolType = ArrayList<Station>()
+        val preferredPetrolType: PetrolType? = currentUser.preferredPetrolType
+
+        stationList.forEach { station ->
+            if (station.stationPetrolTypeIDs.contains(preferredPetrolType?.petrolID)) {
+                stationsWithPreferredPetrolType.add(station)
+            }
+        }
+
+        return stationsWithPreferredPetrolType
     }
 
     override fun getInfoContents(p0: Marker?): View? {
@@ -235,6 +251,9 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
             if (location != null) {
                 this.userLatLng = LatLng(location.latitude, location.longitude)
 
+                this.displayedStationList = this.filterDisplayedStations(this.filteredStationList)
+                this.generateStationMarkers(this.displayedStationList)
+
                 this.assignNearestStations(this.nearestStations)
 
                 if (!this.isAdapterInitialized) {
@@ -252,12 +271,24 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
         }
     }
 
+    private fun filterDisplayedStations(filteredStationList: ArrayList<Station>): ArrayList<Station> {
+        var displayedStationList: ArrayList<Station> = ArrayList()
+
+        val distanceSortedList = this.sortStationListByDistance(filteredStationList)
+
+        if (filteredStationList.size > MAX_NO_OF_STATIONS_DISPLAYED) {
+            displayedStationList.addAll(distanceSortedList.subList(0, MAX_NO_OF_STATIONS_DISPLAYED))
+        } else {
+            displayedStationList.addAll(distanceSortedList)
+        }
+
+        return displayedStationList
+    }
+
     private fun assignNearestStations(nearestStations: ArrayList<Station>) {
         nearestStations.clear()
 
-        var distanceArrangedStationList: ArrayList<Station>
-
-        distanceArrangedStationList = if (this.preferredStationList.isNotEmpty()) {
+        var distanceArrangedStationList: ArrayList<Station> = if (this.preferredStationList.isNotEmpty()) {
             this.sortStationListByDistance(this.preferredStationList)
         } else {
             this.sortStationListByDistance(this.filteredStationList)
@@ -292,13 +323,13 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
         }
     }
 
-    private fun sortStationListByDistance(preferredStationList: ArrayList<Station>): ArrayList<Station> {
-        preferredStationList.forEach { station ->
+    private fun sortStationListByDistance(stationList: ArrayList<Station>): ArrayList<Station> {
+        stationList.forEach { station ->
             station.distanceFromUser = this.calculateUserDistanceToStation(station)
         }
 
         val distanceSortedStationList = ArrayList<Station>()
-        distanceSortedStationList.addAll(preferredStationList)
+        distanceSortedStationList.addAll(stationList)
 
         distanceSortedStationList.sortBy { it.distanceFromUser }
 
@@ -328,33 +359,16 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
         this.currentUser = user
         this.filteredStationList = this.filterStationsByPreferredPetrol(this.stationList, this.currentUser)
 
-        this.mapOfStationMarkers.values.forEach { marker ->
-            marker.remove()
-        }
-        this.mapOfStationMarkers.clear()
-        this.generateStationMarkers(this.filteredStationList)
+        this.clearMapMarkers()
 
         Toast.makeText(context!!, getString(R.string.preferences_updated), Toast.LENGTH_SHORT).show()
         this.updateUserLocation()
     }
 
-    private fun filterStationsByPreferredPetrol(stationList: ArrayList<Station>, currentUser: User): ArrayList<Station> {
-        val stationsWithCorrectPetrolType = ArrayList<Station>()
-        val preferredPetrolType: PetrolType? = currentUser.preferredPetrolType
-
-        stationList.forEach { station ->
-            if (station.stationPetrolTypeIDs.contains(preferredPetrolType?.petrolID)) {
-                stationsWithCorrectPetrolType.add(station)
-            }
-        }
-
-        return stationsWithCorrectPetrolType
-    }
-
-    private fun generateStationMarkers(filteredStationList: ArrayList<Station>) {
+    private fun generateStationMarkers(displayedStationList: ArrayList<Station>) {
         preferredStationList.clear()
 
-        for (station in filteredStationList) {
+        for (station in displayedStationList) {
             station.stationLatLng?.apply {
                 val stationLatLng = LatLng(latitude, longitude)
 
@@ -385,5 +399,12 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
                 }
             }
         }
+    }
+
+    private fun clearMapMarkers() {
+        this.mapOfStationMarkers.values.forEach { marker ->
+            marker.remove()
+        }
+        this.mapOfStationMarkers.clear()
     }
 }
