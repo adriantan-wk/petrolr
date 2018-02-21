@@ -7,6 +7,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.location.Location
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -14,9 +15,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.android.volley.VolleyError
 import com.example.apptivitylab.demoapp.NearestStationsAdapter
 import com.example.apptivitylab.demoapp.R
+import com.example.apptivitylab.demoapp.api.RestAPIClient
 import com.example.apptivitylab.demoapp.controllers.BrandController
+import com.example.apptivitylab.demoapp.controllers.PetrolTypeController
 import com.example.apptivitylab.demoapp.controllers.StationController
 import com.example.apptivitylab.demoapp.models.Brand
 import com.example.apptivitylab.demoapp.models.PetrolType
@@ -37,26 +41,30 @@ import kotlinx.android.synthetic.main.infowindow_station_details.view.*
 
 class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
         NearestStationsAdapter.StationViewHolder.onSelectNearestStationListener,
-        NearestStationsAdapter.SeeMoreViewHolder.onSelectSeeMoreListener {
+        NearestStationsAdapter.SeeMoreViewHolder.onSelectSeeMoreListener,
+        RestAPIClient.OnFullDataReceivedListener {
 
     companion object {
         const val MAX_NO_OF_STATIONS_DISPLAYED = 35
+        const val NO_OF_RESOURCE_SETS = 3
 
         const val ACCESS_FINE_LOCATION_PERMISSIONS = 100
         const val USER_EXTRA = "user_object"
-        const val BRAND_LIST_EXTRA = "brand_list"
+        const val FROM_LOGIN_EXTRA = "from_login"
 
-        fun newInstance(currentUser: User, brands: ArrayList<Brand>): TrackNearbyFragment {
+        fun newInstance(currentUser: User, isFromLogin: Boolean): TrackNearbyFragment {
             val fragment = TrackNearbyFragment()
 
             val args = Bundle()
             args.putParcelable(USER_EXTRA, currentUser)
-            args.putParcelableArrayList(BRAND_LIST_EXTRA, brands)
+            args.putBoolean(FROM_LOGIN_EXTRA, isFromLogin)
 
             fragment.arguments = args
             return fragment
         }
     }
+
+    private var dataResourcesReceived = 0
 
     private var mapFragment: SupportMapFragment? = null
     private var googleMap: GoogleMap? = null
@@ -92,27 +100,86 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        var fromLogin = false
+
         arguments?.let {
             this.currentUser = it.getParcelable(USER_EXTRA)
-            this.brandList = it.getParcelableArrayList(BRAND_LIST_EXTRA)
+            fromLogin = it.getBoolean(FROM_LOGIN_EXTRA)
         }
 
+        this.fusedLocationClient = LocationServices.getFusedLocationProviderClient(context!!)
+
+        if (fromLogin) {
+            this.loadAppData()
+        } else {
+            this.performFragmentStartup()
+        }
+    }
+
+    private fun loadAppData() {
+        this.progressBar.visibility = View.VISIBLE
+        this.progressBarTextView.visibility = View.VISIBLE
+
+        if (BrandController.brandList.isEmpty()) {
+            BrandController.loadBrands(this.context!!, this)
+        } else {
+            this.dataResourcesReceived++
+        }
+
+        if (PetrolTypeController.petrolTypeList.isEmpty()) {
+            PetrolTypeController.loadPetrolTypes(this.context!!, this)
+        } else {
+            this.dataResourcesReceived++
+        }
+
+        StationController.loadStations(this.context!!, this)
+    }
+
+    override fun onFullDataReceived(dataReceived: Boolean, error: VolleyError?) {
+        if (!dataReceived || error != null) {
+            view?.let {
+                this.dataResourcesReceived = 0
+                this.progressBar.visibility = View.GONE
+                this.progressBarTextView.visibility = View.GONE
+
+                Snackbar.make(it, getString(R.string.failed_retrieve_data), Snackbar.LENGTH_INDEFINITE)
+                        .setAction(getString(R.string.retry), View.OnClickListener {
+                            this.loadAppData()
+                        })
+                        .show()
+            }
+        } else {
+            this.dataResourcesReceived++
+
+            if (dataResourcesReceived == NO_OF_RESOURCE_SETS) {
+                this.performFragmentStartup()
+            }
+        }
+    }
+
+    private fun performFragmentStartup() {
         this.stationList = StationController.stationList
+        this.brandList = BrandController.brandList
 
         val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         this.nearestStationsRecyclerView.layoutManager = layoutManager
+
+        this.progressBar.visibility = View.GONE
+        this.progressBarTextView.visibility = View.GONE
+        this.refreshNearestStationsButton.visibility = View.VISIBLE
+        this.recenterCameraButton.visibility = View.VISIBLE
+
+        this.filteredStationList = this.filterStationsByPreferredPetrol(this.stationList, this.currentUser)
+
+        this.updateUserLocation()
 
         this.recenterCameraButton.setOnClickListener {
             this.recenterMapCamera()
         }
 
         this.refreshNearestStationsButton.setOnClickListener {
-            this.clearMapMarkers()
             this.updateUserLocation()
-            Toast.makeText(context, getString(R.string.user_location_refreshed), Toast.LENGTH_SHORT).show()
         }
-
-        this.fusedLocationClient = LocationServices.getFusedLocationProviderClient(context!!)
     }
 
     override fun onNearestStationSelected(station: Station) {
@@ -128,6 +195,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
 
     override fun onStart() {
         super.onStart()
+
 
         this.context?.let {
             if (ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -194,7 +262,6 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
                 }
 
                 this.assignInfoWindowAdapterAndListener(this)
-                this.filteredStationList = this.filterStationsByPreferredPetrol(this.stationList, this.currentUser)
             }
         }
     }
@@ -247,11 +314,14 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
 
     @SuppressLint("MissingPermission")
     private fun updateUserLocation() {
+
         this.fusedLocationClient.lastLocation.addOnSuccessListener { location ->
             if (location != null) {
                 this.userLatLng = LatLng(location.latitude, location.longitude)
 
                 this.displayedStationList = this.filterDisplayedStations(this.filteredStationList)
+
+                this.clearMapMarkers()
                 this.generateStationMarkers(this.displayedStationList)
 
                 this.assignNearestStations(this.nearestStations)
@@ -267,6 +337,8 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
                 }
 
                 this.recenterMapCamera()
+            } else {
+                Toast.makeText(context, getString(R.string.location_update_failed), Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -358,8 +430,6 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
 
         this.currentUser = user
         this.filteredStationList = this.filterStationsByPreferredPetrol(this.stationList, this.currentUser)
-
-        this.clearMapMarkers()
 
         Toast.makeText(context!!, getString(R.string.preferences_updated), Toast.LENGTH_SHORT).show()
         this.updateUserLocation()

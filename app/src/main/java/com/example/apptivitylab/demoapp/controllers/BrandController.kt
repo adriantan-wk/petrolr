@@ -48,6 +48,7 @@ object BrandController {
 
     fun loadBrands(context: Context, onFullDataReceivedListener: RestAPIClient.OnFullDataReceivedListener) {
         val path = "/data/companies"
+        this.brandList.clear()
 
         RestAPIClient.shared(context).getResources(path, null,
                 object : RestAPIClient.OnGetResourceCompletedListener {

@@ -16,7 +16,7 @@ import java.io.InputStreamReader
  */
 
 object PetrolTypeController {
-    lateinit var petrolTypeList: ArrayList<PetrolType>
+    var petrolTypeList: ArrayList<PetrolType> = ArrayList()
 
     fun loadMockPetrolTypes(context: Context) {
         val petrolTypeList: ArrayList<PetrolType> = ArrayList()
@@ -39,6 +39,7 @@ object PetrolTypeController {
 
     fun loadPetrolTypes(context: Context, onFullDataReceivedListener: RestAPIClient.OnFullDataReceivedListener) {
         val path = "data/petrols?related=price_histories_by_petrol_uuid"
+        this.petrolTypeList.clear()
 
         RestAPIClient.shared(context).getResources(path, null,
                 object : RestAPIClient.OnGetResourceCompletedListener {

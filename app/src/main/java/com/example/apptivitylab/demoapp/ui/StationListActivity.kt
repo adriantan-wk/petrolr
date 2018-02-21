@@ -12,7 +12,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.example.apptivitylab.demoapp.R
-import com.example.apptivitylab.demoapp.controllers.BrandController
 import com.example.apptivitylab.demoapp.controllers.PetrolTypeController
 import com.example.apptivitylab.demoapp.controllers.StationController
 import com.example.apptivitylab.demoapp.controllers.UserController
@@ -96,7 +95,7 @@ class StationListActivity : AppCompatActivity(), NavigationView.OnNavigationItem
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.nav_track_nearby -> {
-                val trackNearIntent = TrackNearActivity.newLaunchIntent(this, BrandController.brandList)
+                val trackNearIntent = TrackNearActivity.newLaunchIntent(this, false)
                         .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(trackNearIntent)
 
