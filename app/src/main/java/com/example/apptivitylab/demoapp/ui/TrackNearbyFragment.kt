@@ -200,16 +200,16 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
     }
 
     private fun filterStationsByPreferredPetrol(stationList: ArrayList<Station>, currentUser: User): ArrayList<Station> {
-        val stationsWithCorrectPetrolType = ArrayList<Station>()
+        val stationsWithPreferredPetrolType = ArrayList<Station>()
         val preferredPetrolType: PetrolType? = currentUser.preferredPetrolType
 
         stationList.forEach { station ->
             if (station.stationPetrolTypeIDs.contains(preferredPetrolType?.petrolID)) {
-                stationsWithCorrectPetrolType.add(station)
+                stationsWithPreferredPetrolType.add(station)
             }
         }
 
-        return stationsWithCorrectPetrolType
+        return stationsWithPreferredPetrolType
     }
 
     override fun getInfoContents(p0: Marker?): View? {
