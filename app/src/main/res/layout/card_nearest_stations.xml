@@ -30,9 +30,10 @@
             android:id="@+id/nearestStationName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="4dp"
             android:ellipsize="end"
-            android:maxLines="1"
+            android:gravity="center"
+            android:lines="2"
             android:textAlignment="center"
             android:textColor="@color/colorAccent"
             android:textSize="12sp"
@@ -44,7 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"
-            android:textSize="12sp"
+            android:textSize="14sp"
             tools:text="16.5" />
 
         <TextView
