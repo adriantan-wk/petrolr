@@ -18,6 +18,7 @@ import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.api.RestAPIClient
 import com.example.apptivitylab.demoapp.controllers.UserController
 import com.example.apptivitylab.demoapp.models.User
+import kotlinx.android.synthetic.main.dialog_loading.*
 import kotlinx.android.synthetic.main.fragment_login.*
 import org.json.JSONObject
 import java.net.SocketException
@@ -67,8 +68,6 @@ class LoginFragment : Fragment(), RestAPIClient.OnVerificationCompletedListener 
             val inputMethodManager = this.context!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
 
-            this.showLoadingDialog()
-
             if (this.usernameEditText.isEmpty() || this.passwordEditText.isEmpty()) {
                 this.messageTextView.text = getString(R.string.username_or_password_empty_message)
             } else {
@@ -92,10 +91,12 @@ class LoginFragment : Fragment(), RestAPIClient.OnVerificationCompletedListener 
         val username = usernameEditText.text.toString()
         val password = passwordEditText.text.toString()
 
-        var jsonRequest: JSONObject = JSONObject()
+        var jsonRequest = JSONObject()
         jsonRequest.put("identifier", username)
         jsonRequest.put("challenge", password)
         jsonRequest.put("type", "userpass")
+
+        this.showLoadingDialog()
 
         RestAPIClient.shared(this.context!!).postResources(VERIFY_PATH, jsonRequest,
                 object : RestAPIClient.OnPostResponseReceivedListener {
@@ -181,6 +182,7 @@ class LoginFragment : Fragment(), RestAPIClient.OnVerificationCompletedListener 
             this.loadingDialog?.let {
                 it.setContentView(R.layout.dialog_loading)
                 it.window.setBackgroundDrawableResource(android.R.color.transparent)
+                it.progressBarTextView.text = getString(R.string.logging_in)
                 it.show()
             }
         } else {
