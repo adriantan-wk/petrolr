@@ -19,20 +19,11 @@ import kotlinx.android.synthetic.main.fragment_forgot_password.*
 class ForgotPasswordFragment : Fragment() {
 
     companion object {
-        const val USER_LIST_EXTRA = "user_list"
-
-        fun newInstance(userList: ArrayList<User>): ForgotPasswordFragment {
-            val fragment = ForgotPasswordFragment()
-
-            val args: Bundle = Bundle()
-            args.putParcelableArrayList(USER_LIST_EXTRA, userList)
-
-            fragment.arguments = args
-            return fragment
+        fun newInstance(): ForgotPasswordFragment {
+            return ForgotPasswordFragment()
         }
     }
 
-    private var userList: ArrayList<User> = ArrayList()
     private var user: User? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -41,10 +32,6 @@ class ForgotPasswordFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        this.arguments?.let {
-            this.userList = it.getParcelableArrayList(USER_LIST_EXTRA)
-        }
 
         this.okButton.setOnClickListener {
             this.usernameTextInputLayout.error = ""
@@ -63,9 +50,9 @@ class ForgotPasswordFragment : Fragment() {
             this.usernameTextInputLayout.error = getString(R.string.enter_username)
             false
         } else {
-            val user = this.userList.firstOrNull { user ->
-                user.username == username
-            }
+//            val user = this.userList.firstOrNull { user ->
+//                user.username == username
+//            }
 
             if (user == null) {
                 this.usernameTextInputLayout.error = getString(R.string.no_such_username)

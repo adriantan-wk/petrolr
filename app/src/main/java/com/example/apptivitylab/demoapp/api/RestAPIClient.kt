@@ -17,7 +17,8 @@ class RestAPIClient(val context: Context) {
     private var requestQueue: RequestQueue = Volley.newRequestQueue(this.context)
 
     companion object {
-        val BASE_URL = "https://kong-gateway.apptivitylab.com/euro5-api-dev/v1"
+        const val BASE_URL = "https://kong-gateway.apptivitylab.com/euro5-api-dev/v1"
+        const val CONTENT_TYPE = "application/json; charset=utf-8"
 
         private var singleton: RestAPIClient? = null
 
@@ -30,6 +31,14 @@ class RestAPIClient(val context: Context) {
         }
     }
 
+    interface OnPostResponseReceivedListener {
+        fun onPostResponseReceived(jsonObject: JSONObject?, error: VolleyError?)
+    }
+
+    interface OnVerificationCompletedListener {
+        fun onVerificationCompleted(resultCode: Int)
+    }
+
     interface OnGetResourceCompletedListener {
         fun onComplete(jsonObject: JSONObject?, error: VolleyError?)
     }
@@ -40,6 +49,25 @@ class RestAPIClient(val context: Context) {
 
     interface OnFullDataReceivedListener {
         fun onFullDataReceived(dataReceived: Boolean, error: VolleyError?)
+    }
+
+    fun postResources(path: String, jsonRequest: JSONObject, responseReceivedListener: OnPostResponseReceivedListener) {
+
+        val request = Euro5JsonObjectRequest(Request.Method.POST,
+                BASE_URL + path, jsonRequest,
+                object : Response.Listener<JSONObject> {
+                    override fun onResponse(response: JSONObject?) {
+                        responseReceivedListener.onPostResponseReceived(response, null)
+                    }
+                }, object : Response.ErrorListener {
+            override fun onErrorResponse(error: VolleyError?) {
+                responseReceivedListener.onPostResponseReceived(null, error)
+            }
+        })
+
+        request.putHeader("Content-Type", CONTENT_TYPE)
+
+        this.requestQueue.add(request)
     }
 
     fun getResources(path: String, limit: Int?, completionListener: OnGetResourceCompletedListener) {

@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.models.User
 import kotlinx.android.synthetic.main.fragment_register.*
@@ -17,20 +16,12 @@ import kotlinx.android.synthetic.main.fragment_register.*
 class RegisterFragment : Fragment() {
 
     companion object {
-        const val USER_LIST_EXTRA = "user_list"
 
-        fun newInstance(userList: ArrayList<User>): RegisterFragment {
-            val fragment = RegisterFragment()
-
-            val args: Bundle = Bundle()
-            args.putParcelableArrayList(USER_LIST_EXTRA, userList)
-
-            fragment.arguments = args
-            return fragment
+        fun newInstance(): RegisterFragment {
+            return RegisterFragment()
         }
     }
 
-    var userList: ArrayList<User> = ArrayList()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_register, container, false)
@@ -39,12 +30,8 @@ class RegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        this.arguments?.let {
-            this.userList = it.getParcelableArrayList(USER_LIST_EXTRA)
-        }
-
         this.registerBtn.setOnClickListener({
-            this.validateRegistration()
+//            this.validateRegistration()
         })
 
         this.loginLink.setOnClickListener {
@@ -55,36 +42,36 @@ class RegisterFragment : Fragment() {
         }
     }
 
-    private fun validateRegistration() {
-        if (!this.isEmptyFieldsFound()) {
-            val username = this.usernameEditText.text.toString()
-            val email = this.emailEditText.text.toString()
-            val password = this.passwordEditText.text.toString()
-            val confirmPassword = this.confirmPassEditText.text.toString()
-
-            if (this.usernameExists(username)) {
-                this.usernameTextInputLayout.error = getString(R.string.username_exists)
-            } else {
-                if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    if (password == confirmPassword) {
-                        val titleActivity = this.activity as TitleActivity
-                        titleActivity.registerNewUser(this.createNewUser(username, email, password))
-
-                        Toast.makeText(this.context!!, getString(R.string.registration_successful), Toast.LENGTH_SHORT).show()
-                        this.activity?.let {
-                            it.supportFragmentManager
-                                    .popBackStackImmediate()
-                        }
-                    } else {
-                        this.passwordTextInputLayout.error = getString(R.string.password_and_confirm_must_match)
-                        this.confirmPasswordTextInputLayout.error = getString(R.string.password_and_confirm_must_match)
-                    }
-                } else {
-                    this.emailTextInputLayout.error = getString(R.string.invalid_email_address)
-                }
-            }
-        }
-    }
+//    private fun validateRegistration() {
+//        if (!this.isEmptyFieldsFound()) {
+//            val username = this.usernameEditText.text.toString()
+//            val email = this.emailEditText.text.toString()
+//            val password = this.passwordEditText.text.toString()
+//            val confirmPassword = this.confirmPassEditText.text.toString()
+//
+//            if (this.usernameExists(username)) {
+//                this.usernameTextInputLayout.error = getString(R.string.username_exists)
+//            } else {
+//                if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+//                    if (password == confirmPassword) {
+//                        val titleActivity = this.activity as TitleActivity
+//                        //titleActivity.registerNewUser(this.createNewUser(username, email, password))
+//
+//                        Toast.makeText(this.context!!, getString(R.string.registration_successful), Toast.LENGTH_SHORT).show()
+//                        this.activity?.let {
+//                            it.supportFragmentManager
+//                                    .popBackStackImmediate()
+//                        }
+//                    } else {
+//                        this.passwordTextInputLayout.error = getString(R.string.password_and_confirm_must_match)
+//                        this.confirmPasswordTextInputLayout.error = getString(R.string.password_and_confirm_must_match)
+//                    }
+//                } else {
+//                    this.emailTextInputLayout.error = getString(R.string.invalid_email_address)
+//                }
+//            }
+//        }
+//    }
 
     private fun isEmptyFieldsFound(): Boolean {
         this.usernameTextInputLayout.error = null
@@ -96,13 +83,13 @@ class RegisterFragment : Fragment() {
                 || this.passwordTextInputLayout.isEmpty() || this.confirmPasswordTextInputLayout.isEmpty()
     }
 
-    private fun usernameExists(username: String): Boolean {
-        val user = this.userList.firstOrNull { user ->
-            user.username == username
-        }
-
-        return user != null
-    }
+//    private fun usernameExists(username: String): Boolean {
+//        val user = this.userList.firstOrNull { user ->
+//            user.username == username
+//        }
+//
+//        return user != null
+//    }
 
     private fun createNewUser(username: String, email: String, password: String): User {
         val user = User()

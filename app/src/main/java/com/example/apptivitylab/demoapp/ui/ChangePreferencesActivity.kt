@@ -10,6 +10,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import com.example.apptivitylab.demoapp.R
+import com.example.apptivitylab.demoapp.controllers.UserController
 import com.example.apptivitylab.demoapp.models.User
 import kotlinx.android.synthetic.main.activity_blank_toolbar.*
 import kotlinx.android.synthetic.main.dialog_welcome.view.*
@@ -21,13 +22,11 @@ import kotlinx.android.synthetic.main.dialog_welcome.view.*
 class ChangePreferencesActivity : AppCompatActivity() {
 
     companion object {
-        const val USER_EXTRA = "user_object"
         const val NEW_USER_BOOLEAN_EXTRA = "new_user_boolean"
 
-        fun newLaunchIntent(context: Context, currentUser: User, isNewUser: Boolean): Intent {
+        fun newLaunchIntent(context: Context, isNewUser: Boolean): Intent {
             val intent = Intent(context, ChangePreferencesActivity::class.java)
 
-            intent.putExtra(USER_EXTRA, currentUser)
             intent.putExtra(NEW_USER_BOOLEAN_EXTRA, isNewUser)
 
             return intent
@@ -66,7 +65,7 @@ class ChangePreferencesActivity : AppCompatActivity() {
 
         this.supportActionBar?.title = supportActionBarTitle
 
-        this.currentUser = intent.getParcelableExtra<User>(USER_EXTRA)
+        this.currentUser = UserController.user
 
         this.changePreferencesFragment = ChangePreferencesFragment.newInstance(this.currentUser, this.isNewUser)
 
