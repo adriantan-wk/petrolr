@@ -116,7 +116,7 @@ class StationListActivity : AppCompatActivity(), NavigationView.OnNavigationItem
             }
 
             R.id.nav_preferences -> {
-                val preferencesIntent = ChangePreferencesActivity.newLaunchIntent(this, UserController.user, false)
+                val preferencesIntent = ChangePreferencesActivity.newLaunchIntent(this, false)
                 startActivityForResult(preferencesIntent, CHANGE_PREFERENCES_REQUEST_CODE)
 
                 true

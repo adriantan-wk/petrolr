@@ -108,4 +108,6 @@
     <string name="stations_loading">Loading Stations…</string>
     <string name="retry">Retry</string>
     <string name="location_update_failed">Location Update Failed. Please make sure your GPS is enabled.</string>
+    <string name="error_communicating">Error communicating with login server. Please check your Internet connection.</string>
+    <string name="logging_in">Logging in…</string>
 </resources>

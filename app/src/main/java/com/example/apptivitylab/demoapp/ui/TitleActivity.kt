@@ -3,8 +3,6 @@ package com.example.apptivitylab.demoapp.ui
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.example.apptivitylab.demoapp.R
-import com.example.apptivitylab.demoapp.controllers.UserListController
-import com.example.apptivitylab.demoapp.models.User
 
 class TitleActivity : AppCompatActivity() {
 
@@ -14,24 +12,11 @@ class TitleActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_title)
 
-        this.loadUserMockData()
-
-        this.loginFragment = LoginFragment.newInstance(UserListController.allUserList)
+        this.loginFragment = LoginFragment.newInstance()
 
         this.supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.titleContainer, loginFragment)
                 .commit()
-    }
-
-    private fun loadUserMockData() {
-        if (UserListController.performMockDataLoad) {
-            UserListController.loadMockUsers(this)
-        }
-    }
-
-    fun registerNewUser(user: User) {
-        UserListController.addNewUser(user)
-        this.loginFragment.refreshUserList(UserListController.allUserList)
     }
 }
