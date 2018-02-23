@@ -112,4 +112,7 @@
     <string name="logging_in">Logging in…</string>
     <string name="invalid_phone_no">Invalid Phone Number</string>
     <string name="registering">Registering…</string>
+    <string name="unavailable">Unavailable</string>
+    <string name="account_created_on">Account Created On</string>
+    <string name="phone_no">Phone Number</string>
 </resources>

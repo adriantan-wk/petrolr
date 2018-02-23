@@ -53,7 +53,7 @@ class ForgotPasswordFragment : Fragment() {
         val layoutInflater: LayoutInflater = LayoutInflater.from(this.context)
         val dialogView = layoutInflater.inflate(R.layout.dialog_password, null)
 
-        dialogView.passwordTextView.text = "This doesn't work :P"
+        dialogView.passwordTextView.text = getString(R.string.unavailable)
 
         val passwordDialog = AlertDialog.Builder(this.context!!)
                 .setView(dialogView)
