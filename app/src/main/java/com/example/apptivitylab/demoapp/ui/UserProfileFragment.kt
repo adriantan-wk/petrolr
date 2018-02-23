@@ -50,7 +50,7 @@ class UserProfileFragment: Fragment() {
     private fun updateUserProfileDetails(user: User) {
         this.usernameTextView.text = user.username
         this.emailTextView.text = user.email
-        this.phoneNoTextView.text = user.phoneNo
+        this.phoneNumberTextView.text = user.phoneNo
 
         this.createdOnTextView.text = SimpleDateFormat("dd MMMM yyyy").format(user.userCreatedAt)
     }
