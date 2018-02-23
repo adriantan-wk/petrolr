@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.models.User
-import kotlinx.android.synthetic.main.activity_petrol_price_history.*
+import kotlinx.android.synthetic.main.activity_gradient_toolbar.*
 
 /**
  * Created by ApptivityLab on 23/02/2018.
@@ -29,13 +29,13 @@ class UserProfileActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_petrol_price_history)
+        setContentView(R.layout.activity_gradient_toolbar)
 
-        setSupportActionBar(this.priceHistoryToolbar)
+        setSupportActionBar(this.toolbar)
         this.supportActionBar?.title = ""
 
-        this.priceHistoryToolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_material)
-        this.priceHistoryToolbar.setNavigationOnClickListener({
+        this.toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_material)
+        this.toolbar.setNavigationOnClickListener({
             finish()
         })
 
