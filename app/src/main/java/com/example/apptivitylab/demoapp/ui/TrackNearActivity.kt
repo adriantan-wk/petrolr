@@ -58,6 +58,10 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         navigationViewHeader.navHeaderUserTextView.text = UserController.user.username
         navigationViewHeader.navHeaderEmailTextView.text = UserController.user.email
 
+        navigationViewHeader.setOnClickListener {
+            startActivity(UserProfileActivity.newLaunchIntent(this, UserController.user))
+        }
+
         val isFromLogin = intent.getBooleanExtra(FROM_LOGIN_EXTRA, false)
 
         this.trackNearbyFragment = TrackNearbyFragment.newInstance(UserController.user, isFromLogin)

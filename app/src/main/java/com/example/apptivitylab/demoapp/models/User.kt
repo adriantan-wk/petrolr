@@ -36,6 +36,7 @@ class User() : Parcelable {
         this.username = jsonObject.optString("name")
         this.password = jsonObject.optString("password")
         this.email = jsonObject.optString("email")
+        this.phoneNo = jsonObject.optString("phone")
         this.userCreatedAt = (SimpleDateFormat("yyyy-MM-dd kk:mm:ss").parse(jsonObject.optString("created_at")))
 
         val petrolType = jsonObject.optJSONObject("preferred_petrol_type")

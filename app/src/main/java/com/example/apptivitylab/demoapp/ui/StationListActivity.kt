@@ -69,6 +69,10 @@ class StationListActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         navigationViewHeader.navHeaderUserTextView.text = UserController.user.username
         navigationViewHeader.navHeaderEmailTextView.text = UserController.user.email
 
+        navigationViewHeader.setOnClickListener {
+            startActivity(UserProfileActivity.newLaunchIntent(this, UserController.user))
+        }
+
         this.stationList = StationController.stationList
 
         this.stationListFragment = StationListFragment.newInstance(UserController.user)

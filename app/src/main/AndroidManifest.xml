@@ -25,6 +25,7 @@
         <activity android:name=".ui.StationDetailsActivity"/>
         <activity android:name=".ui.ChangePreferencesActivity"/>
         <activity android:name=".ui.PetrolPriceHistoryActivity"/>
+        <activity android:name=".ui.UserProfileActivity"/>
 
         <meta-data
             android:name="com.google.android.gms.version"
