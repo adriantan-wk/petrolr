@@ -115,4 +115,7 @@
     <string name="unavailable">Unavailable</string>
     <string name="account_created_on">Account Created On</string>
     <string name="phone_no">Phone Number</string>
+    <string name="go_to">Go to:</string>
+    <string name="no_preferred_stations">There are no preferred stations</string>
+    <string name="no_non_preferred_stations">There are no non-preferred stations</string>
 </resources>
