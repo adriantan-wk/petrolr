@@ -10,26 +10,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="16dp">
-
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/ic_petrolr_logo" />
-
-        <TextView
-            style="@style/TitleText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:text="@string/register" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|center_vertical"
         android:orientation="vertical">
 
@@ -65,6 +45,24 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/email"
                 android:inputType="text"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/phoneNoTextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:errorEnabled="true"
+            app:errorTextAppearance="@style/TextInputLayoutErrorMessage"
+            app:hintTextAppearance="@style/TextInputLayoutHintMessage">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/phoneNoEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/phone_no"
+                android:inputType="number"
                 android:maxLines="1" />
 
         </android.support.design.widget.TextInputLayout>
@@ -106,37 +104,39 @@
 
         </android.support.design.widget.TextInputLayout>
 
-        <Button
-            android:id="@+id/registerBtn"
-            style="@style/RaisedButton"
-            android:layout_width="match_parent"
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/registerBtn"
+        style="@style/RaisedButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:text="@string/register" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="8dp"
-            android:text="@string/register" />
+            android:text="@string/have_account"
+            android:textColor="@android:color/black" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/loginLink"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:gravity="center">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/have_account"
-                android:textColor="@android:color/black" />
-
-            <TextView
-                android:id="@+id/loginLink"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:clickable="true"
-                android:text="@string/login"
-                android:textColor="@color/colorLink" />
-
-        </LinearLayout>
+            android:layout_marginLeft="8dp"
+            android:focusable="true"
+            android:text="@string/login"
+            android:textColor="@color/colorLink" />
 
     </LinearLayout>
+
 </LinearLayout>

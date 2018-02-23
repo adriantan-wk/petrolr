@@ -52,7 +52,6 @@ class RestAPIClient(val context: Context) {
     }
 
     fun postResources(path: String, jsonRequest: JSONObject, responseReceivedListener: OnPostResponseReceivedListener) {
-
         val request = Euro5JsonObjectRequest(Request.Method.POST,
                 BASE_URL + path, jsonRequest,
                 object : Response.Listener<JSONObject> {
