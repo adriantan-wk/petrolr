@@ -18,34 +18,6 @@ import java.io.InputStreamReader
 object BrandController {
     var brandList: ArrayList<Brand> = ArrayList()
 
-    fun loadMockBrands(context: Context) {
-        val brandList: ArrayList<Brand> = ArrayList()
-        val inputStream: InputStream = context.resources.openRawResource(R.raw.brands)
-        val reader = BufferedReader(InputStreamReader(inputStream))
-        var jsonObject: JSONObject
-        var brand: Brand
-
-        val fileContent = reader.readText()
-        jsonObject = JSONObject(fileContent.substring(fileContent.indexOf("{"), fileContent.lastIndexOf("}") + 1))
-        val jsonArray: JSONArray = jsonObject.optJSONArray("brands")
-
-        for (pt in 0 until jsonArray.length()) {
-            brand = Brand(jsonArray.getJSONObject(pt))
-
-            brand.brandLogo = when (brand.brandID) {
-                "SHEL" -> R.drawable.ic_shell
-                "BRPE" -> R.drawable.ic_bp
-                "PTNS" -> R.drawable.ic_petronas
-                "PTRN" -> R.drawable.ic_petron
-                else -> 0
-            }
-
-            brandList.add(brand)
-        }
-
-        this.brandList = brandList
-    }
-
     fun loadBrands(context: Context, onFullDataReceivedListener: RestAPIClient.OnFullDataReceivedListener) {
         val path = "/data/companies"
         this.brandList.clear()
