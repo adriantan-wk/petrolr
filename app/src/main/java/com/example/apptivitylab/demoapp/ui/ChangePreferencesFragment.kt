@@ -26,6 +26,9 @@ import kotlinx.android.synthetic.main.cell_brand.view.*
 import kotlinx.android.synthetic.main.dialog_change_preferred_brands.view.*
 import kotlinx.android.synthetic.main.dialog_change_preferred_petrol.view.*
 import kotlinx.android.synthetic.main.fragment_change_preferences.*
+import org.json.JSONArray
+import org.json.JSONObject
+import java.io.OutputStreamWriter
 
 /**
  * Created by ApptivityLab on 19/01/2018.
@@ -236,8 +239,8 @@ class ChangePreferencesFragment : Fragment(), RestAPIClient.OnFullDataReceivedLi
                     .map { brandCheckBoxesLinearLayout.getChildAt(it) as CheckBox }
                     .forEach {
                         if (preferredBrands.any { brand ->
-                            it.text == brand.brandName
-                        }) {
+                                    it.text == brand.brandName
+                                }) {
                             it.isChecked = true
                         }
                     }
@@ -286,6 +289,10 @@ class ChangePreferencesFragment : Fragment(), RestAPIClient.OnFullDataReceivedLi
                                 currentUser.preferredPetrolType = this.preferredPetrolType
                                 currentUser.preferredBrands = this.preferredBrands
 
+                                this.preferredPetrolType?.let {
+                                    this.writePreferencesToFile(currentUser, it, this.preferredBrands)
+                                }
+
                                 this.changePreferencesActivity.unsavedChangesMade = false
 
                                 val intent = Intent()
@@ -303,6 +310,23 @@ class ChangePreferencesFragment : Fragment(), RestAPIClient.OnFullDataReceivedLi
                     .setPositiveButton(R.string.ok, null)
                     .show()
         }
+    }
+
+    private fun writePreferencesToFile(currentUser: User, preferredPetrolType: PetrolType, preferredBrands: ArrayList<Brand>) {
+        val fileName = currentUser.username + ".json"
+        var jsonObject = JSONObject()
+        jsonObject.put("preferred_petrol_type", preferredPetrolType.petrolID)
+
+        val jsonArray = JSONArray()
+        preferredBrands.forEach { brand ->
+            jsonArray.put(brand.brandID)
+        }
+        jsonObject.put("preferred_brands", jsonArray)
+
+        val file = OutputStreamWriter(this.context!!.applicationContext.openFileOutput(fileName, Activity.MODE_PRIVATE))
+        file.write(jsonObject.toString())
+        file.flush()
+        file.close()
     }
 
     private fun isPreferenceValid(petrolOrBrands: String, viewGroup: View): Boolean {

@@ -50,6 +50,10 @@ class PetrolType() : Parcelable {
         }
     }
 
+    constructor(petrolID: String) : this() {
+        this.petrolID = petrolID
+    }
+
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(this.petrolID)
         parcel.writeString(this.petrolName)

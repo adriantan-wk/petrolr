@@ -152,6 +152,10 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
             this.dataResourcesReceived++
 
             if (dataResourcesReceived == NO_OF_RESOURCE_SETS) {
+                if (this.currentUser.preferredPetrolType?.petrolName == null) {
+                    this.currentUser.assignUserPreferences()
+                }
+
                 this.performFragmentStartup()
             }
         }

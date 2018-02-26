@@ -17,10 +17,14 @@ import com.android.volley.VolleyError
 import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.api.RestAPIClient
 import com.example.apptivitylab.demoapp.controllers.UserController
+import com.example.apptivitylab.demoapp.models.Brand
+import com.example.apptivitylab.demoapp.models.PetrolType
 import com.example.apptivitylab.demoapp.models.User
 import kotlinx.android.synthetic.main.dialog_loading.*
 import kotlinx.android.synthetic.main.fragment_login.*
 import org.json.JSONObject
+import java.io.BufferedReader
+import java.io.InputStreamReader
 import java.net.SocketException
 
 /**
@@ -111,6 +115,7 @@ class LoginFragment : Fragment(), RestAPIClient.OnVerificationCompletedListener 
                             if (jsonObject.has("success") && jsonObject.optString("success") == "true") {
                                 val user = User(jsonObject.optJSONObject("profile"))
                                 UserController.setCurrentUser(user)
+                                this@LoginFragment.assignUserPreferences(UserController.user)
 
                                 if (UserController.user.preferredPetrolType == null || UserController.user.preferredBrands.isEmpty()) {
                                     onVerificationCompletedListener.onVerificationCompleted(NEW_USER)
@@ -155,6 +160,31 @@ class LoginFragment : Fragment(), RestAPIClient.OnVerificationCompletedListener 
             EXISTING_USER -> {
                 val randomIntent = TrackNearActivity.newLaunchIntent(this.context!!, true)
                 startActivity(randomIntent)
+            }
+        }
+    }
+
+    private fun assignUserPreferences(currentUser: User) {
+        val fileName = currentUser.username + ".json"
+
+        if (this.context!!.applicationContext.fileList().contains(fileName)) {
+            val file = InputStreamReader(this.context!!.applicationContext.openFileInput(currentUser.username + ".json"))
+            val br = BufferedReader(file)
+            var line = br.readLine()
+            val all = StringBuilder()
+            while (line != null) {
+                all.append(line + "\n")
+                line = br.readLine()
+            }
+            br.close()
+            file.close()
+
+            val jsonObject = JSONObject(all.toString())
+            var jsonArray = jsonObject.optJSONArray("preferred_brands")
+
+            currentUser.preferredPetrolType = PetrolType(jsonObject.optString("preferred_petrol_type"))
+            (0 until jsonArray.length()).forEach { brandID ->
+                currentUser.preferredBrands.add(Brand(jsonArray.getString(brandID)))
             }
         }
     }

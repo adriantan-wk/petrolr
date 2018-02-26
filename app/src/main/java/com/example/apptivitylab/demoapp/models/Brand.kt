@@ -47,6 +47,10 @@ class Brand() : Parcelable {
         this.brandWebsite = jsonObject.optString("website")
     }
 
+    constructor(brandID: String) : this() {
+        this.brandID = brandID
+    }
+
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(this.brandID)
         parcel.writeString(this.brandName)
