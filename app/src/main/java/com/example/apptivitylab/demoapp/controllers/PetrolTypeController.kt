@@ -18,25 +18,6 @@ import java.io.InputStreamReader
 object PetrolTypeController {
     var petrolTypeList: ArrayList<PetrolType> = ArrayList()
 
-    fun loadMockPetrolTypes(context: Context) {
-        val petrolTypeList: ArrayList<PetrolType> = ArrayList()
-        val inputStream: InputStream = context.resources.openRawResource(R.raw.petroltypes)
-        val reader = BufferedReader(InputStreamReader(inputStream))
-        var jsonObject: JSONObject
-        var petrolType: PetrolType
-
-        val fileContent = reader.readText()
-        jsonObject = JSONObject(fileContent.substring(fileContent.indexOf("{"), fileContent.lastIndexOf("}") + 1))
-        val jsonArray: JSONArray = jsonObject.optJSONArray("petrol_types")
-
-        for (pt in 0 until jsonArray.length()) {
-            petrolType = PetrolType(jsonArray.getJSONObject(pt))
-            petrolTypeList.add(petrolType)
-        }
-
-        this.petrolTypeList = petrolTypeList
-    }
-
     fun loadPetrolTypes(context: Context, onFullDataReceivedListener: RestAPIClient.OnFullDataReceivedListener) {
         val path = "data/petrols?related=price_histories_by_petrol_uuid"
         this.petrolTypeList.clear()

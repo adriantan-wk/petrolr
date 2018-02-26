@@ -18,25 +18,6 @@ import java.io.InputStreamReader
 object StationController {
     var stationList: ArrayList<Station> = ArrayList()
 
-    fun loadMockStations(context: Context) {
-        val stationList: ArrayList<Station> = ArrayList()
-        val inputStream: InputStream = context.resources.openRawResource(R.raw.stations)
-        val reader = BufferedReader(InputStreamReader(inputStream))
-        var jsonObject: JSONObject
-        var station: Station
-
-        val fileContent = reader.readText()
-        jsonObject = JSONObject(fileContent.substring(fileContent.indexOf("{"), fileContent.lastIndexOf("}") + 1))
-        val jsonArray: JSONArray = jsonObject.optJSONArray("stations")
-
-        for (s in 0 until jsonArray.length()) {
-            station = Station(jsonArray.getJSONObject(s))
-            stationList.add(station)
-        }
-
-        this.stationList = stationList
-    }
-
     fun loadStations(context: Context, onFullDataReceivedListener: RestAPIClient.OnFullDataReceivedListener) {
         val path = "data/stations?related=petrols_by_station_petrols"
         this.stationList.clear()
