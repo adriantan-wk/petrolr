@@ -2,9 +2,12 @@ package com.example.apptivitylab.demoapp.models
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.example.apptivitylab.demoapp.controllers.BrandController
+import com.example.apptivitylab.demoapp.controllers.PetrolTypeController
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Created by ApptivityLab on 12/01/2018.
@@ -38,17 +41,26 @@ class User() : Parcelable {
         this.email = jsonObject.optString("email")
         this.phoneNo = jsonObject.optString("phone")
         this.userCreatedAt = (SimpleDateFormat("yyyy-MM-dd kk:mm:ss").parse(jsonObject.optString("created_at")))
+    }
 
-        val petrolType = jsonObject.optJSONObject("preferred_petrol_type")
-        if (petrolType != null) {
-            this.preferredPetrolType = PetrolType(petrolType)
+    fun assignUserPreferences() {
+        var preferredBrandIDs: ArrayList<String> = ArrayList()
+        this.preferredBrands.forEach { brand ->
+            brand.brandID?.let {
+                preferredBrandIDs.add(it)
+            }
         }
 
-        val preferredBrandsJSONArray = jsonObject.optJSONArray("preferred_brands")
-        if (preferredBrandsJSONArray != null) {
-            for (brand in 0 until preferredBrandsJSONArray.length()) {
-                this.preferredBrands.add(Brand(preferredBrandsJSONArray.getJSONObject(brand)))
-            }
+        this.preferredPetrolType = PetrolTypeController.petrolTypeList.firstOrNull { petrolType ->
+            petrolType.petrolID == this.preferredPetrolType?.petrolID
+        }
+
+        this.preferredBrands.clear()
+
+        preferredBrandIDs.forEach { brandID ->
+            this.preferredBrands.add(BrandController.brandList.first { brand ->
+                brand.brandID == brandID
+            })
         }
     }
 
