@@ -24,8 +24,6 @@ import com.example.apptivitylab.demoapp.models.User
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.synthetic.main.fragment_station_list.*
-import java.util.*
-import kotlin.collections.ArrayList
 
 /**
  * Created by ApptivityLab on 15/01/2018.
@@ -47,6 +45,10 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
             return fragment
         }
     }
+
+    private var nonPreferredStationHeaderPosition: Int? = null
+    private var hasPreferredStations: Boolean = true
+    private var hasNonPreferredStations: Boolean = true
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallBack: LocationCallback
@@ -81,6 +83,24 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
         this.stationsAdapter.setStationListener(this)
         this.stationListRecyclerView.adapter = this.stationsAdapter
         this.updateAdapterDataSet(this.stationsAdapter, this.stations, this.userLatLng)
+
+        this.preferredStationsButton.setOnClickListener {
+            if (this.hasPreferredStations) {
+                layoutManager.scrollToPositionWithOffset(0, 0)
+            } else {
+                Toast.makeText(this.context, getString(R.string.no_preferred_stations), Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        this.nonPreferredStationsButton.setOnClickListener {
+            if (this.hasNonPreferredStations) {
+                this.nonPreferredStationHeaderPosition?.let {
+                    layoutManager.scrollToPositionWithOffset(it, 20)
+                }
+            } else {
+                Toast.makeText(this.context, getString(R.string.no_non_preferred_stations), Toast.LENGTH_SHORT).show()
+            }
+        }
 
         this.fusedLocationClient = LocationServices.getFusedLocationProviderClient(this.context!!)
     }
@@ -229,21 +249,14 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
         val distanceSortedStationList = ArrayList<Station>()
         distanceSortedStationList.addAll(stations)
 
-        Collections.sort(distanceSortedStationList) { o1, o2 ->
-            val distance1 = o1.distanceFromUser
-            val distance2 = o2.distanceFromUser
+        distanceSortedStationList.sortBy { it.distanceFromUser }
 
-            if (distance1 != null && distance2 != null)
-                (distance1 - distance2).toInt()
-            else
-                0
-        }
         return distanceSortedStationList
     }
 
     private fun arrangeListByPreferences(stations: ArrayList<Station>, user: User): ArrayList<Any> {
 
-        val stationsWithCorrectPetrolType = ArrayList<Station>()
+        val stationsWithPreferredPetrolType = ArrayList<Station>()
         val preferredStationList = ArrayList<Station>()
         val arrangedStationsAndHeadersList = ArrayList<Any>()
 
@@ -252,11 +265,11 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
 
         stations.forEach { station ->
             if (station.stationPetrolTypeIDs.contains(userPreferredPetrolType)) {
-                stationsWithCorrectPetrolType.add(station)
+                stationsWithPreferredPetrolType.add(station)
             }
         }
 
-        stationsWithCorrectPetrolType.forEach { station ->
+        stationsWithPreferredPetrolType.forEach { station ->
             if (userPreferredBrands.any { brand ->
                         brand.brandID == station.stationBrand
                     }) {
@@ -267,9 +280,15 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
         arrangedStationsAndHeadersList.add(getString(R.string.preferred_stations))
         arrangedStationsAndHeadersList.addAll(preferredStationList)
 
-        stationsWithCorrectPetrolType.removeAll(preferredStationList)
+        this.hasPreferredStations = preferredStationList.isNotEmpty()
+
+        this.nonPreferredStationHeaderPosition = preferredStationList.size + 1
+
+        stationsWithPreferredPetrolType.removeAll(preferredStationList)
         arrangedStationsAndHeadersList.add(getString(R.string.non_preferred_stations))
-        arrangedStationsAndHeadersList.addAll(stationsWithCorrectPetrolType)
+        arrangedStationsAndHeadersList.addAll(stationsWithPreferredPetrolType)
+
+        this.hasNonPreferredStations = stationsWithPreferredPetrolType.isNotEmpty()
 
         return arrangedStationsAndHeadersList
     }
