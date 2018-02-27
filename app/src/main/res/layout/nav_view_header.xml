@@ -6,7 +6,6 @@
     android:layout_height="wrap_content"
     android:background="@drawable/gradient_background"
     android:clickable="true"
-    android:gravity="center_vertical"
     android:orientation="vertical"
     android:padding="16dp">
 
@@ -21,7 +20,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:gravity="bottom"
         tools:text="Username" />
 
     <TextView

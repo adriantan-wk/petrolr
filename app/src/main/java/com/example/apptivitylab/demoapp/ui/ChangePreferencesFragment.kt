@@ -113,9 +113,18 @@ class ChangePreferencesFragment : Fragment(), RestAPIClient.OnFullDataReceivedLi
             this.dataResourcesReceived++
 
             if (dataResourcesReceived == NO_OF_RESOURCE_SETS) {
+                this.loadNewUserDefaultPreferences(this.currentUser)
                 this.performFragmentStartup()
             }
         }
+    }
+
+    private fun loadNewUserDefaultPreferences(user: User) {
+        user.preferredPetrolType = PetrolTypeController.petrolTypeList.firstOrNull { petrolType ->
+            petrolType.petrolName == "RON95"
+        }
+
+        user.preferredBrands.addAll(BrandController.brandList)
     }
 
     private fun performFragmentStartup() {

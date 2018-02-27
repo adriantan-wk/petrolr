@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.apptivitylab.demoapp.models.Brand
 import com.example.apptivitylab.demoapp.models.Station
-import kotlinx.android.synthetic.main.cell_header.view.*
 import kotlinx.android.synthetic.main.cell_station.view.*
 
 /**
@@ -15,10 +14,7 @@ import kotlinx.android.synthetic.main.cell_station.view.*
  */
 
 class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private val STATION: Int = 0
-    private val HEADER: Int = 1
-
-    private var stationsAndHeadersList: ArrayList<Any> = ArrayList()
+    private var stationList: ArrayList<Station> = ArrayList()
     private var brandList: ArrayList<Brand> = ArrayList()
     private lateinit var stationListener: StationViewHolder.onSelectStationListener
 
@@ -26,59 +22,31 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         this.stationListener = stationListener
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return if (this.stationsAndHeadersList[position] is Station) {
-            STATION
-        } else {
-            HEADER
-        }
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
-        var viewHolder: RecyclerView.ViewHolder = when (viewType) {
-            STATION -> {
-                StationViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.cell_station,
-                        parent, false), this.stationListener)
-            }
-            else -> {
-                HeaderViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.cell_header,
-                        parent, false))
-            }
-        }
-
-        return viewHolder
+        return StationViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.cell_station,
+                parent, false), this.stationListener)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (holder.itemViewType) {
-            STATION -> {
-                val stationViewHolder: StationViewHolder = holder as StationViewHolder
-                val station: Station = this.stationsAndHeadersList[position] as Station
+        val stationViewHolder: StationViewHolder = holder as StationViewHolder
+        val station: Station = this.stationList[position] as Station
 
-                val stationLogo = this.brandList.firstOrNull { brand ->
-                    brand.brandID == station.stationBrand
-                }?.brandLogo
+        val stationLogo = this.brandList.firstOrNull { brand ->
+            brand.brandID == station.stationBrand
+        }?.brandLogo
 
-                stationLogo?.let {
-                    stationViewHolder.updateStationViewHolder(station, stationLogo)
-                }
-            }
-            else -> {
-                val headerViewHolder: HeaderViewHolder = holder as HeaderViewHolder
-                val header: String = this.stationsAndHeadersList[position] as String
-
-                headerViewHolder.updateHeaderViewHolder(header)
-            }
+        stationLogo?.let {
+            stationViewHolder.updateStationViewHolder(station, stationLogo)
         }
     }
 
     override fun getItemCount(): Int {
-        return this.stationsAndHeadersList.size
+        return this.stationList.size
     }
 
-    fun updateDataSet(stationsAndHeadersList: ArrayList<Any>, brandList: ArrayList<Brand>) {
-        this.stationsAndHeadersList.clear()
-        this.stationsAndHeadersList.addAll(stationsAndHeadersList)
+    fun updateDataSet(stationList: ArrayList<Station>, brandList: ArrayList<Brand>) {
+        this.stationList.clear()
+        this.stationList.addAll(stationList)
         this.brandList = brandList
 
         this.notifyDataSetChanged()
@@ -112,13 +80,6 @@ class StationsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 this.itemView.distanceTextView.text = ""
                 this.itemView.distanceUnitTextView.text = ""
             }
-        }
-    }
-
-    class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        fun updateHeaderViewHolder(header: String) {
-            this.itemView.headerTextView.text = header
         }
     }
 }

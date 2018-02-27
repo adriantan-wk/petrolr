@@ -2,6 +2,7 @@ package com.example.apptivitylab.demoapp.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -32,6 +33,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import kotlinx.android.synthetic.main.dialog_loading.*
 import kotlinx.android.synthetic.main.fragment_track_nearby.*
 import kotlinx.android.synthetic.main.infowindow_station_details.view.*
 
@@ -142,8 +144,8 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
     }
 
     private fun loadAppData() {
-        this.progressBar.visibility = View.VISIBLE
-        this.progressBarTextView.visibility = View.VISIBLE
+        this.loadStationsProgressBar.visibility = View.VISIBLE
+        this.loadStationsProgressBarTextView.visibility = View.VISIBLE
 
         if (BrandController.brandList.isEmpty()) {
             BrandController.loadBrands(this.context!!, this)
@@ -164,8 +166,8 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
         if (!dataReceived || error != null) {
             view?.let {
                 this.dataResourcesReceived = 0
-                this.progressBar.visibility = View.GONE
-                this.progressBarTextView.visibility = View.GONE
+                this.loadStationsProgressBar.visibility = View.GONE
+                this.loadStationsProgressBarTextView.visibility = View.GONE
 
                 Snackbar.make(it, getString(R.string.failed_retrieve_data), Snackbar.LENGTH_INDEFINITE)
                         .setAction(getString(R.string.retry), View.OnClickListener {
@@ -193,8 +195,8 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
         val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         this.nearestStationsRecyclerView.layoutManager = layoutManager
 
-        this.progressBar.visibility = View.GONE
-        this.progressBarTextView.visibility = View.GONE
+        this.loadStationsProgressBar.visibility = View.GONE
+        this.loadStationsProgressBarTextView.visibility = View.GONE
         this.refreshNearestStationsButton.visibility = View.VISIBLE
         this.recenterCameraButton.visibility = View.VISIBLE
 
@@ -212,6 +214,9 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
         }
 
         this.refreshNearestStationsButton.setOnClickListener {
+            this.refreshProgressBar.visibility = View.VISIBLE
+            this.refreshProgressBar.progress = 0
+            this.refreshNearestStationsButton.visibility = View.GONE
             this.updateUserLocation()
         }
     }
@@ -254,6 +259,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
                     uiSettings?.isCompassEnabled = false
                     uiSettings?.isZoomControlsEnabled = true
                     uiSettings?.isMapToolbarEnabled = false
+                    uiSettings?.isMyLocationButtonEnabled = false
 
                     context?.let {
                         if (ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -346,6 +352,9 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
                 }
 
                 this.recenterMapCamera()
+
+                this.refreshNearestStationsButton.visibility = View.VISIBLE
+                this.refreshProgressBar.visibility = View.GONE
             } else {
                 Toast.makeText(context, getString(R.string.location_update_failed), Toast.LENGTH_LONG).show()
             }

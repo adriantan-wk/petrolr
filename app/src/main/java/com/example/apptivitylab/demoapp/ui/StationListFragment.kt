@@ -7,12 +7,16 @@ import android.location.Location
 import android.os.Bundle
 import android.os.Looper
 import android.support.v4.app.ActivityCompat
+import android.support.v4.app.ActivityCompat.requestPermissions
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
+import android.support.v4.content.ContextCompat.startActivity
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.Toast
 import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.StationsListAdapter
@@ -21,6 +25,8 @@ import com.example.apptivitylab.demoapp.controllers.StationController
 import com.example.apptivitylab.demoapp.models.Brand
 import com.example.apptivitylab.demoapp.models.Station
 import com.example.apptivitylab.demoapp.models.User
+import com.example.apptivitylab.demoapp.ui.StationListFragment.Companion.NON_PREFERRED
+import com.example.apptivitylab.demoapp.ui.StationListFragment.Companion.PREFERRED
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.synthetic.main.fragment_station_list.*
@@ -33,6 +39,8 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
         SwipeRefreshLayout.OnRefreshListener {
 
     companion object {
+        const val PREFERRED = 0
+        const val NON_PREFERRED = 1
         const val USER_EXTRA = "user_object"
 
         fun newInstance(currentUser: User): StationListFragment {
@@ -46,9 +54,9 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
         }
     }
 
-    private var nonPreferredStationHeaderPosition: Int? = null
     private var hasPreferredStations: Boolean = true
     private var hasNonPreferredStations: Boolean = true
+    private var currentMode = PREFERRED
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallBack: LocationCallback
@@ -80,29 +88,70 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
         val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         this.stationListRecyclerView.layoutManager = layoutManager
 
+        this.currentMode = PREFERRED
+        this.selectStationButton(PREFERRED)
+
         this.stationsAdapter.setStationListener(this)
         this.stationListRecyclerView.adapter = this.stationsAdapter
-        this.updateAdapterDataSet(this.stationsAdapter, this.stations, this.userLatLng)
+        this.changeDisplayedStationList(this.currentMode)
 
         this.preferredStationsButton.setOnClickListener {
-            if (this.hasPreferredStations) {
-                layoutManager.scrollToPositionWithOffset(0, 0)
-            } else {
-                Toast.makeText(this.context, getString(R.string.no_preferred_stations), Toast.LENGTH_SHORT).show()
-            }
+            this.changeDisplayedStationList(PREFERRED)
         }
 
         this.nonPreferredStationsButton.setOnClickListener {
-            if (this.hasNonPreferredStations) {
-                this.nonPreferredStationHeaderPosition?.let {
-                    layoutManager.scrollToPositionWithOffset(it, 20)
-                }
-            } else {
-                Toast.makeText(this.context, getString(R.string.no_non_preferred_stations), Toast.LENGTH_SHORT).show()
-            }
+            this.changeDisplayedStationList(NON_PREFERRED)
         }
 
         this.fusedLocationClient = LocationServices.getFusedLocationProviderClient(this.context!!)
+    }
+
+    private fun selectStationButton(choice: Int) {
+        when (choice) {
+            PREFERRED -> {
+                this.preferredStationsButton.setBackgroundResource(R.drawable.button_rounded)
+                this.preferredStationsButton.setTextColor(ContextCompat.getColor(this.context!!, android.R.color.white))
+
+                this.nonPreferredStationsButton.setBackgroundResource(android.R.color.transparent)
+                this.nonPreferredStationsButton.setTextColor(ContextCompat.getColor(this.context!!, R.color.colorAccent))
+            }
+            NON_PREFERRED -> {
+                this.nonPreferredStationsButton.setBackgroundResource(R.drawable.button_rounded)
+                this.nonPreferredStationsButton.setTextColor(ContextCompat.getColor(this.context!!, android.R.color.white))
+
+                this.preferredStationsButton.setBackgroundResource(android.R.color.transparent)
+                this.preferredStationsButton.setTextColor(ContextCompat.getColor(this.context!!, R.color.colorAccent))
+            }
+        }
+    }
+
+    private fun changeDisplayedStationList(currentMode: Int) {
+        var hasStations = true
+        var stationTypeString = String()
+
+        this.selectStationButton(currentMode)
+        this.currentMode = currentMode
+        this.updateAdapterDataSet(this.stationsAdapter, this.stations, this.userLatLng, this.currentMode)
+
+        when (currentMode) {
+            PREFERRED -> {
+                hasStations = this.hasPreferredStations
+                stationTypeString = getString(R.string.no_stations, getString(R.string.preferred))
+            }
+            NON_PREFERRED -> {
+                hasStations = this.hasNonPreferredStations
+                stationTypeString = getString(R.string.no_stations, getString(R.string.non_preferred))
+            }
+        }
+
+        if (hasStations) {
+            this.swipeRefreshLayout.visibility = View.VISIBLE
+            this.noStationsTextView.visibility = View.GONE
+        } else {
+            this.swipeRefreshLayout.visibility = View.GONE
+            this.noStationsTextView.text = stationTypeString
+            this.noStationsTextView.visibility = View.VISIBLE
+        }
     }
 
     override fun onStart() {
@@ -145,7 +194,7 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
     fun onUserPreferencesChanged(user: User) {
         this.currentUser = user
 
-        this.updateUserLocation()
+        this.changeDisplayedStationList(this.currentMode)
     }
 
     override fun onRefresh() {
@@ -204,14 +253,14 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
                 this.userLatLng = LatLng(location.latitude, location.longitude)
             }
 
-            this.updateAdapterDataSet(this.stationsAdapter, this.stations, this.userLatLng)
+            this.updateAdapterDataSet(this.stationsAdapter, this.stations, this.userLatLng, this.currentMode)
         }
     }
 
-    private fun updateAdapterDataSet(stationsAdapter: StationsListAdapter
-                                     , stations: ArrayList<Station>, userLatLng: LatLng?) {
-        var stationsAndHeadersList = ArrayList<Any>()
+    private fun updateAdapterDataSet(stationsAdapter: StationsListAdapter, stations: ArrayList<Station>,
+                                     userLatLng: LatLng?, currentMode: Int) {
         var stationList = ArrayList<Station>()
+        var finalStationList: ArrayList<Station>
         stationList.addAll(stations)
 
 
@@ -220,8 +269,8 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
             stationList = this.arrangeStationsByDistance(stationList)
         }
 
-        stationsAndHeadersList = this.arrangeListByPreferences(stationList, currentUser)
-        stationsAdapter.updateDataSet(stationsAndHeadersList, BrandController.brandList)
+        finalStationList = this.createStationList(stationList, this.currentUser, currentMode)
+        stationsAdapter.updateDataSet(finalStationList, BrandController.brandList)
     }
 
     private fun setDistanceFromUser(stations: ArrayList<Station>, userLatLng: LatLng?) {
@@ -254,11 +303,11 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
         return distanceSortedStationList
     }
 
-    private fun arrangeListByPreferences(stations: ArrayList<Station>, user: User): ArrayList<Any> {
+    private fun createStationList(stations: ArrayList<Station>, user: User, currentMode: Int): ArrayList<Station> {
 
         val stationsWithPreferredPetrolType = ArrayList<Station>()
         val preferredStationList = ArrayList<Station>()
-        val arrangedStationsAndHeadersList = ArrayList<Any>()
+        val stationList = ArrayList<Station>()
 
         val userPreferredPetrolType = user.preferredPetrolType?.petrolID
         val userPreferredBrands: ArrayList<Brand> = user.preferredBrands
@@ -277,20 +326,21 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
             }
         }
 
-        arrangedStationsAndHeadersList.add(getString(R.string.preferred_stations))
-        arrangedStationsAndHeadersList.addAll(preferredStationList)
+        when (currentMode) {
+            PREFERRED -> {
+                stationList.addAll(preferredStationList)
 
-        this.hasPreferredStations = preferredStationList.isNotEmpty()
+                this.hasPreferredStations = preferredStationList.isNotEmpty()
+            }
+            NON_PREFERRED -> {
+                stationsWithPreferredPetrolType.removeAll(preferredStationList)
+                stationList.addAll(stationsWithPreferredPetrolType)
 
-        this.nonPreferredStationHeaderPosition = preferredStationList.size + 1
+                this.hasNonPreferredStations = stationsWithPreferredPetrolType.isNotEmpty()
+            }
+        }
 
-        stationsWithPreferredPetrolType.removeAll(preferredStationList)
-        arrangedStationsAndHeadersList.add(getString(R.string.non_preferred_stations))
-        arrangedStationsAndHeadersList.addAll(stationsWithPreferredPetrolType)
-
-        this.hasNonPreferredStations = stationsWithPreferredPetrolType.isNotEmpty()
-
-        return arrangedStationsAndHeadersList
+        return stationList
     }
 
     override fun onStop() {
