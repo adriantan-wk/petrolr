@@ -68,7 +68,6 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
 
     private var mapFragment: SupportMapFragment? = null
     private var googleMap: GoogleMap? = null
-    private var performInitialMapZoom = true
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
@@ -94,7 +93,33 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
             this.mapFragment = activity!!.supportFragmentManager.findFragmentById(R.id.mapContainerFrameLayout) as SupportMapFragment
         }
 
+        this.context?.let {
+            if (ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                        ACCESS_FINE_LOCATION_PERMISSIONS)
+            }
+        }
+
         return inflater.inflate(R.layout.fragment_track_nearby, container, false)
+    }
+
+    @SuppressLint("MissingPermission")
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            ACCESS_FINE_LOCATION_PERMISSIONS -> {
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    val toast = Toast.makeText(context, R.string.location_permissions_granted, Toast.LENGTH_SHORT)
+                    toast.show()
+
+                } else {
+                    val toast = Toast.makeText(context, R.string.location_permissions_denied, Toast.LENGTH_SHORT)
+                    toast.show()
+                }
+            }
+        }
+
+        this.setupGoogleMapFragment()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -175,7 +200,12 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
 
         this.filteredStationList = this.filterStationsByPreferredPetrol(this.stationList, this.currentUser)
 
-        this.updateUserLocation()
+        this.context?.let {
+            if (ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                this.updateUserLocation()
+            }
+        }
 
         this.recenterCameraButton.setOnClickListener {
             this.recenterMapCamera()
@@ -195,44 +225,6 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
     override fun onSeeMoreSelected() {
         val stationListIntent = StationListActivity.newLaunchIntent(this.context!!, true)
         startActivity(stationListIntent)
-    }
-
-    override fun onStart() {
-        super.onStart()
-
-
-        this.context?.let {
-            if (ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                        ACCESS_FINE_LOCATION_PERMISSIONS)
-            } else {
-                if (this.performInitialMapZoom) {
-                    this.performInitialMapZoom = false
-                    this.updateUserLocation()
-                }
-            }
-        }
-    }
-
-    @SuppressLint("MissingPermission")
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        when (requestCode) {
-            ACCESS_FINE_LOCATION_PERMISSIONS -> {
-                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    val toast = Toast.makeText(context, R.string.location_permissions_granted, Toast.LENGTH_SHORT)
-                    toast.show()
-
-                    if (this.performInitialMapZoom) {
-                        this.performInitialMapZoom = false
-                        this.updateUserLocation()
-                    }
-                } else {
-                    val toast = Toast.makeText(context, R.string.location_permissions_denied, Toast.LENGTH_SHORT)
-                    toast.show()
-                }
-            }
-        }
     }
 
     @SuppressLint("MissingPermission")
@@ -262,7 +254,20 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
                     uiSettings?.isCompassEnabled = false
                     uiSettings?.isZoomControlsEnabled = true
                     uiSettings?.isMapToolbarEnabled = false
-                    isMyLocationEnabled = true
+
+                    context?.let {
+                        if (ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_FINE_LOCATION)
+                                == PackageManager.PERMISSION_GRANTED) {
+                            isMyLocationEnabled = true
+                        }
+                    }
+                }
+
+                context?.let {
+                    if (ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        this.updateUserLocation()
+                    }
                 }
 
                 this.assignInfoWindowAdapterAndListener(this)
