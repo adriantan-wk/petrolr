@@ -103,6 +103,10 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
             this.changeDisplayedStationList(NON_PREFERRED)
         }
 
+        this.goToTopButton.setOnClickListener {
+            this.stationListRecyclerView.smoothScrollToPosition(0)
+        }
+
         this.fusedLocationClient = LocationServices.getFusedLocationProviderClient(this.context!!)
     }
 

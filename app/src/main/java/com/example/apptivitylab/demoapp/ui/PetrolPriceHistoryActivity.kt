@@ -8,7 +8,7 @@ import android.view.View
 import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.models.PetrolType
 import com.example.apptivitylab.demoapp.models.User
-import kotlinx.android.synthetic.main.activity_gradient_toolbar.*
+import kotlinx.android.synthetic.main.activity_petrol_price_history.*
 
 /**
  * Created by ApptivityLab on 31/01/2018.
@@ -30,9 +30,12 @@ class PetrolPriceHistoryActivity : AppCompatActivity() {
         }
     }
 
+    private lateinit var pageAdapter: PetrolPricePageAdapter
+    private var petrolTypeList = ArrayList<PetrolType>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_gradient_toolbar)
+        setContentView(R.layout.activity_petrol_price_history)
 
         setSupportActionBar(this.toolbar)
         this.supportActionBar?.title = getString(R.string.price_history)
@@ -43,7 +46,11 @@ class PetrolPriceHistoryActivity : AppCompatActivity() {
         })
 
         val currentUser = intent.getParcelableExtra<User>(USER_EXTRA)
-        val petrolTypeList = intent.getParcelableArrayListExtra<PetrolType>(PETROL_TYPE_LIST_EXTRA)
+        this.petrolTypeList = intent.getParcelableArrayListExtra<PetrolType>(PETROL_TYPE_LIST_EXTRA)
+
+        this.pageAdapter = PetrolPricePageAdapter(this.supportFragmentManager, this.petrolTypeList)
+        this.viewPagerContainer.adapter = this.pageAdapter
+        this.tabLayout.setupWithViewPager(this.viewPagerContainer)
 
         var preferredPetrolType = PetrolType()
 
@@ -53,9 +60,6 @@ class PetrolPriceHistoryActivity : AppCompatActivity() {
             }
         }
 
-        supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.container, PetrolPriceHistoryFragment.newInstance(preferredPetrolType))
-                .commit()
+        this.viewPagerContainer.setCurrentItem(this.pageAdapter.findPreferredPetrolTypePosition(preferredPetrolType), false)
     }
 }

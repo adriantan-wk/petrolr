@@ -72,6 +72,17 @@
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/goToTopButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_margin="16dp"
+            android:rotation="90"
+            android:src="?attr/homeAsUpIndicator"
+            android:tint="@android:color/white"
+            app:fabSize="normal" />
+
     </FrameLayout>
 
 </LinearLayout>
