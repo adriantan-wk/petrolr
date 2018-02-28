@@ -91,15 +91,19 @@ class StationListFragment : Fragment(), StationsListAdapter.StationViewHolder.on
         this.changeDisplayedStationList(this.currentMode)
 
         this.preferredStationsButton.setOnClickListener {
-            this.changeDisplayedStationList(PREFERRED)
+            if (currentMode == PREFERRED) {
+                this.stationListRecyclerView.smoothScrollToPosition(0)
+            } else {
+                this.changeDisplayedStationList(PREFERRED)
+            }
         }
 
         this.nonPreferredStationsButton.setOnClickListener {
-            this.changeDisplayedStationList(NON_PREFERRED)
-        }
-
-        this.goToTopButton.setOnClickListener {
-            this.stationListRecyclerView.smoothScrollToPosition(0)
+            if (currentMode == NON_PREFERRED) {
+                this.stationListRecyclerView.smoothScrollToPosition(0)
+            } else {
+                this.changeDisplayedStationList(NON_PREFERRED)
+            }
         }
 
         this.fusedLocationClient = LocationServices.getFusedLocationProviderClient(this.context!!)
