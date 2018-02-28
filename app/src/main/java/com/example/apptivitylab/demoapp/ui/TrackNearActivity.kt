@@ -15,6 +15,9 @@ import com.example.apptivitylab.demoapp.R
 import com.example.apptivitylab.demoapp.controllers.PetrolTypeController
 import com.example.apptivitylab.demoapp.controllers.UserController
 import com.example.apptivitylab.demoapp.models.User
+import com.google.android.gms.location.places.AutocompleteFilter
+import com.google.android.gms.location.places.Place
+import com.google.android.gms.location.places.ui.PlaceAutocomplete
 import kotlinx.android.synthetic.main.activity_track_nearby.*
 import kotlinx.android.synthetic.main.nav_view_header.view.*
 
@@ -26,6 +29,7 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
     companion object {
         const val CHANGE_PREFERENCES_REQUEST_CODE = 200
+        const val LOCATION_SEARCH_REQUEST_CODE = 300
         const val FROM_LOGIN_EXTRA = "from_login"
 
         fun newLaunchIntent(context: Context, isFromLogin: Boolean): Intent {
@@ -37,7 +41,12 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         }
     }
 
+    interface SearchLocationListener {
+        fun onLocationSelected(place: Place)
+    }
+
     private lateinit var trackNearbyFragment: TrackNearbyFragment
+    private lateinit var searchLocationListener: SearchLocationListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,9 +71,23 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             startActivity(UserProfileActivity.newLaunchIntent(this, UserController.user))
         }
 
+        val autoCompleteFilter: AutocompleteFilter = AutocompleteFilter.Builder()
+                .setTypeFilter(Place.TYPE_COUNTRY)
+                .setCountry("MY")
+                .build()
+
+        this.locationSearchTextView.setOnClickListener {
+            val intent = PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
+                    .setFilter(autoCompleteFilter)
+                    .build(this@TrackNearActivity)
+
+            this.startActivityForResult(intent, LOCATION_SEARCH_REQUEST_CODE)
+        }
+
         val isFromLogin = intent.getBooleanExtra(FROM_LOGIN_EXTRA, false)
 
         this.trackNearbyFragment = TrackNearbyFragment.newInstance(UserController.user, isFromLogin)
+        this.searchLocationListener = this.trackNearbyFragment
 
         supportFragmentManager
                 .beginTransaction()
@@ -82,6 +105,9 @@ class TrackNearActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             newUserPreferences?.let {
                 updateUserPreferences(newUserPreferences)
             }
+        } else if (requestCode == LOCATION_SEARCH_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            val place = PlaceAutocomplete.getPlace(this, data)
+            this.searchLocationListener.onLocationSelected(place)
         }
     }
 
