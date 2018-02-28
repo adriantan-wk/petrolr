@@ -2,7 +2,6 @@ package com.example.apptivitylab.demoapp.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Dialog
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -29,11 +28,12 @@ import com.example.apptivitylab.demoapp.models.Station
 import com.example.apptivitylab.demoapp.models.User
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.places.Place
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
-import kotlinx.android.synthetic.main.dialog_loading.*
+import kotlinx.android.synthetic.main.activity_track_nearby.*
 import kotlinx.android.synthetic.main.fragment_track_nearby.*
 import kotlinx.android.synthetic.main.infowindow_station_details.view.*
 
@@ -44,7 +44,7 @@ import kotlinx.android.synthetic.main.infowindow_station_details.view.*
 class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
         NearestStationsAdapter.StationViewHolder.onSelectNearestStationListener,
         NearestStationsAdapter.SeeMoreViewHolder.onSelectSeeMoreListener,
-        RestAPIClient.OnFullDataReceivedListener {
+        RestAPIClient.OnFullDataReceivedListener, TrackNearActivity.SearchLocationListener {
 
     companion object {
         const val MAX_NO_OF_STATIONS_DISPLAYED = 35
@@ -75,6 +75,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
 
     private lateinit var currentUser: User
     private var userLatLng: LatLng? = null
+    private var locationMarker: Marker? = null
 
     private var brandList: ArrayList<Brand> = ArrayList()
     private var stationList: ArrayList<Station> = ArrayList()
@@ -205,7 +206,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
         this.context?.let {
             if (ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
-                this.updateUserLocation()
+                this.updateBaseLocation(true, null)
             }
         }
 
@@ -214,10 +215,18 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
         }
 
         this.refreshNearestStationsButton.setOnClickListener {
+            if (this.refreshNearestStationsButton.text == getString(R.string.return_to_user_location)) {
+                this.refreshNearestStationsButton.text = getString(R.string.refresh_nearest_stations)
+
+                this.activity?.let {
+                    it.locationSearchTextView.text = ""
+                }
+            }
+
             this.refreshProgressBar.visibility = View.VISIBLE
             this.refreshProgressBar.progress = 0
             this.refreshNearestStationsButton.visibility = View.GONE
-            this.updateUserLocation()
+            this.updateBaseLocation(true, null)
         }
     }
 
@@ -272,7 +281,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
                 context?.let {
                     if (ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_FINE_LOCATION)
                             == PackageManager.PERMISSION_GRANTED) {
-                        this.updateUserLocation()
+                        this.updateBaseLocation(true, null)
                     }
                 }
 
@@ -299,21 +308,26 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
     }
 
     override fun getInfoWindow(marker: Marker?): View? {
-        val view: View = activity!!.layoutInflater.inflate(R.layout.infowindow_station_details, null)
+        return if (marker?.tag is Station) {
+            val view: View = activity!!.layoutInflater.inflate(R.layout.infowindow_station_details, null)
+            val station: Station = marker.tag as Station
 
-        val station: Station = marker?.tag as Station
+            view.stationNameTextView.text = station.stationName
 
-        view.stationNameTextView.text = station.stationName
-
-        return view
+            view
+        } else {
+            null
+        }
     }
 
     private fun assignInfoWindowAdapterAndListener(adapter: GoogleMap.InfoWindowAdapter) {
         this.googleMap?.let {
             it.setInfoWindowAdapter(adapter)
             it.setOnInfoWindowClickListener { marker ->
-                val stationDetailsIntent = StationDetailsActivity.newLaunchIntent(context!!, marker.tag as Station, BrandController.brandList)
-                startActivity(stationDetailsIntent)
+                if (marker?.tag is Station) {
+                    val stationDetailsIntent = StationDetailsActivity.newLaunchIntent(context!!, marker.tag as Station, BrandController.brandList)
+                    startActivity(stationDetailsIntent)
+                }
             }
         }
     }
@@ -327,38 +341,79 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
         this.isAdapterInitialized = true
     }
 
-    @SuppressLint("MissingPermission")
-    private fun updateUserLocation() {
+    override fun onLocationSelected(place: Place) {
+        this.activity?.let {
+            it.locationSearchTextView.text = place.name
+        }
 
-        this.fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-            if (location != null) {
-                this.userLatLng = LatLng(location.latitude, location.longitude)
+        this.refreshNearestStationsButton.text = getString(R.string.return_to_user_location)
 
-                this.displayedStationList = this.filterDisplayedStations(this.filteredStationList)
+        if (this.locationMarker == null) {
+            val markerOptions = MarkerOptions()
+                    .position(place.latLng)
+                    .title(place.name.toString())
 
-                this.clearMapMarkers()
-                this.generateStationMarkers(this.displayedStationList)
+            this.locationMarker = this.googleMap?.addMarker(markerOptions)
+        } else {
+            this.locationMarker?.let {
+                it.position = place.latLng
+                it.title = place.name.toString()
 
-                this.assignNearestStations(this.nearestStations)
-
-                if (!this.isAdapterInitialized) {
-                    if (this.nearestStations.isNotEmpty()) {
-                        this.initializeNearestStationsAdapter()
-                    }
+                if (it.isInfoWindowShown) {
+                    it.hideInfoWindow()
                 }
-
-                if (this.isAdapterInitialized) {
-                    this.nearestStationsAdapter.updateDataSet(this.nearestStations, this.brandList)
-                }
-
-                this.recenterMapCamera()
-
-                this.refreshNearestStationsButton.visibility = View.VISIBLE
-                this.refreshProgressBar.visibility = View.GONE
-            } else {
-                Toast.makeText(context, getString(R.string.location_update_failed), Toast.LENGTH_LONG).show()
             }
         }
+
+        this.locationMarker?.tag = place.id
+        this.updateBaseLocation(false, place.latLng)
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun updateBaseLocation(useTrueLocation: Boolean, locationLatLng: LatLng?) {
+        if (useTrueLocation) {
+            this.fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                if (location != null) {
+                    this.userLatLng = LatLng(location.latitude, location.longitude)
+
+                    if (this.locationMarker != null) {
+                        this.locationMarker?.remove()
+                    }
+
+                    this.performLocationChangedUIUpdates()
+                } else {
+                    Toast.makeText(context, getString(R.string.location_update_failed), Toast.LENGTH_LONG).show()
+                }
+            }
+        } else {
+            this.userLatLng = locationLatLng
+
+            this.performLocationChangedUIUpdates()
+        }
+    }
+
+    private fun performLocationChangedUIUpdates() {
+        this.displayedStationList = this.filterDisplayedStations(this.filteredStationList)
+
+        this.clearMapMarkers()
+        this.generateStationMarkers(this.displayedStationList)
+
+        this.assignNearestStations(this.nearestStations)
+
+        if (!this.isAdapterInitialized) {
+            if (this.nearestStations.isNotEmpty()) {
+                this.initializeNearestStationsAdapter()
+            }
+        }
+
+        if (this.isAdapterInitialized) {
+            this.nearestStationsAdapter.updateDataSet(this.nearestStations, this.brandList)
+        }
+
+        this.recenterMapCamera()
+
+        this.refreshNearestStationsButton.visibility = View.VISIBLE
+        this.refreshProgressBar.visibility = View.GONE
     }
 
     private fun filterDisplayedStations(filteredStationList: ArrayList<Station>): ArrayList<Station> {
@@ -409,7 +464,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
             }
 
             bounds.include(this.userLatLng)
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 100))
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 200))
         }
     }
 
@@ -445,12 +500,18 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
     }
 
     fun onUserPreferencesChanged(user: User) {
-
         this.currentUser = user
         this.filteredStationList = this.filterStationsByPreferredPetrol(this.stationList, this.currentUser)
 
+        this.activity?.let {
+            if (it.locationSearchTextView.text.isNotEmpty()) {
+                this.updateBaseLocation(false, this.userLatLng)
+            } else {
+                this.updateBaseLocation(true, null)
+            }
+        }
+
         Toast.makeText(context!!, getString(R.string.preferences_updated), Toast.LENGTH_SHORT).show()
-        this.updateUserLocation()
     }
 
     private fun generateStationMarkers(displayedStationList: ArrayList<Station>) {

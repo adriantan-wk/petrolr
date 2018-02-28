@@ -119,4 +119,5 @@
     <string name="no_stations">Oops!\nYou do not have any\n%1$s stations.</string>
     <string name="preferred">preferred</string>
     <string name="non_preferred">non-preferred</string>
+    <string name="return_to_user_location">Return to User Location</string>
 </resources>
