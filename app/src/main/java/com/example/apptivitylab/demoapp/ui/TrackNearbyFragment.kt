@@ -310,8 +310,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
     override fun getInfoWindow(marker: Marker?): View? {
         return if (marker?.tag is Station) {
             val view: View = activity!!.layoutInflater.inflate(R.layout.infowindow_station_details, null)
-
-            val station: Station = marker?.tag as Station
+            val station: Station = marker.tag as Station
 
             view.stationNameTextView.text = station.stationName
 
@@ -349,13 +348,24 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
 
         this.refreshNearestStationsButton.text = getString(R.string.return_to_user_location)
 
-        val markerOptions = MarkerOptions()
-                .position(place.latLng)
-                .title(place.name.toString())
+        if (this.locationMarker == null) {
+            val markerOptions = MarkerOptions()
+                    .position(place.latLng)
+                    .title(place.name.toString())
 
-        this.locationMarker = this.googleMap?.addMarker(markerOptions)
+            this.locationMarker = this.googleMap?.addMarker(markerOptions)
+        } else {
+            this.locationMarker?.let {
+                it.position = place.latLng
+                it.title = place.name.toString()
+
+                if (it.isInfoWindowShown) {
+                    it.hideInfoWindow()
+                }
+            }
+        }
+
         this.locationMarker?.tag = place.id
-
         this.updateBaseLocation(false, place.latLng)
     }
 
