@@ -100,7 +100,7 @@
     <string name="warning">Warning</string>
     <string name="refresh_nearest_stations">Refresh Nearest Stations</string>
     <string name="see_more">See More</string>
-    <string name="recenter_camera">Recenter Camera</string>
+    <string name="recenter_camera">Recenter</string>
     <string name="user_location_refreshed">User Location Refreshed</string>
     <string name="failed_retrieve_data">Failed to retrieve app data</string>
     <string name="map_loading">Loading Map…</string>
@@ -116,6 +116,7 @@
     <string name="account_created_on">Account Created On</string>
     <string name="phone_no">Phone Number</string>
     <string name="go_to">Go to:</string>
-    <string name="no_preferred_stations">There are no preferred stations</string>
-    <string name="no_non_preferred_stations">There are no non-preferred stations</string>
+    <string name="no_stations">Oops!\nYou do not have any\n%1$s stations.</string>
+    <string name="preferred">preferred</string>
+    <string name="non_preferred">non-preferred</string>
 </resources>
