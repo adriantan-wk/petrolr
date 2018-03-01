@@ -11,7 +11,6 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -434,7 +433,13 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
         }
 
         if (this.isAdapterInitialized) {
-            this.nearestStationsAdapter.updateDataSet(this.nearestStations, this.brandList)
+            this.activity?.let {
+                if (it.locationSearchTextView.text.isNotEmpty()) {
+                    this.nearestStationsAdapter.updateDataSet(this.nearestStations, this.brandList, false)
+                } else {
+                    this.nearestStationsAdapter.updateDataSet(this.nearestStations, this.brandList, true)
+                }
+            }
         }
 
         this.recenterMapCamera()
@@ -551,6 +556,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
             val icon = iconGenerator.makeIcon()
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon))
         }
+
         override fun onBeforeClusterItemRendered(item: Station, markerOptions: MarkerOptions) {
             val itemBrandID = item.stationBrand
             val bitmapImg: Bitmap
