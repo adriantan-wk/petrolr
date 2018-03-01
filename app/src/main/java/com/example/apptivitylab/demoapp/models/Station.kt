@@ -3,6 +3,7 @@ package com.example.apptivitylab.demoapp.models
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.clustering.ClusterItem
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
@@ -11,7 +12,7 @@ import java.util.*
  * Created by ApptivityLab on 12/01/2018.
  */
 
-class Station() : Parcelable {
+class Station() : Parcelable, ClusterItem {
     var stationCreatedAt: Date? = null
     var stationUpdatedAt: Date? = null
     var stationName: String? = null
@@ -76,4 +77,15 @@ class Station() : Parcelable {
         }
     }
 
+    override fun getSnippet(): String {
+        return this.stationBrand ?: ""
+    }
+
+    override fun getTitle(): String {
+        return this.stationName ?: ""
+    }
+
+    override fun getPosition(): LatLng {
+        return this.stationLatLng ?: LatLng(0.0, 0.0)
+    }
 }

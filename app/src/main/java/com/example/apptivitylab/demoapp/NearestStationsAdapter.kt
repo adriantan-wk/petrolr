@@ -18,6 +18,8 @@ class NearestStationsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val STATION: Int = 1
     private val SEE_MORE: Int = 2
 
+    private var showSeeMore = true
+
     private var nearestStations: ArrayList<Station> = ArrayList()
     private var brandList: ArrayList<Brand> = ArrayList()
 
@@ -65,7 +67,11 @@ class NearestStationsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return this.nearestStations.size + 1
+        return if (this.showSeeMore) {
+            this.nearestStations.size + 1
+        } else {
+            this.nearestStations.size
+        }
     }
 
     fun setNearestStationListener(nearestStationListener: StationViewHolder.onSelectNearestStationListener) {
@@ -76,10 +82,11 @@ class NearestStationsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         this.seeMoreListener = seeMoreListener
     }
 
-    fun updateDataSet(nearestStations: ArrayList<Station>, brandList: ArrayList<Brand>) {
+    fun updateDataSet(nearestStations: ArrayList<Station>, brandList: ArrayList<Brand>, showSeeMore: Boolean) {
         this.nearestStations.clear()
         this.nearestStations.addAll(nearestStations)
         this.brandList = brandList
+        this.showSeeMore = showSeeMore
 
         this.notifyDataSetChanged()
     }
