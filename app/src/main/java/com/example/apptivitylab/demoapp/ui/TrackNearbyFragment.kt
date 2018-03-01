@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -34,9 +35,12 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
+import com.google.maps.android.ui.IconGenerator
 import kotlinx.android.synthetic.main.activity_track_nearby.*
+import kotlinx.android.synthetic.main.cluster_marker.view.*
 import kotlinx.android.synthetic.main.fragment_track_nearby.*
 import kotlinx.android.synthetic.main.infowindow_station_details.view.*
 
@@ -536,6 +540,17 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
 
     inner class StationMarkerRenderer(context: Context?, googleMap: GoogleMap?, clusterManager: ClusterManager<Station>?)
         : DefaultClusterRenderer<Station>(context, googleMap, clusterManager) {
+        val iconGenerator = IconGenerator(context)
+        override fun onBeforeClusterRendered(cluster: Cluster<Station>, markerOptions: MarkerOptions) {
+            val view = LayoutInflater.from(context).inflate(R.layout.cluster_marker, null)
+            view.clusterSizeTextView.text = cluster.size.toString()
+
+            iconGenerator.setBackground(null)
+            iconGenerator.setContentView(view)
+
+            val icon = iconGenerator.makeIcon()
+            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon))
+        }
         override fun onBeforeClusterItemRendered(item: Station, markerOptions: MarkerOptions) {
             val itemBrandID = item.stationBrand
             val bitmapImg: Bitmap
