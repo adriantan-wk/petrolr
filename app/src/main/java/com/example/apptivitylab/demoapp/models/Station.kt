@@ -78,14 +78,14 @@ class Station() : Parcelable, ClusterItem {
     }
 
     override fun getSnippet(): String {
-        return this.stationBrand!!
+        return this.stationBrand ?: ""
     }
 
     override fun getTitle(): String {
-        return this.stationName!!
+        return this.stationName ?: ""
     }
 
     override fun getPosition(): LatLng {
-        return this.stationLatLng!!
+        return this.stationLatLng ?: LatLng(0.0, 0.0)
     }
 }

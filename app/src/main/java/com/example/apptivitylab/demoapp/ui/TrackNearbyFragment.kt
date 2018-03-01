@@ -443,6 +443,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
         this.nearestStationsAdapter = NearestStationsAdapter()
         this.nearestStationsAdapter.setNearestStationListener(this)
         this.nearestStationsAdapter.setSeeMoreListener(this)
+
         this.nearestStationsRecyclerView.adapter = this.nearestStationsAdapter
 
         this.isAdapterInitialized = true
@@ -477,7 +478,6 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
 
         val distanceSortedStationList = ArrayList<Station>()
         distanceSortedStationList.addAll(stationList)
-
         distanceSortedStationList.sortBy { it.distanceFromUser }
 
         return distanceSortedStationList
@@ -537,12 +537,11 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
     inner class StationMarkerRenderer(context: Context?, googleMap: GoogleMap?, clusterManager: ClusterManager<Station>?)
         : DefaultClusterRenderer<Station>(context, googleMap, clusterManager) {
         override fun onBeforeClusterItemRendered(item: Station, markerOptions: MarkerOptions) {
+            val itemBrandID = item.stationBrand
             val bitmapImg: Bitmap
             val resizedBitmapImg: Bitmap
 
-            if (this@TrackNearbyFragment.currentUser.preferredBrands.any { brand ->
-                        brand.brandID == item.stationBrand
-                    }) {
+            if (this@TrackNearbyFragment.currentUser.preferredBrands.any { it.brandID == itemBrandID }) {
                 bitmapImg = BitmapFactory.decodeResource(resources, R.drawable.ic_gasstation_marker)
                 resizedBitmapImg = Bitmap.createScaledBitmap(bitmapImg, 100, 100, false)
             } else {
