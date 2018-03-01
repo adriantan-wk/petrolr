@@ -54,6 +54,8 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
 
     companion object {
         const val NO_OF_RESOURCE_SETS = 3
+        const val DEFAULT_LATITUDE = 3.519863
+        const val DEFAULT_LONGITUDE = 101.538116
 
         const val ACCESS_FINE_LOCATION_PERMISSIONS = 100
         const val USER_EXTRA = "user_object"
@@ -73,7 +75,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
 
     private var dataResourcesReceived = 0
     private var performFirstTimeMarkerGeneration = false
-    private val malaysiaLatLng = LatLng(3.519863, 101.538116)
+    private val defaultLatLng = LatLng(DEFAULT_LATITUDE, DEFAULT_LONGITUDE)
 
     private var mapFragment: SupportMapFragment? = null
     private var googleMap: GoogleMap? = null
@@ -292,7 +294,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
                 this.setupClusterManager(this.filteredStationList)
 
                 if (this.userLatLng == null) {
-                    val cameraUpdate = CameraUpdateFactory.newLatLngZoom(malaysiaLatLng, 5f)
+                    val cameraUpdate = CameraUpdateFactory.newLatLngZoom(defaultLatLng, 5f)
                     googleMap?.moveCamera(cameraUpdate)
                 } else {
                     this.recenterMapCamera()
@@ -321,7 +323,7 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
     }
 
     private fun setupClusterManager(stationList: ArrayList<Station>) {
-        this.googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(malaysiaLatLng, 5f))
+        this.googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLatLng, 5f))
 
         with(this.clusterManager) {
             clearItems()
