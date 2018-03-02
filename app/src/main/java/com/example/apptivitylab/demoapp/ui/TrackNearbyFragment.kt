@@ -2,6 +2,7 @@ package com.example.apptivitylab.demoapp.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -227,6 +228,14 @@ class TrackNearbyFragment : Fragment(), GoogleMap.InfoWindowAdapter,
                     == PackageManager.PERMISSION_GRANTED) {
                 this.updateBaseLocation(true, null)
             }
+        }
+
+        this.petrolrTextView.setOnClickListener {
+            val dialog = Dialog(this.activity)
+
+            dialog.setContentView(R.layout.dialog_petrolr)
+            dialog.window.setBackgroundDrawableResource(android.R.color.transparent)
+            dialog.show()
         }
 
         this.recenterCameraButton.setOnClickListener {

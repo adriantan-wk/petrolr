@@ -120,4 +120,6 @@
     <string name="preferred">preferred</string>
     <string name="non_preferred">non-preferred</string>
     <string name="return_to_user_location">Return to User Location</string>
+    <string name="developed_by">Developed by Adrian Tan</string>
+    <string name="circa">circa 2018</string>
 </resources>
